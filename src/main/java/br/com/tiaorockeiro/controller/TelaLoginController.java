@@ -28,7 +28,7 @@ import javafx.scene.control.PasswordField;
  * @author Wendel
  */
 public class TelaLoginController implements Initializable {
-
+    
     @FXML
     private PasswordField senha;
     @FXML
@@ -56,17 +56,23 @@ public class TelaLoginController implements Initializable {
             }
         });
     }
-
+    
     public void setApplication(MainApp application) {
         this.application = application;
     }
-
+    
     @FXML
     public void acaoLogar(ActionEvent event) throws IOException {
         try {
             Usuario usuarioSelecionado = this.listaUsuarios.getSelectionModel().getSelectedItem();
             if (usuarioSelecionado != null && SessaoUtil.logar(usuarioSelecionado.getDescricao(), this.senha.getText())) {
-                this.application.irParaTelaPrincipal();
+                if (SessaoUtil.getUsuario().isAdministrador() || SessaoUtil.getUsuario().isGerente() || SessaoUtil.getUsuario().isOperadorCaixa()
+                        || SessaoUtil.getUsuario().isVendedor()) {
+                    this.application.irParaTelaPrincipal();
+                } else {
+                    SessaoUtil.fecharSessao();
+                    enviarMensagemInformacao("Usuário não tem permissão para acessar o sistema!");
+                }
             } else {
                 enviarMensagemInformacao("Usuário/Senha inválida!");
             }
@@ -74,62 +80,62 @@ public class TelaLoginController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-
+    
     @FXML
     public void acaoBotao1(ActionEvent event) {
         this.adicionaNumeroSenha(1);
     }
-
+    
     @FXML
     public void acaoBotao2(ActionEvent event) {
         this.adicionaNumeroSenha(2);
     }
-
+    
     @FXML
     public void acaoBotao3(ActionEvent event) {
         this.adicionaNumeroSenha(3);
     }
-
+    
     @FXML
     public void acaoBotao4(ActionEvent event) {
         this.adicionaNumeroSenha(4);
     }
-
+    
     @FXML
     public void acaoBotao5(ActionEvent event) {
         this.adicionaNumeroSenha(5);
     }
-
+    
     @FXML
     public void acaoBotao6(ActionEvent event) {
         this.adicionaNumeroSenha(6);
     }
-
+    
     @FXML
     public void acaoBotao7(ActionEvent event) {
         this.adicionaNumeroSenha(7);
     }
-
+    
     @FXML
     public void acaoBotao8(ActionEvent event) {
         this.adicionaNumeroSenha(8);
     }
-
+    
     @FXML
     public void acaoBotao9(ActionEvent event) {
         this.adicionaNumeroSenha(9);
     }
-
+    
     @FXML
     public void acaoBotao0(ActionEvent event) {
         this.adicionaNumeroSenha(0);
     }
-
+    
     @FXML
     public void acaoBotaoLimpar(ActionEvent event) {
         this.senha.setText("");
     }
-
+    
     private void adicionaNumeroSenha(int numero) {
         this.senha.setText(this.senha.getText() + numero);
     }

@@ -31,6 +31,10 @@ public class SessaoUtil {
         return false;
     }
 
+    public static void fecharSessao() {
+        usuario = null;
+    }
+
     public static Usuario getUsuario() {
         return usuario;
     }
