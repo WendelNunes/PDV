@@ -14,7 +14,15 @@ import javax.persistence.EntityManager;
  */
 public class ConfiguracaoDAOImpl extends DAOImpl<Configuracao, Long> implements ConfiguracaoDAO {
 
+    private final EntityManager entityManager;
+
     public ConfiguracaoDAOImpl(EntityManager entityManager) {
         super(entityManager);
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public Configuracao obterConfiguracao() {
+        return (Configuracao) this.entityManager.createQuery("FROM Configuracao c").getSingleResult();
     }
 }

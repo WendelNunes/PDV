@@ -5,7 +5,9 @@
  */
 package br.com.tiaorockeiro.util;
 
+import br.com.tiaorockeiro.modelo.Configuracao;
 import br.com.tiaorockeiro.modelo.Usuario;
+import br.com.tiaorockeiro.negocio.ConfiguracaoNegocio;
 import br.com.tiaorockeiro.negocio.UsuarioNegocio;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -19,12 +21,14 @@ import java.security.NoSuchAlgorithmException;
 public class SessaoUtil {
 
     private static Usuario usuario;
+    private static Configuracao configuracao;
 
     public static boolean logar(String descricao, String senha) throws Exception {
         if (usuario == null) {
             Usuario u = new UsuarioNegocio().procurarPorDescricao(descricao);
             if (u != null && u.getDescricao().equals(descricao) && u.getSenha().equals(geraMD5Senha(senha))) {
                 usuario = u;
+                configuracao = new ConfiguracaoNegocio().obterConfiguracao();
                 return true;
             }
         }
@@ -37,6 +41,10 @@ public class SessaoUtil {
 
     public static Usuario getUsuario() {
         return usuario;
+    }
+
+    public static Configuracao getConfiguracao() {
+        return configuracao;
     }
 
     private static String geraMD5Senha(String senha) throws NoSuchAlgorithmException {

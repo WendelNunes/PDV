@@ -12,5 +12,6 @@ import br.com.tiaorockeiro.modelo.Configuracao;
  * @author Wendel
  */
 public interface ConfiguracaoDAO extends DAO<Configuracao, Long> {
-    
+
+    public Configuracao obterConfiguracao();
 }
