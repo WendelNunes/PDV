@@ -6,6 +6,7 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.Configuracao;
+import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
@@ -23,6 +24,7 @@ public class ConfiguracaoDAOImpl extends DAOImpl<Configuracao, Long> implements 
 
     @Override
     public Configuracao obterConfiguracao() {
-        return (Configuracao) this.entityManager.createQuery("FROM Configuracao c").getSingleResult();
+        List<Configuracao> resultado = this.entityManager.createQuery("FROM Configuracao c").getResultList();
+        return resultado.isEmpty() ? null : resultado.get(0);
     }
 }

@@ -5,6 +5,7 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,7 +33,6 @@ public class TelaMesasController implements Initializable {
     @FXML
     private GridPane gridMesas;
 
-    private static final int QTDE_MESAS = 25;
     private static final int QTDE_COLUNAS = 5;
 
     /**
@@ -44,32 +44,35 @@ public class TelaMesasController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.criaGridMesas();
-        AnchorPane.setLeftAnchor(this.gridMesas, 0.0);
-        AnchorPane.setTopAnchor(this.gridMesas, 0.0);
-        AnchorPane.setRightAnchor(this.gridMesas, 0.0);
-        AnchorPane.setBottomAnchor(this.gridMesas, 0.0);
-        this.anchorPaneMesas.getChildren().add(this.gridMesas);
     }
 
     private void criaGridMesas() {
-        this.gridMesas = new GridPane();
-        this.gridMesas.setVgap(5);
-        this.gridMesas.setHgap(5);
+        if (SessaoUtil.getConfiguracao() != null && SessaoUtil.getConfiguracao().getQuantidadeMesas() > 0) {
+            this.gridMesas = new GridPane();
+            this.gridMesas.setVgap(5);
+            this.gridMesas.setHgap(5);
 
-        int coluna = 0;
-        int linha = 0;
-        for (int i = 1; i <= QTDE_MESAS; i++) {
-            AnchorPane anchorPaneMesa = new AnchorPane();
-            setAnchor(anchorPaneMesa);
-            Button botaoMesa = criaBotao(i);
-            setAnchor(botaoMesa);
-            anchorPaneMesa.getChildren().add(botaoMesa);
-            this.gridMesas.add(anchorPaneMesa, coluna, linha);
-            ++coluna;
-            if (coluna == QTDE_COLUNAS) {
-                coluna = 0;
-                ++linha;
+            int coluna = 0;
+            int linha = 0;
+            for (int i = 1; i <= SessaoUtil.getConfiguracao().getQuantidadeMesas(); i++) {
+                AnchorPane anchorPaneMesa = new AnchorPane();
+                setAnchor(anchorPaneMesa);
+                Button botaoMesa = criaBotao(i);
+                setAnchor(botaoMesa);
+                anchorPaneMesa.getChildren().add(botaoMesa);
+                this.gridMesas.add(anchorPaneMesa, coluna, linha);
+                ++coluna;
+                if (coluna == QTDE_COLUNAS) {
+                    coluna = 0;
+                    ++linha;
+                }
             }
+
+            AnchorPane.setLeftAnchor(this.gridMesas, 0.0);
+            AnchorPane.setTopAnchor(this.gridMesas, 0.0);
+            AnchorPane.setRightAnchor(this.gridMesas, 0.0);
+            AnchorPane.setBottomAnchor(this.gridMesas, 0.0);
+            this.anchorPaneMesas.getChildren().add(this.gridMesas);
         }
     }
 
