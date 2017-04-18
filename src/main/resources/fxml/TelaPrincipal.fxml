@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="787.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="787.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane fx:id="content" layoutY="88.0" prefHeight="699.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="88.0" />
-      <HBox layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="691.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="99.0" AnchorPane.topAnchor="10.0">
-         <children>
-            <Button mnemonicParsing="false" onAction="#acaoEntrarTelaMesa" prefHeight="60.0" prefWidth="86.0" style="-fx-background-radius: 0;" text="Mesas" />
-            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="86.0" style="-fx-background-radius: 0;" text="Fechar Caixa" />
-            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="86.0" style="-fx-background-radius: 0;" text="Relatórios" />
-         </children>
-      </HBox>
+      <HBox fx:id="menuPrincipal" layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="691.0" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="99.0" AnchorPane.topAnchor="10.0" />
       <Button layoutX="700.0" layoutY="10.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="86.0" style="-fx-background-radius: 0;" text="Sair" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <Separator layoutY="78.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="78.0" />
    </children>
