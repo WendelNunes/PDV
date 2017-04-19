@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -8,14 +12,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaAberturaCaixaController">
+<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaAberturaCaixaController">
    <children>
       <Label fx:id="titulo11" layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="661.0" text="Caixa:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <ComboBox layoutX="10.0" layoutY="28.0" prefHeight="52.0" prefWidth="663.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="28.0" />
+      <ComboBox fx:id="cbCaixa" layoutX="10.0" layoutY="28.0" prefHeight="52.0" prefWidth="663.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="28.0" />
       <Label fx:id="titulo111" layoutX="10.0" layoutY="83.0" prefHeight="18.0" prefWidth="149.0" text="Data da Abertura:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="83.0">
          <font>
             <Font name="Arial" size="14.0" />

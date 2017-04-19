@@ -5,9 +5,12 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.Caixa;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 
 /**
  * FXML Controller class
@@ -15,6 +18,9 @@ import javafx.fxml.Initializable;
  * @author Wendel
  */
 public class TelaAberturaCaixaController implements Initializable {
+
+    @FXML
+    private ComboBox<Caixa> cbCaixa;
 
     /**
      * Initializes the controller class.

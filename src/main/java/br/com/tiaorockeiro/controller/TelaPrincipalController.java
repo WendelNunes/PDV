@@ -52,22 +52,32 @@ public class TelaPrincipalController implements Initializable {
         if (usuario.isGerente() || usuario.isVendedor()) {
             Button btnEntrarTelaMesa = new Button("Mesas");
             btnEntrarTelaMesa.setOnAction(this::acaoEntrarTelaMesa);
+            this.aplicaEstiloBotoesMenu(btnEntrarTelaMesa);
             this.menuPrincipal.getChildren().add(btnEntrarTelaMesa);
         }
 
         if (usuario.isGerente() || usuario.isOperadorCaixa()) {
             Button btnEntrarTelaAbrirCaixa = new Button("Abrir Caixa");
             btnEntrarTelaAbrirCaixa.setOnAction(this::acaoEntrarTelaAbrirCaixa);
+            this.aplicaEstiloBotoesMenu(btnEntrarTelaAbrirCaixa);
             this.menuPrincipal.getChildren().add(btnEntrarTelaAbrirCaixa);
 
             Button btnEntrarTelaFecharCaixa = new Button("Fechar Caixa");
             btnEntrarTelaFecharCaixa.setOnAction(this::acaoEntrarTelaFecharCaixa);
+            this.aplicaEstiloBotoesMenu(btnEntrarTelaFecharCaixa);
             this.menuPrincipal.getChildren().add(btnEntrarTelaFecharCaixa);
 
             Button btnEntrarTelaRelatorios = new Button("Relatórios");
             btnEntrarTelaRelatorios.setOnAction(this::acaoEntrarTelaRelatorios);
+            this.aplicaEstiloBotoesMenu(btnEntrarTelaRelatorios);
             this.menuPrincipal.getChildren().add(btnEntrarTelaRelatorios);
         }
+    }
+
+    private void aplicaEstiloBotoesMenu(Button botao) {
+        botao.setPrefWidth(86);
+        botao.setPrefHeight(60);
+        botao.setStyle("-fx-background-radius: 0");
     }
 
     private void acaoEntrarTelaMesa(ActionEvent event) {

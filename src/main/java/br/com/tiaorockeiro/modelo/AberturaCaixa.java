@@ -45,8 +45,7 @@ public class AberturaCaixa implements Serializable {
     @OneToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
-    @OneToOne
-    @JoinColumn(name = "id_fechamento_caixa")
+    @OneToOne(mappedBy = "aberturaCaixa")
     private FechamentoCaixa fechamentoCaixa;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "aberturaCaixa")
     private List<SangriaCaixa> sangrias;
