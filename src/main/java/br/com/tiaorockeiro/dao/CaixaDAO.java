@@ -6,6 +6,7 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.Caixa;
+import java.util.List;
 
 /**
  *
@@ -13,4 +14,5 @@ import br.com.tiaorockeiro.modelo.Caixa;
  */
 public interface CaixaDAO extends DAO<Caixa, Long> {
 
+    public List<Caixa> obterCaixasSemAbertura();
 }

@@ -5,6 +5,7 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -68,7 +69,7 @@ public class TelaPedidoController implements Initializable {
             AnchorPane telaMesas = loader.load();
             TelaPrincipalController.getInstance().mudaTela(telaMesas);
         } catch (IOException | NumberFormatException e) {
-            System.err.println(e);
+            enviarMensagemErro(e.getMessage());
         }
     }
 

@@ -6,11 +6,14 @@
 package br.com.tiaorockeiro.modelo;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -29,6 +32,8 @@ public class Caixa implements Serializable {
     private String codigo;
     @Column(name = "descricao")
     private String descricao;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "caixa")
+    private List<AberturaCaixa> aberturas;
 
     public Long getId() {
         return id;
@@ -52,5 +57,13 @@ public class Caixa implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public List<AberturaCaixa> getAberturas() {
+        return aberturas;
+    }
+
+    public void setAberturas(List<AberturaCaixa> aberturas) {
+        this.aberturas = aberturas;
     }
 }

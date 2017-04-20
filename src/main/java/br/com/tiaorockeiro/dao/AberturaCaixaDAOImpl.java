@@ -24,6 +24,6 @@ public class AberturaCaixaDAOImpl extends DAOImpl<AberturaCaixa, Long> implement
 
     @Override
     public List<AberturaCaixa> listarAbertos() {
-        return this.entityManager.createQuery("FROM AberturaCaixa a WHERE a.fechamentoCaixa IS NULL").getResultList();
+        return this.entityManager.createQuery("SELECT a FROM AberturaCaixa a LEFT JOIN a.fechamentoCaixa f WHERE f IS NULL").getResultList();
     }
 }
