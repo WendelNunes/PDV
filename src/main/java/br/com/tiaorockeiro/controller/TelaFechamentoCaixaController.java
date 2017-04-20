@@ -12,15 +12,16 @@ import br.com.tiaorockeiro.negocio.FechamentoCaixaNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
+import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
+import static br.com.tiaorockeiro.util.MoedaUtil.parseMoeda;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -53,7 +54,6 @@ public class TelaFechamentoCaixaController implements Initializable {
     private TextField inputHoraAbertura;
     @FXML
     private TextField inputSaldoFinal;
-    private DecimalFormat formatadorValor;
     private Date dataHoraFechamentoCaixa;
 
     /**
@@ -66,8 +66,7 @@ public class TelaFechamentoCaixaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             this.dataHoraFechamentoCaixa = new Date();
-            this.formatadorValor = new DecimalFormat("#,##0.00");
-            this.inputSaldoFinal.setText(this.formatadorValor.format(0.0));
+            this.inputSaldoFinal.setText(formataMoeda(BigDecimal.ZERO));
             this.inputDataFechamento.setText(new SimpleDateFormat("dd/MM/yyyy").format(this.dataHoraFechamentoCaixa));
             this.inputHoraFechamento.setText(new SimpleDateFormat("HH:mm:ss").format(this.dataHoraFechamentoCaixa));
             this.cbCaixa.getItems().add(null);
@@ -110,74 +109,62 @@ public class TelaFechamentoCaixaController implements Initializable {
     }
 
     @FXML
-    public void acaoBotao1(ActionEvent event
-    ) {
+    public void acaoBotao1(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(1);
     }
 
     @FXML
-    public void acaoBotao2(ActionEvent event
-    ) {
+    public void acaoBotao2(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(2);
     }
 
     @FXML
-    public void acaoBotao3(ActionEvent event
-    ) {
+    public void acaoBotao3(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(3);
     }
 
     @FXML
-    public void acaoBotao4(ActionEvent event
-    ) {
+    public void acaoBotao4(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(4);
     }
 
     @FXML
-    public void acaoBotao5(ActionEvent event
-    ) {
+    public void acaoBotao5(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(5);
     }
 
     @FXML
-    public void acaoBotao6(ActionEvent event
-    ) {
+    public void acaoBotao6(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(6);
     }
 
     @FXML
-    public void acaoBotao7(ActionEvent event
-    ) {
+    public void acaoBotao7(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(7);
     }
 
     @FXML
-    public void acaoBotao8(ActionEvent event
-    ) {
+    public void acaoBotao8(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(8);
     }
 
     @FXML
-    public void acaoBotao9(ActionEvent event
-    ) {
+    public void acaoBotao9(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(9);
     }
 
     @FXML
-    public void acaoBotao0(ActionEvent event
-    ) {
+    public void acaoBotao0(ActionEvent event) {
         this.adicionaNumeroSaldoFinal(0);
     }
 
     @FXML
-    public void acaoBotaoLimparSaldoFinal(ActionEvent event
-    ) {
-        this.inputSaldoFinal.setText(this.formatadorValor.format(0.0));
+    public void acaoBotaoLimparSaldoFinal(ActionEvent event) {
+        this.inputSaldoFinal.setText(formataMoeda(BigDecimal.ZERO));
     }
 
     @FXML
-    public void acaoBotaoFecharCaixa(ActionEvent event
-    ) {
+    public void acaoBotaoFecharCaixa(ActionEvent event) {
         try {
             if (this.cbCaixa.getValue() == null) {
                 enviarMensagemInformacao("Caixa deve ser informado!");
@@ -197,8 +184,7 @@ public class TelaFechamentoCaixaController implements Initializable {
     }
 
     @FXML
-    public void acaoBotaoVoltar(ActionEvent event
-    ) {
+    public void acaoBotaoVoltar(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
             AnchorPane telaMesas = loader.load();
@@ -210,12 +196,11 @@ public class TelaFechamentoCaixaController implements Initializable {
 
     private void adicionaNumeroSaldoFinal(Integer numero) {
         try {
-            StringBuilder texto = new StringBuilder(this.inputSaldoFinal.getText().replaceAll(",", "")
-                    .replaceAll("\\.", ""));
+            StringBuilder texto = new StringBuilder(parseMoeda(this.inputSaldoFinal.getText()).toString().replaceAll("\\.", ""));
             texto.append(numero);
             texto.insert(texto.length() - 2, ".");
-            this.inputSaldoFinal.setText(this.formatadorValor.format(new BigDecimal(texto.toString())));
-        } catch (NumberFormatException e) {
+            this.inputSaldoFinal.setText(formataMoeda(new BigDecimal(texto.toString())));
+        } catch (NumberFormatException | ParseException e) {
             enviarMensagemErro(e.getMessage());
         }
     }
