@@ -74,3 +74,13 @@ CREATE TABLE suprimento_caixa (
    FOREIGN KEY (id_abertura_caixa) REFERENCES abertura_caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION, 
    FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+CREATE TABLE configuracao_usuario (
+   id bigserial NOT NULL,
+   id_usuario bigint NOT NULL,
+   id_caixa_selecionado bigint,
+   PRIMARY KEY (id),
+   FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+   FOREIGN KEY (id_caixa_selecionado) REFERENCES caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+

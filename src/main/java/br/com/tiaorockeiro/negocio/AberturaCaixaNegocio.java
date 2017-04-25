@@ -8,8 +8,10 @@ package br.com.tiaorockeiro.negocio;
 import br.com.tiaorockeiro.dao.AberturaCaixaDAO;
 import br.com.tiaorockeiro.dao.AberturaCaixaDAOImpl;
 import br.com.tiaorockeiro.modelo.AberturaCaixa;
+import br.com.tiaorockeiro.modelo.Caixa;
 import static br.com.tiaorockeiro.util.JpaUtil.criaEntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 
 /**
@@ -26,5 +28,11 @@ public class AberturaCaixaNegocio extends NegocioImpl<AberturaCaixa, Long> {
         } finally {
             entityManager.close();
         }
+    }
+
+    public AberturaCaixa obterAbertoPorCaixa(Caixa caixa) throws Exception {
+        List<AberturaCaixa> caixasAbertos = this.listarAbertos();
+        List<AberturaCaixa> abertura = caixasAbertos.stream().filter(ac -> ac.getCaixa().equals(caixa)).collect(Collectors.toList());
+        return abertura.isEmpty() ? null : abertura.get(0);
     }
 }

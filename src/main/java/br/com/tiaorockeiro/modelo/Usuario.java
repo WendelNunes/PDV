@@ -8,6 +8,7 @@ package br.com.tiaorockeiro.modelo;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,6 +43,8 @@ public class Usuario implements Serializable {
     private boolean operadorCaixa;
     @Column(name = "vendedor")
     private boolean vendedor;
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "usuario")
+    private ConfiguracaoUsuario configuracao;
 
     public Long getId() {
         return id;
@@ -105,5 +108,13 @@ public class Usuario implements Serializable {
 
     public void setVendedor(boolean vendedor) {
         this.vendedor = vendedor;
+    }
+
+    public ConfiguracaoUsuario getConfiguracao() {
+        return configuracao;
+    }
+
+    public void setConfiguracao(ConfiguracaoUsuario configuracao) {
+        this.configuracao = configuracao;
     }
 }
