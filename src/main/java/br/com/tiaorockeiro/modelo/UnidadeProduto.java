@@ -6,24 +6,20 @@
 package br.com.tiaorockeiro.modelo;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author INLOC01
+ * @author Wendel
  */
 @Entity
-@Table(name = "caixa")
-public class Caixa implements Serializable {
+@Table(name = "unidade_produto")
+public class UnidadeProduto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +29,6 @@ public class Caixa implements Serializable {
     private String codigo;
     @Column(name = "descricao")
     private String descricao;
-    @OneToMany(mappedBy = "caixa")
-    private List<AberturaCaixa> aberturas;
 
     public Long getId() {
         return id;
@@ -58,32 +52,5 @@ public class Caixa implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public List<AberturaCaixa> getAberturas() {
-        return aberturas;
-    }
-
-    public void setAberturas(List<AberturaCaixa> aberturas) {
-        this.aberturas = aberturas;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Caixa other = (Caixa) obj;
-        return Objects.equals(this.id, other.id);
     }
 }

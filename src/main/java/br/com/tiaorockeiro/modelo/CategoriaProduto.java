@@ -7,7 +7,6 @@ package br.com.tiaorockeiro.modelo;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,22 +18,20 @@ import javax.persistence.Table;
 
 /**
  *
- * @author INLOC01
+ * @author Wendel
  */
 @Entity
-@Table(name = "caixa")
-public class Caixa implements Serializable {
+@Table(name = "categoria_produto")
+public class CategoriaProduto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "codigo")
-    private String codigo;
     @Column(name = "descricao")
     private String descricao;
-    @OneToMany(mappedBy = "caixa")
-    private List<AberturaCaixa> aberturas;
+    @OneToMany(mappedBy = "categoriaProduto")
+    private List<Produto> produtos;
 
     public Long getId() {
         return id;
@@ -42,14 +39,6 @@ public class Caixa implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getDescricao() {
@@ -60,30 +49,11 @@ public class Caixa implements Serializable {
         this.descricao = descricao;
     }
 
-    public List<AberturaCaixa> getAberturas() {
-        return aberturas;
+    public List<Produto> getProdutos() {
+        return produtos;
     }
 
-    public void setAberturas(List<AberturaCaixa> aberturas) {
-        this.aberturas = aberturas;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Caixa other = (Caixa) obj;
-        return Objects.equals(this.id, other.id);
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
     }
 }

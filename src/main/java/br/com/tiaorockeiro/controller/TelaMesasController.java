@@ -26,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 
 /**
  * FXML Controller class
@@ -39,13 +40,7 @@ public class TelaMesasController implements Initializable {
     @FXML
     private GridPane gridMesas;
     @FXML
-    private Label labelCaixaSelecionado;
-    @FXML
-    private Label labelDataCaixaSelecionado;
-    @FXML
-    private Label labelHoraCaixaSelecionado;
-    @FXML
-    private Label labelUsuarioCaixaSelecionado;
+    private AnchorPane paneInformacaoCaixa;
     @FXML
     private Button btnSelecionarCaixa;
     private AberturaCaixa aberturaCaixa;
@@ -69,7 +64,8 @@ public class TelaMesasController implements Initializable {
     }
 
     private void criaGridMesas() {
-        if (SessaoUtil.getConfiguracao() != null && SessaoUtil.getConfiguracao().getQuantidadeMesas() > 0) {
+        if (SessaoUtil.getConfiguracao() != null && SessaoUtil.getConfiguracao().getQuantidadeMesas() > 0
+                && this.aberturaCaixa != null) {
             this.gridMesas = new GridPane();
             this.gridMesas.setVgap(5);
             this.gridMesas.setHgap(5);
@@ -134,23 +130,58 @@ public class TelaMesasController implements Initializable {
             telaPedidoController.setMesa(mesa);
             TelaPrincipalController.getInstance().mudaTela(telaPedido);
         } catch (IOException | NumberFormatException e) {
-            System.err.println(e);
+            enviarMensagemErro(e.getMessage());
         }
     }
 
     private void carregaCaixaSelecionado() throws Exception {
         ConfiguracaoUsuario configuracaoUsuario = SessaoUtil.getUsuario().getConfiguracao();
+        GridPane gridPane = new GridPane();
         if (configuracaoUsuario != null && configuracaoUsuario.getCaixaSelecionado() != null) {
             this.aberturaCaixa = new AberturaCaixaNegocio().obterAbertoPorCaixa(configuracaoUsuario.getCaixaSelecionado());
             if (this.aberturaCaixa != null) {
-                this.labelCaixaSelecionado.setText("Caixa: " + this.aberturaCaixa.getCaixa().getDescricao());
-                this.labelDataCaixaSelecionado.setText("Data: " + new SimpleDateFormat("dd/MM/yyyy").format(this.aberturaCaixa.getDataHora()));
-                this.labelHoraCaixaSelecionado.setText("Hora: " + new SimpleDateFormat("HH:mm:ss").format(this.aberturaCaixa.getDataHora()));
-                this.labelUsuarioCaixaSelecionado.setText("Usuário: " + this.aberturaCaixa.getUsuario().getDescricao());
+                Font font = new Font("Arial", 14);
+                Label labelCaixa = new Label("Caixa:");
+                labelCaixa.setFont(font);
+                gridPane.add(labelCaixa, 0, 0);
+                Label labelDescricaoCaixa = new Label(this.aberturaCaixa.getCaixa().getDescricao());
+                labelDescricaoCaixa.setFont(font);
+                gridPane.add(labelDescricaoCaixa, 1, 0);
+                Label labelData = new Label("Data:");
+                labelData.setFont(font);
+                gridPane.add(labelData, 0, 1);
+                Label labelDataDescricao = new Label(new SimpleDateFormat("dd/MM/yyyy").format(this.aberturaCaixa.getDataHora()));
+                labelDataDescricao.setFont(font);
+                gridPane.add(labelDataDescricao, 1, 1);
+                Label labelHora = new Label("Hora:");
+                labelHora.setFont(font);
+                gridPane.add(labelHora, 0, 2);
+                Label labelHoraDescricao = new Label(new SimpleDateFormat("HH:mm:ss").format(this.aberturaCaixa.getDataHora()));
+                labelHoraDescricao.setFont(font);
+                gridPane.add(labelHoraDescricao, 1, 2);
+                Label labelUsuario = new Label("Usuário:");
+                labelUsuario.setFont(font);
+                gridPane.add(labelUsuario, 0, 3);
+                Label labelUsuarioDescricao = new Label(this.aberturaCaixa.getUsuario().getDescricao());
+                labelUsuarioDescricao.setFont(font);
+                gridPane.add(labelUsuarioDescricao, 1, 3);
                 this.btnSelecionarCaixa.setText("Mudar Caixa");
+                this.paneInformacaoCaixa.getChildren().add(gridPane);
                 return;
             }
         }
-        this.labelCaixaSelecionado.setText("Nenhum caixa selecionado!");
+        gridPane.add(new Label("Nenhum caixa selecionado!"), 0, 0);
+        this.paneInformacaoCaixa.getChildren().add(gridPane);
+    }
+
+    @FXML
+    public void acaoSelecionarCaixa(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaSelecionarCaixa.fxml"));
+            AnchorPane telaPedido = loader.load();
+            TelaPrincipalController.getInstance().mudaTela(telaPedido);
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
     }
 }

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="586.0" prefWidth="1074.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaMesasController">
+<AnchorPane id="AnchorPane" prefHeight="586.0" prefWidth="1074.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaMesasController">
    <children>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="10.0">
          <content>
@@ -15,27 +13,8 @@
          </content>
       </ScrollPane>
       <Separator layoutX="774.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="294.0" AnchorPane.topAnchor="10.0" />
-      <Label fx:id="labelCaixaSelecionado" layoutX="780.0" layoutY="14.0" prefHeight="17.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnSelecionarCaixa" layoutX="953.0" layoutY="90.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="111.0" style="-fx-background-radius: 0;" text="Selecionar Caixa" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
-      <Label fx:id="labelDataCaixaSelecionado" layoutX="780.0" layoutY="30.0" prefHeight="17.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelHoraCaixaSelecionado" layoutX="780.0" layoutY="50.0" prefHeight="17.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelUsuarioCaixaSelecionado" layoutX="780.0" layoutY="70.0" prefHeight="17.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
+      <Button fx:id="btnSelecionarCaixa" layoutX="953.0" layoutY="90.0" mnemonicParsing="false" onAction="#acaoSelecionarCaixa" prefHeight="52.0" prefWidth="111.0" style="-fx-background-radius: 0;" text="Selecionar Caixa" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
       <Separator layoutX="780.0" layoutY="145.0" prefHeight="6.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="145.0" />
+      <AnchorPane fx:id="paneInformacaoCaixa" layoutX="780.0" layoutY="10.0" prefHeight="78.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
    </children>
 </AnchorPane>
