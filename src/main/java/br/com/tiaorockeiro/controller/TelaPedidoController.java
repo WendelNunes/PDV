@@ -5,9 +5,14 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.CategoriaProduto;
+import br.com.tiaorockeiro.modelo.Produto;
+import br.com.tiaorockeiro.negocio.CategoriaProdutoNegocio;
+import br.com.tiaorockeiro.negocio.ProdutoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,9 +48,9 @@ public class TelaPedidoController implements Initializable {
     @FXML
     private GridPane gridProdutos;
     private Integer mesa;
+    private List<CategoriaProduto> categorias;
+    private List<Produto> produtos;
 
-    private static final int QTDE_CATEGORIAS = 10;
-    private static final int QTDE_PRODUTOS = 20;
     private static final int QTDE_COLUNAS_PRODUTOS = 5;
 
     /**
@@ -56,10 +61,14 @@ public class TelaPedidoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.criaGridCategorias();
-        this.scrollCategorias.setContent(this.gridCategorias);
-        this.criaGridProdutos(1);
-        this.scrollProdutos.setContent(this.gridProdutos);
+        try {
+            this.criaGridCategorias();
+            if (this.categorias != null && !this.categorias.isEmpty()) {
+                this.criaGridProdutos(this.categorias.get(0).getId());
+            }
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
     }
 
     @FXML
@@ -74,21 +83,26 @@ public class TelaPedidoController implements Initializable {
     }
 
     private void criaGridCategorias() {
+        this.categorias = new CategoriaProdutoNegocio().listarTodos(CategoriaProduto.class);
         this.gridCategorias = new GridPane();
         this.gridCategorias.setVgap(10);
         this.gridCategorias.setHgap(10);
-        for (int i = 1; i <= QTDE_CATEGORIAS; i++) {
-            this.gridCategorias.add(this.criaBotaoCategorias(i), i, 0);
+        if (this.categorias != null && !this.categorias.isEmpty()) {
+            int posicao = 0;
+            for (CategoriaProduto categoria : this.categorias) {
+                this.gridCategorias.add(this.criaBotaoCategorias(categoria), ++posicao, 0);
+            }
         }
+        this.scrollCategorias.setContent(this.gridCategorias);
     }
 
-    private Button criaBotaoCategorias(int mesa) {
+    private Button criaBotaoCategorias(CategoriaProduto categoriaProduto) {
         Image image = new Image("/imagens/icon-table.png");
-        Button button = new Button("Categoria " + mesa, new ImageView(image));
+        Button button = new Button(categoriaProduto.getDescricao(), new ImageView(image));
         button.setContentDisplay(ContentDisplay.TOP);
         button.setPrefSize(123, 107);
         button.setStyle("-fx-background-radius: 0");
-        button.setId("categoria-" + String.valueOf(mesa));
+        button.setId(categoriaProduto.getId().toString());
         button.setOnAction((ActionEvent event) -> {
             this.selecionaCategoria(event);
         });
@@ -96,35 +110,42 @@ public class TelaPedidoController implements Initializable {
     }
 
     private void selecionaCategoria(ActionEvent event) {
-        Integer categoria = Integer.valueOf(((Control) event.getSource()).getId().replace("categoria-", ""));
-        this.criaGridProdutos(categoria);
-        this.scrollProdutos.setContent(this.gridProdutos);
-    }
-
-    private void criaGridProdutos(Integer categoria) {
-        this.gridProdutos = new GridPane();
-        this.gridProdutos.setVgap(10);
-        this.gridProdutos.setHgap(10);
-
-        int coluna = 0;
-        int linha = 0;
-        for (int i = 1; i <= QTDE_PRODUTOS; i++) {
-            this.gridProdutos.add(criaBotaoProdutos(categoria, i), coluna, linha);
-            ++coluna;
-            if (coluna == QTDE_COLUNAS_PRODUTOS) {
-                coluna = 0;
-                ++linha;
-            }
+        try {
+            Long idCategoria = Long.valueOf(((Control) event.getSource()).getId());
+            this.criaGridProdutos(idCategoria);
+            this.scrollProdutos.setContent(this.gridProdutos);
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
         }
     }
 
-    private Button criaBotaoProdutos(Integer categoria, Integer produto) {
+    private void criaGridProdutos(Long idCategoria) throws Exception {
+        this.produtos = new ProdutoNegocio().listarPorCategoria(idCategoria);
+        this.gridProdutos = new GridPane();
+        this.gridProdutos.setVgap(10);
+        this.gridProdutos.setHgap(10);
+        if (this.produtos != null && !this.produtos.isEmpty()) {
+            int coluna = 0;
+            int linha = 0;
+            for (Produto produto : this.produtos) {
+                this.gridProdutos.add(this.criaBotaoProdutos(produto), coluna, linha);
+                ++coluna;
+                if (coluna == QTDE_COLUNAS_PRODUTOS) {
+                    coluna = 0;
+                    ++linha;
+                }
+            }
+        }
+        this.scrollProdutos.setContent(this.gridProdutos);
+    }
+
+    private Button criaBotaoProdutos(Produto produto) {
         Image image = new Image("/imagens/icon-table.png");
-        Button button = new Button("C: " + categoria + " P: " + produto, new ImageView(image));
+        Button button = new Button(produto.getDescricao(), new ImageView(image));
         button.setContentDisplay(ContentDisplay.TOP);
         button.setPrefSize(107, 107);
         button.setStyle("-fx-background-radius: 0");
-        button.setId("C-" + categoria + "-P-" + produto);
+        button.setId(produto.getId().toString());
         button.setOnAction((ActionEvent event) -> {
             this.acaoAdicionaProduto(event);
         });

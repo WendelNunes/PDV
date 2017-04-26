@@ -84,3 +84,37 @@ CREATE TABLE configuracao_usuario (
    FOREIGN KEY (id_caixa_selecionado) REFERENCES caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+CREATE TABLE impressora (
+    id bigserial NOT NULL,
+    descricao character varying NOT NULL,
+    url character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE unidade_produto (
+    id bigserial NOT NULL,
+    codigo character varying NOT NULL,
+    descricao character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE categoria_produto (
+    id bigserial NOT NULL,
+    descricao character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE produto (
+    id bigserial NOT NULL,
+    codigo character varying NOT NULL,
+    descricao character varying NOT NULL,
+    id_categoria_produto bigint NOT NULL,
+    id_unidade_produto bigint NOT NULL,
+    valor numeric(14,4) NOT NULL DEFAULT 0,
+    id_impressora_comanda bigint,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_categoria_produto) REFERENCES categoria_produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_unidade_produto) REFERENCES unidade_produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_impressora_comanda) REFERENCES impressora (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
