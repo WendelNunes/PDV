@@ -6,14 +6,22 @@
 package br.com.tiaorockeiro.controller;
 
 import br.com.tiaorockeiro.modelo.CategoriaProduto;
+import br.com.tiaorockeiro.modelo.ItemPedido;
+import br.com.tiaorockeiro.modelo.Pedido;
 import br.com.tiaorockeiro.modelo.Produto;
 import br.com.tiaorockeiro.negocio.CategoriaProdutoNegocio;
 import br.com.tiaorockeiro.negocio.ProdutoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
+import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
+import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,10 +31,14 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -34,7 +46,7 @@ import javafx.scene.layout.GridPane;
  * @author Wendel
  */
 public class TelaPedidoController implements Initializable {
-
+    
     @FXML
     private AnchorPane anchorPaneTelaPedido;
     @FXML
@@ -47,10 +59,23 @@ public class TelaPedidoController implements Initializable {
     private ScrollPane scrollProdutos;
     @FXML
     private GridPane gridProdutos;
-    private Integer mesa;
+    @FXML
+    private TableView<ItemPedido> tableViewItens;
+    @FXML
+    private TableColumn<ItemPedido, String> tableColumnProduto;
+    @FXML
+    private TableColumn<ItemPedido, String> tableColumnQuantidade;
+    @FXML
+    private TableColumn<ItemPedido, String> tableColumnPreco;
+    @FXML
+    private TableColumn<ItemPedido, String> tableColumnTotal;
+    @FXML
+    private TableColumn<ItemPedido, String> tableColumnMenu;
+    
     private List<CategoriaProduto> categorias;
     private List<Produto> produtos;
-
+    private Pedido pedido;
+    
     private static final int QTDE_COLUNAS_PRODUTOS = 5;
 
     /**
@@ -62,6 +87,9 @@ public class TelaPedidoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            this.pedido = new Pedido();
+            this.pedido.setItens(new ArrayList<>());
+            this.ajustaTabelaItens();
             this.criaGridCategorias();
             if (this.categorias != null && !this.categorias.isEmpty()) {
                 this.criaGridProdutos(this.categorias.get(0).getId());
@@ -70,7 +98,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-
+    
     @FXML
     public void acaoVoltar(ActionEvent event) {
         try {
@@ -81,7 +109,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-
+    
     private void criaGridCategorias() {
         this.categorias = new CategoriaProdutoNegocio().listarTodos(CategoriaProduto.class);
         this.gridCategorias = new GridPane();
@@ -95,7 +123,7 @@ public class TelaPedidoController implements Initializable {
         }
         this.scrollCategorias.setContent(this.gridCategorias);
     }
-
+    
     private Button criaBotaoCategorias(CategoriaProduto categoriaProduto) {
         Image image = new Image("/imagens/icon-table.png");
         Button button = new Button(categoriaProduto.getDescricao(), new ImageView(image));
@@ -108,7 +136,7 @@ public class TelaPedidoController implements Initializable {
         });
         return button;
     }
-
+    
     private void selecionaCategoria(ActionEvent event) {
         try {
             Long idCategoria = Long.valueOf(((Control) event.getSource()).getId());
@@ -118,7 +146,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-
+    
     private void criaGridProdutos(Long idCategoria) throws Exception {
         this.produtos = new ProdutoNegocio().listarPorCategoria(idCategoria);
         this.gridProdutos = new GridPane();
@@ -138,7 +166,7 @@ public class TelaPedidoController implements Initializable {
         }
         this.scrollProdutos.setContent(this.gridProdutos);
     }
-
+    
     private Button criaBotaoProdutos(Produto produto) {
         Image image = new Image("/imagens/icon-table.png");
         Button button = new Button(produto.getDescricao(), new ImageView(image));
@@ -151,11 +179,49 @@ public class TelaPedidoController implements Initializable {
         });
         return button;
     }
-
-    private void acaoAdicionaProduto(ActionEvent event) {
-
+    
+    private void ajustaTabelaItens() {
+        this.tableColumnProduto.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getProduto().getDescricao()));
+        this.tableColumnQuantidade.setCellValueFactory(i -> new SimpleStringProperty(formataQuantidade(i.getValue().getQuantidade())));
+        this.tableColumnPreco.setCellValueFactory(i -> new SimpleStringProperty(formataMoeda(i.getValue().getValor())));
+        this.tableColumnTotal.setCellValueFactory(i -> new SimpleStringProperty(formataMoeda(i.getValue().getValorTotal())));
+        this.tableColumnMenu.setCellFactory((TableColumn<ItemPedido, String> param) -> new TableCell<ItemPedido, String>() {
+            Button btnDeletar = new Button("Deletar");
+            
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    btnDeletar.setOnAction(event -> {
+                        acaoDeletarProduto(getIndex());
+                    });
+                    setGraphic(btnDeletar);
+                    setText(null);
+                }
+            }
+            
+        });
     }
-
+    
+    private void acaoDeletarProduto(int index) {
+        this.tableViewItens.getItems().remove(index);
+        this.pedido.getItens().remove(index);
+    }
+    
+    private void acaoAdicionaProduto(ActionEvent event) {
+        Produto produto = new ProdutoNegocio().obterPorId(Produto.class, Long.valueOf(((Control) event.getSource()).getId()));
+        ItemPedido item = new ItemPedido();
+        item.setPedido(this.pedido);
+        item.setProduto(produto);
+        item.setQuantidade(BigDecimal.ONE);
+        item.setValor(produto.getValor());
+        this.pedido.getItens().add(item);
+        this.tableViewItens.setItems(FXCollections.observableList(this.pedido.getItens()));
+    }
+    
     @FXML
     public void acaoFinalizarVenda(ActionEvent event) {
         try {
@@ -169,12 +235,12 @@ public class TelaPedidoController implements Initializable {
             System.err.println(e);
         }
     }
-
+    
     public void setMesa(Integer mesa) {
-        this.mesa = mesa;
-        this.titulo.setText("Mesa " + this.mesa);
+        this.pedido.setMesa(mesa);
+        this.titulo.setText("Mesa " + this.pedido.getMesa());
     }
-
+    
     public AnchorPane getAnchorPaneTelaPedido() {
         return anchorPaneTelaPedido;
     }
