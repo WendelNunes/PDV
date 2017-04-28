@@ -14,7 +14,6 @@ import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.CategoriaProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.ProdutoNegocio;
-import br.com.tiaorockeiro.util.MensagemUtil;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -71,6 +71,8 @@ public class TelaPedidoController implements Initializable {
     private GridPane gridProdutos;
     @FXML
     private TableView<ItemPedido> tableViewItens;
+    @FXML
+    private TableColumn<ItemPedido, Integer> tableColumnSequencia;
     @FXML
     private TableColumn<ItemPedido, String> tableColumnProduto;
     @FXML
@@ -197,6 +199,20 @@ public class TelaPedidoController implements Initializable {
     private void ajustaTabelaItens() {
         this.tableViewItens.setItems(FXCollections.observableList(this.pedido.getItens()));
         this.tableViewItens.setFixedCellSize(45);
+        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getSequencia()));
+        this.tableColumnSequencia.setCellFactory((TableColumn<ItemPedido, Integer> param) -> new TableCell<ItemPedido, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                } else {
+                    setText(item.toString());
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_RIGHT);
+                }
+            }
+        });
         this.tableColumnProduto.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getProduto().getDescricao()));
         this.tableColumnProduto.setCellFactory((TableColumn<ItemPedido, String> param) -> new TableCell<ItemPedido, String>() {
             @Override
@@ -264,9 +280,10 @@ public class TelaPedidoController implements Initializable {
     public void acaoMaisProduto() {
         int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
         if (index != -1) {
-            ItemPedido item = this.pedido.getItens().get(index);
+            ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
             item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
             this.tableViewItens.getItems().set(index, item);
+            this.tableViewItens.getSelectionModel().select(index);
         }
         this.atualizaTotalizadores();
     }
@@ -275,10 +292,11 @@ public class TelaPedidoController implements Initializable {
     public void acaoMenosProduto() {
         int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
         if (index != -1) {
-            ItemPedido item = this.pedido.getItens().get(index);
+            ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
             if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
                 item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
                 this.tableViewItens.getItems().set(index, item);
+                this.tableViewItens.getSelectionModel().select(index);
             }
         }
         this.atualizaTotalizadores();
@@ -288,6 +306,10 @@ public class TelaPedidoController implements Initializable {
     public void acaoExcluirProduto() {
         int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
         if (index != -1) {
+            ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
+            this.tableViewItens.getItems().stream().filter(i -> i.getSequencia() > item.getSequencia()).forEach((ItemPedido i) -> {
+                i.setSequencia(i.getSequencia() - 1);
+            });
             this.tableViewItens.getItems().remove(index);
         }
         this.atualizaTotalizadores();
@@ -300,6 +322,7 @@ public class TelaPedidoController implements Initializable {
         item.setProduto(produto);
         item.setQuantidade(BigDecimal.ONE);
         item.setValor(produto.getValor());
+        item.setSequencia(this.pedido.getItens().size() + 1);
         this.tableViewItens.getItems().add(item);
         this.atualizaTotalizadores();
     }

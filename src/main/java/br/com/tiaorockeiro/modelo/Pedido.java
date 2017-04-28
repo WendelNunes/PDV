@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -103,5 +104,24 @@ public class Pedido implements Serializable {
 
     public BigDecimal getQuantidadeItens() {
         return this.itens != null ? this.itens.stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pedido other = (Pedido) obj;
+        return Objects.equals(this.id, other.id);
     }
 }

@@ -8,6 +8,7 @@ package br.com.tiaorockeiro.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,8 @@ public class ItemPedido implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_pedido", referencedColumnName = "id")
     private Pedido pedido;
+    @Column(name = "sequencia")
+    private Integer sequencia;
     @OneToOne
     @JoinColumn(name = "id_produto", referencedColumnName = "id")
     private Produto produto;
@@ -83,5 +86,32 @@ public class ItemPedido implements Serializable {
 
     public BigDecimal getValorTotal() {
         return this.quantidade.multiply(this.valor).setScale(2, RoundingMode.HALF_DOWN);
+    }
+
+    public Integer getSequencia() {
+        return sequencia;
+    }
+
+    public void setSequencia(Integer sequencia) {
+        this.sequencia = sequencia;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ItemPedido other = (ItemPedido) obj;
+        return Objects.equals(this.id, other.id);
     }
 }
