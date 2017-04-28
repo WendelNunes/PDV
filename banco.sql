@@ -132,6 +132,7 @@ CREATE TABLE pedido (
 CREATE TABLE item_pedido (
     id bigserial NOT NULL,
     id_pedido bigint NOT NULL,
+    sequencia integer NOT NULL,
     id_produto bigint NOT NULL,
     quantidade numeric(14,4) NOT NULL DEFAULT 0,
     valor numeric(14,4) NOT NULL DEFAULT 0,
