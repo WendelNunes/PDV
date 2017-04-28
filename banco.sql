@@ -118,3 +118,24 @@ CREATE TABLE produto (
     FOREIGN KEY (id_impressora_comanda) REFERENCES impressora (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+CREATE TABLE pedido (
+    id bigserial NOT NULL,
+    id_usuario bigint NOT NULL,
+    id_abertura_caixa bigint NOT NULL,
+    data_hora timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    mesa integer NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_abertura_caixa) REFERENCES abertura_caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE item_pedido (
+    id bigserial NOT NULL,
+    id_pedido bigint NOT NULL,
+    id_produto bigint NOT NULL,
+    quantidade numeric(14,4) NOT NULL DEFAULT 0,
+    valor numeric(14,4) NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_pedido) REFERENCES pedido (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);

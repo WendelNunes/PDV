@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,7 +46,7 @@ public class Pedido implements Serializable {
     private Date dataHora;
     @Column(name = "mesa")
     private Integer mesa;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens;
 
     public Long getId() {
@@ -97,6 +98,10 @@ public class Pedido implements Serializable {
     }
 
     public BigDecimal getValorTotal() {
-        return this.itens.stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return this.itens != null ? this.itens.stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
+    }
+
+    public BigDecimal getQuantidadeItens() {
+        return this.itens != null ? this.itens.stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 }
