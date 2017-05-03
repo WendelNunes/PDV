@@ -8,7 +8,6 @@ package br.com.tiaorockeiro.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,39 +18,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
- * @author INLOC01
+ * @author Wendel
  */
 @Entity
-@Table(name = "item_pedido")
-public class ItemPedido implements Serializable {
+@Table(name = "item_venda")
+public class ItemVenda implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "id_pedido", referencedColumnName = "id")
-    private Pedido pedido;
-    @ManyToOne
-    @JoinColumn(name = "id_abertura_caixa", referencedColumnName = "id")
-    private AberturaCaixa aberturaCaixa;
-    @ManyToOne
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
-    private Usuario usuario;
-    @Column(name = "data_hora")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataHora;
-    @ManyToOne
-    @JoinColumn(name = "id_usuario_cancelamento", referencedColumnName = "id")
-    private Usuario usuarioCancelamento;
-    @Column(name = "data_hora_cancelamento")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataHoraCancelamento;
+    @JoinColumn(name = "id_venda", referencedColumnName = "id")
+    private Venda venda;
+    @Column(name = "sequencia")
+    private Integer sequencia;
     @OneToOne
     @JoinColumn(name = "id_produto", referencedColumnName = "id")
     private Produto produto;
@@ -68,52 +52,20 @@ public class ItemPedido implements Serializable {
         this.id = id;
     }
 
-    public Pedido getPedido() {
-        return pedido;
+    public Venda getVenda() {
+        return venda;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
+    public void setVenda(Venda venda) {
+        this.venda = venda;
     }
 
-    public AberturaCaixa getAberturaCaixa() {
-        return aberturaCaixa;
+    public Integer getSequencia() {
+        return sequencia;
     }
 
-    public void setAberturaCaixa(AberturaCaixa aberturaCaixa) {
-        this.aberturaCaixa = aberturaCaixa;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Date getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
-    }
-
-    public Usuario getUsuarioCancelamento() {
-        return usuarioCancelamento;
-    }
-
-    public void setUsuarioCancelamento(Usuario usuarioCancelamento) {
-        this.usuarioCancelamento = usuarioCancelamento;
-    }
-
-    public Date getDataHoraCancelamento() {
-        return dataHoraCancelamento;
-    }
-
-    public void setDataHoraCancelamento(Date dataHoraCancelamento) {
-        this.dataHoraCancelamento = dataHoraCancelamento;
+    public void setSequencia(Integer sequencia) {
+        this.sequencia = sequencia;
     }
 
     public Produto getProduto() {
@@ -147,19 +99,22 @@ public class ItemPedido implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 53 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ItemPedido other = (ItemPedido) obj;
+        final ItemVenda other = (ItemVenda) obj;
         return Objects.equals(this.id, other.id);
     }
 }

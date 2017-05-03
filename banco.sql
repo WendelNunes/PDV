@@ -121,22 +121,66 @@ CREATE TABLE produto (
 CREATE TABLE pedido (
     id bigserial NOT NULL,
     id_usuario bigint NOT NULL,
-    id_abertura_caixa bigint NOT NULL,
     data_hora timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_usuario_cancelamento bigint,
+    data_hora_cancelamento timestamp without time zone,
     mesa integer NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (id_abertura_caixa) REFERENCES abertura_caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (id_usuario_cancelamento) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE item_pedido (
     id bigserial NOT NULL,
     id_pedido bigint NOT NULL,
+    id_abertura_caixa bigint NOT NULL,
+    id_usuario bigint NOT NULL,
+    data_hora timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_usuario_cancelamento bigint,
+    data_hora_cancelamento timestamp without time zone,
+    id_produto bigint NOT NULL,
+    quantidade numeric(14,4) NOT NULL DEFAULT 0,
+    valor numeric(14,4) NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_pedido) REFERENCES pedido (id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    FOREIGN KEY (id_abertura_caixa) REFERENCES abertura_caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_usuario_cancelamento) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE venda (
+    id bigserial NOT NULL,
+    id_pedido bigint NOT NULL,
+    id_usuario bigint NOT NULL,
+    id_abertura_caixa bigint NOT NULL,
+    data_hora timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    mesa integer NOT NULL,
+    valor_comissao numeric(14,4) DEFAULT 0,
+    valor_desconto numeric(14,4) DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_pedido) REFERENCES pedido (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_abertura_caixa) REFERENCES abertura_caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE item_venda (
+    id bigserial NOT NULL,
+    id_venda bigint NOT NULL,
     sequencia integer NOT NULL,
     id_produto bigint NOT NULL,
     quantidade numeric(14,4) NOT NULL DEFAULT 0,
     valor numeric(14,4) NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_pedido) REFERENCES pedido (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_venda) REFERENCES venda (id) ON UPDATE NO ACTION ON DELETE CASCADE,
     FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE pagamento (
+    id bigserial NOT NULL,
+    id_venda bigint NOT NULL,
+    id_forma_pagamento character varying NOT NULL,
+    valor numeric(14,4) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_venda) REFERENCES venda (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );

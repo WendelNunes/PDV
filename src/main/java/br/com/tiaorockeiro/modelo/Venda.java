@@ -13,7 +13,6 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,34 +26,38 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author INLOC01
+ * @author Wendel
  */
 @Entity
-@Table(name = "pedido")
-public class Pedido implements Serializable {
+@Table(name = "venda")
+public class Venda implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @OneToOne
+    @JoinColumn(name = "id_pedido", referencedColumnName = "id")
+    private Pedido pedido;
     @ManyToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
+    @ManyToOne
+    @JoinColumn(name = "id_abertura_caixa", referencedColumnName = "id")
+    private AberturaCaixa aberturaCaixa;
     @Column(name = "data_hora")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
-    @ManyToOne
-    @JoinColumn(name = "id_usuario_cancelamento", referencedColumnName = "id")
-    private Usuario usuarioCancelamento;
-    @Column(name = "data_hora_cancelamento")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataHoraCancelamento;
     @Column(name = "mesa")
     private Integer mesa;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido")
-    private List<ItemPedido> itens;
-    @OneToOne(mappedBy = "pedido")
-    private Venda venda;
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    private List<ItemVenda> itens;
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    private List<Pagamento> pagamentos;
+    @Column(name = "valor_comissao")
+    private BigDecimal valorComissao;
+    @Column(name = "valor_desconto")
+    private BigDecimal valorDesconto;
 
     public Long getId() {
         return id;
@@ -72,28 +75,20 @@ public class Pedido implements Serializable {
         this.usuario = usuario;
     }
 
+    public AberturaCaixa getAberturaCaixa() {
+        return aberturaCaixa;
+    }
+
+    public void setAberturaCaixa(AberturaCaixa aberturaCaixa) {
+        this.aberturaCaixa = aberturaCaixa;
+    }
+
     public Date getDataHora() {
         return dataHora;
     }
 
     public void setDataHora(Date dataHora) {
         this.dataHora = dataHora;
-    }
-
-    public Usuario getUsuarioCancelamento() {
-        return usuarioCancelamento;
-    }
-
-    public void setUsuarioCancelamento(Usuario usuarioCancelamento) {
-        this.usuarioCancelamento = usuarioCancelamento;
-    }
-
-    public Date getDataHoraCancelamento() {
-        return dataHoraCancelamento;
-    }
-
-    public void setDataHoraCancelamento(Date dataHoraCancelamento) {
-        this.dataHoraCancelamento = dataHoraCancelamento;
     }
 
     public Integer getMesa() {
@@ -104,15 +99,47 @@ public class Pedido implements Serializable {
         this.mesa = mesa;
     }
 
-    public List<ItemPedido> getItens() {
+    public List<ItemVenda> getItens() {
         return itens;
     }
 
-    public void setItens(List<ItemPedido> itens) {
+    public void setItens(List<ItemVenda> itens) {
         this.itens = itens;
     }
 
-    public BigDecimal getValorTotal() {
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public List<Pagamento> getPagamentos() {
+        return pagamentos;
+    }
+
+    public void setPagamentos(List<Pagamento> pagamentos) {
+        this.pagamentos = pagamentos;
+    }
+
+    public BigDecimal getValorComissao() {
+        return valorComissao;
+    }
+
+    public void setValorComissao(BigDecimal valorComissao) {
+        this.valorComissao = valorComissao;
+    }
+
+    public BigDecimal getValorDesconto() {
+        return valorDesconto;
+    }
+
+    public void setValorDesconto(BigDecimal valorDesconto) {
+        this.valorDesconto = valorDesconto;
+    }
+
+    public BigDecimal getValorTotalItens() {
         return this.itens != null ? this.itens.stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 
@@ -120,30 +147,30 @@ public class Pedido implements Serializable {
         return this.itens != null ? this.itens.stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 
-    public Venda getVenda() {
-        return venda;
-    }
-
-    public void setVenda(Venda venda) {
-        this.venda = venda;
+    public BigDecimal getValorTotal() {
+        return this.getValorTotalItens().add(this.valorComissao != null ? this.valorComissao : BigDecimal.ZERO)
+                .subtract(this.valorDesconto != null ? this.valorDesconto : BigDecimal.ZERO);
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 31 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Pedido other = (Pedido) obj;
+        final Venda other = (Venda) obj;
         return Objects.equals(this.id, other.id);
     }
 }

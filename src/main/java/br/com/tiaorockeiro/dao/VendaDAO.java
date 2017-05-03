@@ -5,12 +5,12 @@
  */
 package br.com.tiaorockeiro.dao;
 
-import br.com.tiaorockeiro.modelo.ItemPedido;
+import br.com.tiaorockeiro.modelo.Venda;
 
 /**
  *
  * @author Wendel
  */
-public interface ItemPedidoDAO extends DAO<ItemPedido, Long> {
-
+public interface VendaDAO extends DAO<Venda, Long> {
+    
 }

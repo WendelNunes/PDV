@@ -12,5 +12,6 @@ import br.com.tiaorockeiro.modelo.Pedido;
  * @author Wendel
  */
 public interface PedidoDAO extends DAO<Pedido, Long> {
-    
+
+    public Pedido obterAbertoPorMesa(Integer mesa);
 }

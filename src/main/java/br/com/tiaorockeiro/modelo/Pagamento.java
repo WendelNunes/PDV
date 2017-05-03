@@ -5,13 +5,18 @@
  */
 package br.com.tiaorockeiro.modelo;
 
+import br.com.tiaorockeiro.converter.FormaPagamentoAttributeConverter;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -19,17 +24,21 @@ import javax.persistence.Table;
  * @author Wendel
  */
 @Entity
-@Table(name = "unidade_produto")
-public class UnidadeProduto implements Serializable {
+@Table(name = "pagamento")
+public class Pagamento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "codigo")
-    private String codigo;
-    @Column(name = "descricao")
-    private String descricao;
+    @ManyToOne
+    @JoinColumn(name = "id_venda", referencedColumnName = "id")
+    private Venda venda;
+    @Column(name = "id_forma_pagamento")
+    @Convert(converter = FormaPagamentoAttributeConverter.class)
+    private FormaPagamento formaPagamento;
+    @Column(name = "valor")
+    private BigDecimal valor;
 
     public Long getId() {
         return id;
@@ -39,26 +48,34 @@ public class UnidadeProduto implements Serializable {
         this.id = id;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public Venda getVenda() {
+        return venda;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setVenda(Venda venda) {
+        this.venda = venda;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public FormaPagamento getFormaPagamento() {
+        return formaPagamento;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 41 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -73,7 +90,7 @@ public class UnidadeProduto implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final UnidadeProduto other = (UnidadeProduto) obj;
+        final Pagamento other = (Pagamento) obj;
         return Objects.equals(this.id, other.id);
     }
 }

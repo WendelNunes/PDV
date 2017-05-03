@@ -12,6 +12,7 @@ import br.com.tiaorockeiro.modelo.Pedido;
 import br.com.tiaorockeiro.modelo.Produto;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.CategoriaProdutoNegocio;
+import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.ProdutoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -72,7 +73,7 @@ public class TelaPedidoController implements Initializable {
     @FXML
     private TableView<ItemPedido> tableViewItens;
     @FXML
-    private TableColumn<ItemPedido, Integer> tableColumnSequencia;
+    private TableColumn<ItemPedido, Long> tableColumnSequencia;
     @FXML
     private TableColumn<ItemPedido, String> tableColumnProduto;
     @FXML
@@ -89,8 +90,16 @@ public class TelaPedidoController implements Initializable {
     private List<CategoriaProduto> categorias;
     private List<Produto> produtos;
     private Pedido pedido;
+    private final AberturaCaixa aberturaCaixa;
 
     private static final int QTDE_COLUNAS_PRODUTOS = 5;
+
+    public TelaPedidoController() throws Exception {
+        this.pedido = new Pedido();
+        this.pedido.setItens(new ArrayList<>());
+        this.aberturaCaixa = new AberturaCaixaNegocio()
+                .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado());
+    }
 
     /**
      * Initializes the controller class.
@@ -100,18 +109,7 @@ public class TelaPedidoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            this.pedido = new Pedido();
-            this.pedido.setItens(new ArrayList<>());
-            this.ajustaTabelaItens();
-            this.criaGridCategorias();
-            if (this.categorias != null && !this.categorias.isEmpty()) {
-                this.criaGridProdutos(this.categorias.get(0).getId());
-            }
-            this.atualizaTotalizadores();
-        } catch (Exception e) {
-            enviarMensagemErro(e.getMessage());
-        }
+
     }
 
     @FXML
@@ -197,19 +195,21 @@ public class TelaPedidoController implements Initializable {
 
     @SuppressWarnings("Convert2Lambda")
     private void ajustaTabelaItens() {
-        this.tableViewItens.setItems(FXCollections.observableList(this.pedido.getItens()));
+        this.pedido.getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
+        this.tableViewItens.setItems(FXCollections.observableList(this.pedido.getItens()
+                .stream().filter(i -> i.getDataHoraCancelamento() == null).collect(Collectors.toList())));
         this.tableViewItens.setFixedCellSize(45);
-        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getSequencia()));
-        this.tableColumnSequencia.setCellFactory((TableColumn<ItemPedido, Integer> param) -> new TableCell<ItemPedido, Integer>() {
+        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getId()));
+        this.tableColumnSequencia.setCellFactory((TableColumn<ItemPedido, Long> param) -> new TableCell<ItemPedido, Long>() {
             @Override
-            protected void updateItem(Integer item, boolean empty) {
+            protected void updateItem(Long item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(item.toString());
+                if (item != null) {
+                    setText(String.valueOf(getIndex() + 1));
                     setFont(Font.font("Arial", 14));
                     setAlignment(Pos.CENTER_RIGHT);
+                } else {
+                    setText("");
                 }
             }
         });
@@ -282,6 +282,7 @@ public class TelaPedidoController implements Initializable {
         if (index != -1) {
             ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
             item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
+            new ItemPedidoNegocio().salvar(item);
             this.tableViewItens.getItems().set(index, item);
             this.tableViewItens.getSelectionModel().select(index);
         }
@@ -295,6 +296,7 @@ public class TelaPedidoController implements Initializable {
             ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
             if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
                 item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
+                new ItemPedidoNegocio().salvar(item);
                 this.tableViewItens.getItems().set(index, item);
                 this.tableViewItens.getSelectionModel().select(index);
             }
@@ -307,46 +309,34 @@ public class TelaPedidoController implements Initializable {
         int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
         if (index != -1) {
             ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
-            this.tableViewItens.getItems().stream().filter(i -> i.getSequencia() > item.getSequencia()).forEach((ItemPedido i) -> {
-                i.setSequencia(i.getSequencia() - 1);
-            });
+            item.setDataHoraCancelamento(new Date());
+            item.setUsuarioCancelamento(SessaoUtil.getUsuario());
+            new ItemPedidoNegocio().salvar(item);
             this.tableViewItens.getItems().remove(index);
         }
         this.atualizaTotalizadores();
     }
 
     private void acaoAdicionaProduto(ActionEvent event) {
-        Produto produto = new ProdutoNegocio().obterPorId(Produto.class, Long.valueOf(((Control) event.getSource()).getId()));
-        ItemPedido item = new ItemPedido();
-        item.setPedido(this.pedido);
-        item.setProduto(produto);
-        item.setQuantidade(BigDecimal.ONE);
-        item.setValor(produto.getValor());
-        item.setSequencia(this.pedido.getItens().size() + 1);
-        this.tableViewItens.getItems().add(item);
-        this.atualizaTotalizadores();
-    }
-
-    @FXML
-    public void acaoFinalizarPedido(ActionEvent event) {
         try {
-            if (this.pedido.getItens().isEmpty()) {
-                enviarMensagemInformacao("Deve ser adicionado um ou mais item(ns)!");
-            } else {
+            Produto produto = new ProdutoNegocio().obterPorId(Produto.class, Long.valueOf(((Control) event.getSource()).getId()));
+            if (this.pedido.getId() == null) {
                 this.pedido.setDataHora(new Date());
                 this.pedido.setUsuario(SessaoUtil.getUsuario());
-                AberturaCaixa aberturaCaixa = new AberturaCaixaNegocio()
-                        .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado());
-                this.pedido.setAberturaCaixa(aberturaCaixa);
                 this.pedido = new PedidoNegocio().salvar(this.pedido);
-                if (this.pedido.getId() != null && this.pedido.getId() > 0) {
-                    this.acaoVoltar(null);
-                    enviarMensagemInformacao("Pedido finalizado com sucesso!");
-                } else {
-                    throw new Exception("Erro ao finalizar pedido, tente novamente!");
-                }
             }
-        } catch (Exception e) {
+            ItemPedido item = new ItemPedido();
+            item.setPedido(this.pedido);
+            item.setAberturaCaixa(this.aberturaCaixa);
+            item.setUsuario(SessaoUtil.getUsuario());
+            item.setDataHora(new Date());
+            item.setProduto(produto);
+            item.setQuantidade(BigDecimal.ONE);
+            item.setValor(produto.getValor());
+            item = new ItemPedidoNegocio().salvar(item);
+            this.tableViewItens.getItems().add(item);
+            this.atualizaTotalizadores();
+        } catch (NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }
     }
@@ -354,23 +344,36 @@ public class TelaPedidoController implements Initializable {
     @FXML
     public void acaoFinalizarVenda(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaFinalizarVenda.fxml"));
-            TelaFinalizarVendaController telaFinalizarVendaController = new TelaFinalizarVendaController();
-            telaFinalizarVendaController.setTelaPedidoController(this);
-            loader.setController(telaFinalizarVendaController);
-            AnchorPane telaFinalizarVenda = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda);
-        } catch (IOException | NumberFormatException e) {
+            if (this.pedido.getItens().isEmpty()) {
+                enviarMensagemInformacao("Deve ser adicionado um ou mais item(ns)!");
+            } else {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaFinalizarVenda.fxml"));
+                AnchorPane telaFinalizarVenda = loader.load();
+                TelaFinalizarVendaController telaFinalizarVendaController = loader.getController();
+                telaFinalizarVendaController.inicializaDados(this.pedido.getId());
+                TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda);
+            }
+        } catch (IOException e) {
             enviarMensagemErro(e.getMessage());
         }
     }
 
-    public void setMesa(Integer mesa) {
+    public void inicializaDados(Integer mesa) throws Exception {
         this.pedido.setMesa(mesa);
         this.titulo.setText("Mesa " + this.pedido.getMesa());
+        Pedido pedidoEmAberto = new PedidoNegocio().obterAbertoPorMesa(this.pedido.getMesa());
+        if (pedidoEmAberto != null) {
+            this.pedido = pedidoEmAberto;
+        }
+        this.ajustaTabelaItens();
+        this.criaGridCategorias();
+        if (this.categorias != null && !this.categorias.isEmpty()) {
+            this.criaGridProdutos(this.categorias.get(0).getId());
+        }
+        this.atualizaTotalizadores();
     }
 
-    public AnchorPane getAnchorPaneTelaPedido() {
-        return anchorPaneTelaPedido;
+    public Pedido getPedido() {
+        return pedido;
     }
 }

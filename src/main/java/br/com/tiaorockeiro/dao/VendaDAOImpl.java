@@ -5,12 +5,16 @@
  */
 package br.com.tiaorockeiro.dao;
 
-import br.com.tiaorockeiro.modelo.ItemPedido;
+import br.com.tiaorockeiro.modelo.Venda;
+import javax.persistence.EntityManager;
 
 /**
  *
  * @author Wendel
  */
-public interface ItemPedidoDAO extends DAO<ItemPedido, Long> {
+public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
 
+    public VendaDAOImpl(EntityManager entityManager) {
+        super(entityManager);
+    }
 }
