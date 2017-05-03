@@ -5,6 +5,7 @@
  */
 package br.com.tiaorockeiro.negocio;
 
+import br.com.tiaorockeiro.dao.DAO;
 import br.com.tiaorockeiro.dao.DAOImpl;
 import static br.com.tiaorockeiro.util.JpaUtil.criaEntityManager;
 import java.util.List;
@@ -40,12 +41,58 @@ public class NegocioImpl<T, Long> implements Negocio<T, Long> {
     }
 
     @Override
+    public void salvar(List<T> entidades) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = criaEntityManager();
+            entityManager.getTransaction().begin();
+            DAO<T, Long> dao = new DAOImpl<>(entityManager);
+            entidades.stream().forEach((entidade) -> {
+                entidade = dao.salvar(entidade);
+            });
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
     public void remover(T entidade) {
         EntityManager entityManager = null;
         try {
             entityManager = criaEntityManager();
             entityManager.getTransaction().begin();
             new DAOImpl<>(entityManager).remover(entidade);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    public void remover(List<T> entidades) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = criaEntityManager();
+            entityManager.getTransaction().begin();
+            DAO<T, Long> dao = new DAOImpl<>(entityManager);
+            entidades.stream().forEach((entidade) -> {
+                dao.remover(entidade);
+            });
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             if (entityManager != null) {

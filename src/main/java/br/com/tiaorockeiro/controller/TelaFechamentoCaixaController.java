@@ -9,7 +9,6 @@ import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.FechamentoCaixa;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.FechamentoCaixaNegocio;
-import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
@@ -176,7 +175,7 @@ public class TelaFechamentoCaixaController implements Initializable {
                 fechamentoCaixa.setUsuario(SessaoUtil.getUsuario());
                 new FechamentoCaixaNegocio().salvar(fechamentoCaixa);
                 this.acaoBotaoVoltar(null);
-                enviarMensagemConfirmacao("Caixa fechado com sucesso!");
+                enviarMensagemInformacao("Caixa fechado com sucesso!");
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());

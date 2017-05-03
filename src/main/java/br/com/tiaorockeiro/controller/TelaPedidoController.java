@@ -15,6 +15,7 @@ import br.com.tiaorockeiro.negocio.CategoriaProdutoNegocio;
 import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.ProdutoNegocio;
+import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
@@ -23,14 +24,11 @@ import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -95,8 +93,6 @@ public class TelaPedidoController implements Initializable {
     private static final int QTDE_COLUNAS_PRODUTOS = 5;
 
     public TelaPedidoController() throws Exception {
-        this.pedido = new Pedido();
-        this.pedido.setItens(new ArrayList<>());
         this.aberturaCaixa = new AberturaCaixaNegocio()
                 .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado());
     }
@@ -195,11 +191,8 @@ public class TelaPedidoController implements Initializable {
 
     @SuppressWarnings("Convert2Lambda")
     private void ajustaTabelaItens() {
-        this.pedido.getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-        this.tableViewItens.setItems(FXCollections.observableList(this.pedido.getItens()
-                .stream().filter(i -> i.getDataHoraCancelamento() == null).collect(Collectors.toList())));
         this.tableViewItens.setFixedCellSize(45);
-        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getId()));
+        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getProduto().getId()));
         this.tableColumnSequencia.setCellFactory((TableColumn<ItemPedido, Long> param) -> new TableCell<ItemPedido, Long>() {
             @Override
             protected void updateItem(Long item, boolean empty) {
@@ -272,8 +265,8 @@ public class TelaPedidoController implements Initializable {
     }
 
     private void atualizaTotalizadores() {
-        this.textFieldQuantidadeItens.setText(formataQuantidade(this.pedido.getQuantidadeItens()));
-        this.textFieldValorTotal.setText(formataMoeda(this.pedido.getValorTotal()));
+        this.textFieldQuantidadeItens.setText(formataQuantidade(this.tableViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        this.textFieldValorTotal.setText(formataMoeda(this.tableViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
     }
 
     @FXML
@@ -282,7 +275,6 @@ public class TelaPedidoController implements Initializable {
         if (index != -1) {
             ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
             item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
-            new ItemPedidoNegocio().salvar(item);
             this.tableViewItens.getItems().set(index, item);
             this.tableViewItens.getSelectionModel().select(index);
         }
@@ -296,7 +288,6 @@ public class TelaPedidoController implements Initializable {
             ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
             if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
                 item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
-                new ItemPedidoNegocio().salvar(item);
                 this.tableViewItens.getItems().set(index, item);
                 this.tableViewItens.getSelectionModel().select(index);
             }
@@ -308,10 +299,6 @@ public class TelaPedidoController implements Initializable {
     public void acaoExcluirProduto() {
         int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
         if (index != -1) {
-            ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
-            item.setDataHoraCancelamento(new Date());
-            item.setUsuarioCancelamento(SessaoUtil.getUsuario());
-            new ItemPedidoNegocio().salvar(item);
             this.tableViewItens.getItems().remove(index);
         }
         this.atualizaTotalizadores();
@@ -320,11 +307,6 @@ public class TelaPedidoController implements Initializable {
     private void acaoAdicionaProduto(ActionEvent event) {
         try {
             Produto produto = new ProdutoNegocio().obterPorId(Produto.class, Long.valueOf(((Control) event.getSource()).getId()));
-            if (this.pedido.getId() == null) {
-                this.pedido.setDataHora(new Date());
-                this.pedido.setUsuario(SessaoUtil.getUsuario());
-                this.pedido = new PedidoNegocio().salvar(this.pedido);
-            }
             ItemPedido item = new ItemPedido();
             item.setPedido(this.pedido);
             item.setAberturaCaixa(this.aberturaCaixa);
@@ -333,7 +315,6 @@ public class TelaPedidoController implements Initializable {
             item.setProduto(produto);
             item.setQuantidade(BigDecimal.ONE);
             item.setValor(produto.getValor());
-            item = new ItemPedidoNegocio().salvar(item);
             this.tableViewItens.getItems().add(item);
             this.atualizaTotalizadores();
         } catch (NumberFormatException e) {
@@ -342,16 +323,46 @@ public class TelaPedidoController implements Initializable {
     }
 
     @FXML
+    public void acaoFinalizarPedido(ActionEvent event) {
+        try {
+            if (!this.tableViewItens.getItems().isEmpty()) {
+                this.salvarPedido();
+                this.acaoVoltar(null);
+                enviarMensagemInformacao("Pedido realizado com sucesso!");
+            } else {
+                enviarMensagemInformacao("Deve ser adicionado um ou mais item!");
+            }
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    private void salvarPedido() {
+        if (this.pedido.getId() == null) {
+            this.pedido.setDataHora(new Date());
+            this.pedido.setUsuario(SessaoUtil.getUsuario());
+            this.pedido = new PedidoNegocio().salvar(this.pedido);
+        }
+        this.tableViewItens.getItems().forEach((ItemPedido i) -> {
+            i.setPedido(this.pedido);
+        });
+        new ItemPedidoNegocio().salvar(this.tableViewItens.getItems());
+    }
+
+    @FXML
     public void acaoFinalizarVenda(ActionEvent event) {
         try {
-            if (this.pedido.getItens().isEmpty()) {
-                enviarMensagemInformacao("Deve ser adicionado um ou mais item(ns)!");
-            } else {
+            if (this.tableViewItens.getItems().size() > 0 && enviarMensagemConfirmacao("Deseja salvar o pedido?")) {
+                this.salvarPedido();
+            }
+            if (this.pedido.getId() != null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaFinalizarVenda.fxml"));
                 AnchorPane telaFinalizarVenda = loader.load();
                 TelaFinalizarVendaController telaFinalizarVendaController = loader.getController();
                 telaFinalizarVendaController.inicializaDados(this.pedido.getId());
                 TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda);
+            } else {
+                enviarMensagemInformacao("Não existe nenhum pedido finalizado para a mesa!");
             }
         } catch (IOException e) {
             enviarMensagemErro(e.getMessage());
@@ -359,6 +370,7 @@ public class TelaPedidoController implements Initializable {
     }
 
     public void inicializaDados(Integer mesa) throws Exception {
+        this.pedido = new Pedido();
         this.pedido.setMesa(mesa);
         this.titulo.setText("Mesa " + this.pedido.getMesa());
         Pedido pedidoEmAberto = new PedidoNegocio().obterAbertoPorMesa(this.pedido.getMesa());

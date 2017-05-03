@@ -5,7 +5,10 @@
  */
 package br.com.tiaorockeiro.util;
 
+import java.util.Optional;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 /**
  *
@@ -27,10 +30,11 @@ public class MensagemUtil {
         dialog.showAndWait();
     }
 
-    public static void enviarMensagemConfirmacao(String mensagem) {
+    public static boolean enviarMensagemConfirmacao(String mensagem) {
         Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
         dialog.setTitle("Confirmação");
         dialog.setHeaderText(mensagem);
-        dialog.showAndWait();
+        Optional<ButtonType> result = dialog.showAndWait();
+        return result.get() == ButtonType.OK;
     }
 }

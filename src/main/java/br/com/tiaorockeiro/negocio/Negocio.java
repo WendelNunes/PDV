@@ -17,7 +17,11 @@ public interface Negocio<T, Long> {
 
     public T salvar(T entidade);
 
+    public void salvar(List<T> entidade);
+
     public void remover(T entidade);
+
+    public void remover(List<T> entidade);
 
     public T obterPorId(Class<T> classe, Long id);
 

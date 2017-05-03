@@ -9,7 +9,6 @@ import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.Caixa;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.CaixaNegocio;
-import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
@@ -161,7 +160,7 @@ public class TelaAberturaCaixaController implements Initializable {
                 aberturaCaixa.setUsuario(SessaoUtil.getUsuario());
                 new AberturaCaixaNegocio().salvar(aberturaCaixa);
                 this.acaoBotaoVoltar(null);
-                enviarMensagemConfirmacao("Caixa aberto com sucesso!");
+                enviarMensagemInformacao("Caixa aberto com sucesso!");
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());

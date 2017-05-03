@@ -9,7 +9,6 @@ import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.ConfiguracaoUsuario;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.ConfiguracaoUsuarioNegocio;
-import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import br.com.tiaorockeiro.util.SessaoUtil;
@@ -36,7 +35,7 @@ import javafx.util.StringConverter;
  * @author Wendel
  */
 public class TelaSelecionarCaixaController implements Initializable {
-    
+
     @FXML
     private ComboBox<AberturaCaixa> cbCaixa;
     @FXML
@@ -71,7 +70,7 @@ public class TelaSelecionarCaixaController implements Initializable {
                 public String toString(AberturaCaixa aberturaCaixa) {
                     return aberturaCaixa != null ? aberturaCaixa.getCaixa().getCodigo() + " - " + aberturaCaixa.getCaixa().getDescricao() : null;
                 }
-                
+
                 @Override
                 public AberturaCaixa fromString(String string) {
                     return null;
@@ -90,7 +89,7 @@ public class TelaSelecionarCaixaController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoBotaoSelecionarCaixa(ActionEvent event) {
         try {
@@ -106,13 +105,13 @@ public class TelaSelecionarCaixaController implements Initializable {
                 new ConfiguracaoUsuarioNegocio().salvar(configuracaoUsuario);
                 SessaoUtil.getUsuario().setConfiguracao(configuracaoUsuario);
                 this.acaoBotaoVoltar(null);
-                enviarMensagemConfirmacao("Caixa selecionado com sucesso!");
+                enviarMensagemInformacao("Caixa selecionado com sucesso!");
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoBotaoVoltar(ActionEvent event) {
         try {
