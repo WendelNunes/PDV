@@ -112,11 +112,13 @@ public class Pedido implements Serializable {
     }
 
     public BigDecimal getValorTotal() {
-        return this.itens != null ? this.itens.stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
+        return this.itens != null ? this.itens.stream().filter(i -> i.getDataHoraCancelamento() != null)
+                .map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 
     public BigDecimal getQuantidadeItens() {
-        return this.itens != null ? this.itens.stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
+        return this.itens != null ? this.itens.stream().filter(i -> i.getDataHoraCancelamento() != null)
+                .map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 
     public Venda getVenda() {

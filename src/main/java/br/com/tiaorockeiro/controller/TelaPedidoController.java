@@ -271,37 +271,49 @@ public class TelaPedidoController implements Initializable {
 
     @FXML
     public void acaoMaisProduto() {
-        int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
-        if (index != -1) {
-            ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
-            item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
-            this.tableViewItens.getItems().set(index, item);
-            this.tableViewItens.getSelectionModel().select(index);
+        try {
+            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
+                item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
+                this.tableViewItens.getItems().set(index, item);
+                this.tableViewItens.getSelectionModel().select(index);
+            }
+            this.atualizaTotalizadores();
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
         }
-        this.atualizaTotalizadores();
     }
 
     @FXML
     public void acaoMenosProduto() {
-        int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
-        if (index != -1) {
-            ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
-            if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
-                item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
-                this.tableViewItens.getItems().set(index, item);
-                this.tableViewItens.getSelectionModel().select(index);
+        try {
+            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
+                if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
+                    item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
+                    this.tableViewItens.getItems().set(index, item);
+                    this.tableViewItens.getSelectionModel().select(index);
+                }
             }
+            this.atualizaTotalizadores();
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
         }
-        this.atualizaTotalizadores();
     }
 
     @FXML
     public void acaoExcluirProduto() {
-        int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
-        if (index != -1) {
-            this.tableViewItens.getItems().remove(index);
+        try {
+            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                this.tableViewItens.getItems().remove(index);
+            }
+            this.atualizaTotalizadores();
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
         }
-        this.atualizaTotalizadores();
     }
 
     private void acaoAdicionaProduto(ActionEvent event) {
@@ -363,6 +375,25 @@ public class TelaPedidoController implements Initializable {
                 TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda);
             } else {
                 enviarMensagemInformacao("Não existe nenhum pedido finalizado para a mesa!");
+            }
+        } catch (IOException e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoCancelarVenda(ActionEvent event) {
+        try {
+            if (this.pedido.getId() == null) {
+                enviarMensagemInformacao("Não existe nenhum pedido finalizado para a mesa!");
+            } else if (enviarMensagemConfirmacao("Deseja realmente cancelar a venda?")) {
+                this.pedido.setDataHoraCancelamento(new Date());
+                this.pedido.setUsuarioCancelamento(SessaoUtil.getUsuario());
+                new PedidoNegocio().salvar(this.pedido);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
+                AnchorPane telaMesas = loader.load();
+                TelaPrincipalController.getInstance().mudaTela(telaMesas);
+                enviarMensagemInformacao("Venda cancelada com sucesso!");
             }
         } catch (IOException e) {
             enviarMensagemErro(e.getMessage());

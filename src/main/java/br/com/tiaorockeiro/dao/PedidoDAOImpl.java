@@ -25,7 +25,8 @@ public class PedidoDAOImpl extends DAOImpl<Pedido, Long> implements PedidoDAO {
 
     @Override
     public Pedido obterAbertoPorMesa(Integer mesa) {
-        Query query = this.entityManager.createQuery("SELECT p FROM Pedido p LEFT JOIN p.venda v WHERE p.mesa = :mesa AND v IS NULL");
+        Query query = this.entityManager.createQuery("SELECT p FROM Pedido p LEFT JOIN p.venda v "
+                + "WHERE p.dataHoraCancelamento IS NULL AND p.mesa = :mesa AND v IS NULL");
         query.setParameter("mesa", mesa);
         List<Pedido> result = query.getResultList();
         return result.size() > 0 ? result.get(0) : null;

@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -25,83 +26,92 @@
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <TextField disable="true" editable="false" layoutX="164.0" layoutY="595.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="164.0" />
+        <TextField fx:id="textFieldValorTotal" disable="true" editable="false" layoutX="164.0" layoutY="595.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="164.0" />
         <Label fx:id="titulo21" layoutX="10.0" layoutY="577.0" prefHeight="18.0" prefWidth="77.0" text="Qtde Itens:" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="10.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <TextField disable="true" editable="false" layoutX="10.0" layoutY="595.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+        <TextField fx:id="textFieldQuantidadeItens" disable="true" editable="false" layoutX="10.0" layoutY="595.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
         <Label fx:id="titulo" layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="331.0" text="Mesa" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <Label fx:id="titulo1" layoutX="868.0" layoutY="30.0" prefHeight="18.0" prefWidth="149.0" text="Dinheiro:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="30.0">
+        <Label layoutX="868.0" layoutY="30.0" prefHeight="18.0" prefWidth="149.0" text="Dinheiro:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="30.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <Label fx:id="titulo11" layoutX="868.0" layoutY="103.0" prefHeight="18.0" prefWidth="149.0" text="Cartão de Crédito:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="103.0">
+        <Label layoutX="868.0" layoutY="103.0" prefHeight="18.0" prefWidth="149.0" text="Cartão de Crédito:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="103.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <Label fx:id="titulo111" layoutX="868.0" layoutY="176.0" prefHeight="18.0" prefWidth="149.0" text="Cartão de Débito:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="176.0">
+        <Label layoutX="868.0" layoutY="176.0" prefHeight="18.0" prefWidth="149.0" text="Cartão de Débito:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="176.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <Label fx:id="titulo1111" layoutX="868.0" layoutY="249.0" prefHeight="18.0" prefWidth="149.0" text="Outros:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="249.0">
+        <Label layoutX="868.0" layoutY="249.0" prefHeight="18.0" prefWidth="149.0" text="Outros:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="249.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <TextField disable="true" editable="false" layoutX="869.0" layoutY="48.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="48.0" />
-        <TextField disable="true" editable="false" layoutX="869.0" layoutY="121.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="121.0" />
-        <TextField disable="true" editable="false" layoutX="869.0" layoutY="194.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="194.0" />
-        <TextField disable="true" editable="false" layoutX="869.0" layoutY="267.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="267.0" />
-        <Button layoutX="1209.0" layoutY="48.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="2" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="48.0" />
-        <Button layoutX="1146.0" layoutY="48.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="48.0" />
-        <Button layoutX="1272.0" layoutY="48.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="3" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
-        <Button layoutX="1209.0" layoutY="111.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="5" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="111.0" />
-        <Button layoutX="1272.0" layoutY="111.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="6" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="111.0" />
-        <Button layoutX="1146.0" layoutY="111.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="4" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="111.0" />
-        <Button layoutX="1209.0" layoutY="174.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="7" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="174.0" />
-        <Button layoutX="1272.0" layoutY="174.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="174.0" />
-        <Button layoutX="1146.0" layoutY="174.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="8" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="174.0" />
-        <Button layoutX="1209.0" layoutY="237.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="237.0" />
-        <ToggleButton layoutX="1025.0" layoutY="48.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="48.0" />
-        <Button layoutX="1080.0" layoutY="48.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="L" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="48.0" />
-        <ToggleButton layoutX="1024.0" layoutY="121.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="194.0" />
-        <Button layoutX="1079.0" layoutY="121.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="L" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="121.0" />
-        <ToggleButton layoutX="1024.0" layoutY="194.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="267.0" />
-        <Button layoutX="1079.0" layoutY="194.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="L" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="194.0" />
-        <ToggleButton layoutX="1024.0" layoutY="121.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="121.0" />
-        <Button layoutX="1079.0" layoutY="267.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="L" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="267.0" />
-        <Label fx:id="titulo111111" layoutX="697.0" layoutY="322.0" prefHeight="18.0" prefWidth="149.0" text="Comissão:" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="322.0">
+        <TextField fx:id="textFieldDinhieiro" disable="true" editable="false" layoutX="869.0" layoutY="48.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="48.0" />
+        <TextField fx:id="textFieldCartaoCredito" disable="true" editable="false" layoutX="869.0" layoutY="121.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="121.0" />
+        <TextField fx:id="textFieldCartaoDebito" disable="true" editable="false" layoutX="869.0" layoutY="194.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="194.0" />
+        <TextField fx:id="textFieldOutros" disable="true" editable="false" layoutX="869.0" layoutY="267.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="267.0" />
+        <Button layoutX="1209.0" layoutY="48.0" mnemonicParsing="false" onAction="#acaoBotao2" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="2" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="48.0" />
+        <Button layoutX="1146.0" layoutY="48.0" mnemonicParsing="false" onAction="#acaoBotao1" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="48.0" />
+        <Button layoutX="1272.0" layoutY="48.0" mnemonicParsing="false" onAction="#acaoBotao3" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="3" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
+        <Button layoutX="1209.0" layoutY="111.0" mnemonicParsing="false" onAction="#acaoBotao5" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="5" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="111.0" />
+        <Button layoutX="1272.0" layoutY="111.0" mnemonicParsing="false" onAction="#acaoBotao6" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="6" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="111.0" />
+        <Button layoutX="1146.0" layoutY="111.0" mnemonicParsing="false" onAction="#acaoBotao4" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="4" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="111.0" />
+        <Button layoutX="1209.0" layoutY="174.0" mnemonicParsing="false" onAction="#acaoBotao7" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="7" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="174.0" />
+        <Button layoutX="1272.0" layoutY="174.0" mnemonicParsing="false" onAction="#acaoBotao9" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="174.0" />
+        <Button layoutX="1146.0" layoutY="174.0" mnemonicParsing="false" onAction="#acaoBotao8" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="8" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="174.0" />
+        <Button layoutX="1209.0" layoutY="237.0" mnemonicParsing="false" onAction="#acaoBotao0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="237.0" />
+        <ToggleButton fx:id="buttonSelecionarDinheiro" layoutX="1025.0" layoutY="48.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" selected="true" style="-fx-background-radius: 0;" text="S" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="48.0">
+            <toggleGroup>
+                <ToggleGroup fx:id="grupoBotaoTeclado" />
+            </toggleGroup>
+        </ToggleButton>
+        <ToggleButton fx:id="buttonSelecionarCartaoDebito" layoutX="1024.0" layoutY="121.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" toggleGroup="$grupoBotaoTeclado" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="194.0" />
+        <ToggleButton fx:id="buttonSelecionarOutros" layoutX="1024.0" layoutY="194.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" toggleGroup="$grupoBotaoTeclado" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="267.0" />
+        <ToggleButton fx:id="buttonSelecionarCartaoCredito" layoutX="1024.0" layoutY="121.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" toggleGroup="$grupoBotaoTeclado" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="121.0" />
+        <Label fx:id="titulo111111" layoutX="697.0" layoutY="394.0" prefHeight="18.0" prefWidth="149.0" text="Comissão:" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="394.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <TextField disable="true" editable="false" layoutX="697.0" layoutY="340.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="340.0" />
-        <Button layoutX="852.0" layoutY="340.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="A" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="340.0" />
-        <Button layoutX="908.0" layoutY="340.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="R" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="340.0" />
-        <Label fx:id="titulo1111111" layoutX="697.0" layoutY="395.0" prefHeight="18.0" prefWidth="149.0" text="Total Geral:" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="395.0">
+        <TextField fx:id="textFieldComissao" disable="true" editable="false" layoutX="697.0" layoutY="412.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="412.0" />
+        <Button layoutX="852.0" layoutY="412.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="A" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="412.0" />
+        <Button layoutX="908.0" layoutY="412.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="R" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="412.0" />
+        <Label fx:id="titulo1111111" layoutX="697.0" layoutY="466.0" prefHeight="18.0" prefWidth="149.0" text="Total a Pagar:" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="466.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <TextField disable="true" editable="false" layoutX="697.0" layoutY="413.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="413.0" />
-        <Label fx:id="titulo11111111" layoutX="696.0" layoutY="468.0" prefHeight="18.0" prefWidth="149.0" text="Troco:" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="468.0">
+        <TextField fx:id="textFieldTotalGeral" disable="true" editable="false" layoutX="697.0" layoutY="484.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="484.0" />
+        <Label fx:id="titulo11111111" layoutX="852.0" layoutY="466.0" prefHeight="18.0" prefWidth="149.0" text="Troco:" AnchorPane.rightAnchor="173.0" AnchorPane.topAnchor="466.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
-        <TextField disable="true" editable="false" layoutX="697.0" layoutY="486.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="486.0" />
-        <Button layoutX="584.0" layoutY="595.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Emitir Extrato" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="499.0" />
+        <TextField fx:id="textFieldTroco" disable="true" editable="false" layoutX="852.0" layoutY="484.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="173.0" AnchorPane.topAnchor="484.0" />
+        <Button layoutX="858.0" layoutY="595.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Emitir Extrato" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="216.0" />
         <Button fx:id="btnAcaoVoltar" layoutX="1067.0" layoutY="595.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Voltar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-        <Button layoutX="858.0" layoutY="595.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Finalizar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="216.0" />
-        <Button layoutX="961.0" layoutY="595.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Excluir Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="113.0" />
+        <Button layoutX="755.0" layoutY="595.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Finalizar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="319.0" />
+        <Button layoutX="961.0" layoutY="595.0" mnemonicParsing="false" onAction="#acaoCancelarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Cancelar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="113.0" />
+        <Button layoutX="605.0" layoutY="595.0" mnemonicParsing="false" onAction="#acaoCancelarProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="Cancelar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="499.0" />
+        <Label layoutX="696.0" layoutY="322.0" prefHeight="18.0" prefWidth="149.0" text="Desconto:" AnchorPane.rightAnchor="329.0" AnchorPane.topAnchor="322.0">
+            <font>
+                <Font name="Arial" size="14.0" />
+            </font>
+        </Label>
+        <TextField fx:id="textFieldDesconto" disable="true" editable="false" layoutX="697.0" layoutY="340.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="340.0" />
+        <ToggleButton fx:id="buttonSelecionarDesconto" layoutX="852.0" layoutY="340.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" toggleGroup="$grupoBotaoTeclado" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="340.0" />
+      <Button layoutX="1100.0" layoutY="237.0" mnemonicParsing="false" onAction="#acaoBotaoLimpar" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Limpar" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="237.0" />
     </children>
 </AnchorPane>
