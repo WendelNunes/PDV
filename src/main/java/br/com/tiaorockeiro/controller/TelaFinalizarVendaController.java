@@ -19,6 +19,7 @@ import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class TelaFinalizarVendaController implements Initializable {
     private ToggleButton buttonSelecionarOutros;
     @FXML
     private ToggleButton buttonSelecionarDesconto;
+    @FXML
+    private ToggleButton buttonCalcularComissao;
     @FXML
     private Label titulo;
     @FXML
@@ -218,7 +221,17 @@ public class TelaFinalizarVendaController implements Initializable {
         BigDecimal total = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.textFieldValorTotal.setText(formataMoeda(total));
         BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
-        BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
+        BigDecimal comissao = BigDecimal.ZERO;
+        if (this.buttonCalcularComissao.isSelected()
+                && SessaoUtil.getConfiguracao() != null
+                && SessaoUtil.getConfiguracao().getPercentualComissao() != null
+                && SessaoUtil.getConfiguracao().getPercentualComissao().compareTo(BigDecimal.ZERO) > 0) {
+            comissao = total.multiply(SessaoUtil.getConfiguracao().getPercentualComissao()
+                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
+            this.textFieldComissao.setText(formataMoeda(comissao));
+        } else {
+            this.textFieldComissao.setText(formataMoeda(comissao));
+        }
         BigDecimal totalGeral = total.add(comissao).subtract(desconto);
         this.textFieldTotalGeral.setText(formataMoeda(totalGeral));
         BigDecimal dinheiro = new BigDecimal(this.textFieldDinhieiro.getText().replaceAll("\\.", "").replaceAll(",", "."));
@@ -242,6 +255,15 @@ public class TelaFinalizarVendaController implements Initializable {
                 this.tableViewProdutos.getItems().remove(index);
                 this.atualizaTotalizadores();
             }
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoCalcularComissao(ActionEvent event) {
+        try {
+            this.atualizaTotalizadores();
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }

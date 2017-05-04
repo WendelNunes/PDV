@@ -6,6 +6,7 @@
 package br.com.tiaorockeiro.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,8 @@ public class Configuracao implements Serializable {
     private Long id;
     @Column(name = "qtde_mesas")
     private Integer quantidadeMesas;
+    @Column(name = "percentual_comissao")
+    private BigDecimal percentualComissao;
 
     public Long getId() {
         return id;
@@ -43,6 +46,14 @@ public class Configuracao implements Serializable {
 
     public void setQuantidadeMesas(Integer quantidadeMesas) {
         this.quantidadeMesas = quantidadeMesas;
+    }
+
+    public BigDecimal getPercentualComissao() {
+        return percentualComissao;
+    }
+
+    public void setPercentualComissao(BigDecimal percentualComissao) {
+        this.percentualComissao = percentualComissao;
     }
 
     @Override

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -10,7 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="657.0" prefWidth="1174.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaFinalizarVendaController">
+<AnchorPane id="AnchorPane" prefHeight="657.0" prefWidth="1174.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaFinalizarVendaController">
     <children>
         <TableView fx:id="tableViewProdutos" layoutX="18.0" layoutY="28.0" prefHeight="546.0" prefWidth="665.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="499.0" AnchorPane.topAnchor="30.0">
             <columns>
@@ -86,8 +90,6 @@
             </font>
         </Label>
         <TextField fx:id="textFieldComissao" disable="true" editable="false" layoutX="697.0" layoutY="412.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="412.0" />
-        <Button layoutX="852.0" layoutY="412.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="A" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="412.0" />
-        <Button layoutX="908.0" layoutY="412.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="R" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="412.0" />
         <Label fx:id="titulo1111111" layoutX="697.0" layoutY="466.0" prefHeight="18.0" prefWidth="149.0" text="Total a Pagar:" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="466.0">
             <font>
                 <Font name="Arial" size="14.0" />
@@ -113,5 +115,6 @@
         <TextField fx:id="textFieldDesconto" disable="true" editable="false" layoutX="697.0" layoutY="340.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.rightAnchor="328.0" AnchorPane.topAnchor="340.0" />
         <ToggleButton fx:id="buttonSelecionarDesconto" layoutX="852.0" layoutY="340.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" toggleGroup="$grupoBotaoTeclado" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="340.0" />
       <Button layoutX="1100.0" layoutY="237.0" mnemonicParsing="false" onAction="#acaoBotaoLimpar" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Limpar" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="237.0" />
+      <ToggleButton fx:id="buttonCalcularComissao" layoutX="852.0" layoutY="412.0" mnemonicParsing="false" onAction="#acaoCalcularComissao" prefHeight="52.0" prefWidth="60.0" selected="true" style="-fx-background-radius: 0;" text="Calcular" AnchorPane.rightAnchor="262.0" AnchorPane.topAnchor="412.0" />
     </children>
 </AnchorPane>

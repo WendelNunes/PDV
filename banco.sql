@@ -1,6 +1,7 @@
 CREATE TABLE configuracao (
     id bigserial NOT NULL,
     qtde_mesas INTEGER NOT NULL DEFAULT 0,
+    percentual_comissao numeric(14,4) DEFAULT 0,
     PRIMARY KEY (id)
 );
 
