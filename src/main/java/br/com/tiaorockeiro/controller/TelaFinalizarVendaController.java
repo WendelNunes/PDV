@@ -5,11 +5,16 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.FormaPagamento;
 import br.com.tiaorockeiro.modelo.ItemPedido;
+import br.com.tiaorockeiro.modelo.ItemVenda;
+import br.com.tiaorockeiro.modelo.Pagamento;
 import br.com.tiaorockeiro.modelo.Pedido;
 import br.com.tiaorockeiro.modelo.Venda;
+import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
+import br.com.tiaorockeiro.negocio.VendaNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
@@ -108,6 +113,7 @@ public class TelaFinalizarVendaController implements Initializable {
     public TelaFinalizarVendaController() {
         this.venda = new Venda();
         this.venda.setItens(new ArrayList<>());
+        this.venda.setPagamentos(new ArrayList<>());
     }
 
     /**
@@ -342,6 +348,80 @@ public class TelaFinalizarVendaController implements Initializable {
                 this.atualizaTotalizadores();
             }
         } catch (NumberFormatException | ParseException e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoFinalizarVenda(ActionEvent event) {
+        try {
+            BigDecimal dinheiro = new BigDecimal(this.textFieldDinhieiro.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal cartaoCredito = new BigDecimal(this.textFieldCartaoCredito.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal cartaoDebito = new BigDecimal(this.textFieldCartaoDebito.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal outros = new BigDecimal(this.textFieldOutros.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal pagamentos = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
+            BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal totalItens = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalGeral = totalItens.add(comissao).subtract(desconto);
+            // VERIFICA SE TOTAL DE PAGAMENTOS E MAIOR DO QUE O TOTAL GERAL
+            if (pagamentos.compareTo(totalGeral) < 0) {
+                enviarMensagemInformacao("O valor total dos pagamentos é menor que o valor total a pagar!");
+            } else {
+                this.venda.setAberturaCaixa(new AberturaCaixaNegocio()
+                        .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado()));
+                this.venda.setUsuario(SessaoUtil.getUsuario());
+                this.venda.setDataHora(new Date());
+                this.venda.setValorComissao(comissao);
+                this.venda.setValorDesconto(desconto);
+                // ITENS
+                this.venda.getPedido().getItens().forEach(i -> {
+                    ItemVenda item = new ItemVenda();
+                    item.setVenda(this.venda);
+                    item.setProduto(i.getProduto());
+                    item.setQuantidade(i.getQuantidade());
+                    item.setValor(i.getValor());
+                    this.venda.getItens().add(item);
+                });
+                // FORMA PAGAMENTO
+                if (dinheiro.compareTo(BigDecimal.ZERO) > 0) {
+                    Pagamento pagamento = new Pagamento();
+                    pagamento.setVenda(this.venda);
+                    pagamento.setFormaPagamento(FormaPagamento.DINHEIRO);
+                    pagamento.setValor(dinheiro);
+                    this.venda.getPagamentos().add(pagamento);
+                }
+                if (cartaoCredito.compareTo(BigDecimal.ZERO) > 0) {
+                    Pagamento pagamento = new Pagamento();
+                    pagamento.setVenda(this.venda);
+                    pagamento.setFormaPagamento(FormaPagamento.CARTAO_CREDITO);
+                    pagamento.setValor(cartaoCredito);
+                    this.venda.getPagamentos().add(pagamento);
+                }
+                if (cartaoDebito.compareTo(BigDecimal.ZERO) > 0) {
+                    Pagamento pagamento = new Pagamento();
+                    pagamento.setVenda(this.venda);
+                    pagamento.setFormaPagamento(FormaPagamento.CARTAO_DEBITO);
+                    pagamento.setValor(cartaoDebito);
+                    this.venda.getPagamentos().add(pagamento);
+                }
+                if (outros.compareTo(BigDecimal.ZERO) > 0) {
+                    Pagamento pagamento = new Pagamento();
+                    pagamento.setVenda(this.venda);
+                    pagamento.setFormaPagamento(FormaPagamento.OUTROS);
+                    pagamento.setValor(outros);
+                    this.venda.getPagamentos().add(pagamento);
+                }
+                this.venda = new VendaNegocio().salvar(this.venda);
+                if (this.venda.getId() == null) {
+                    throw new Exception("Erro ao finalizar a venda, tente novamente!");
+                }
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
+                AnchorPane telaMesas = loader.load();
+                TelaPrincipalController.getInstance().mudaTela(telaMesas);
+                enviarMensagemInformacao("Venda finalizada com sucesso!");
+            }
+        } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }

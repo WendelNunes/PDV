@@ -168,7 +168,6 @@ CREATE TABLE venda (
 CREATE TABLE item_venda (
     id bigserial NOT NULL,
     id_venda bigint NOT NULL,
-    sequencia integer NOT NULL,
     id_produto bigint NOT NULL,
     quantidade numeric(14,4) NOT NULL DEFAULT 0,
     valor numeric(14,4) NOT NULL DEFAULT 0,

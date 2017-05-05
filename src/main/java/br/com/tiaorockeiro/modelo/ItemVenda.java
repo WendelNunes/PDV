@@ -34,8 +34,6 @@ public class ItemVenda implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_venda", referencedColumnName = "id")
     private Venda venda;
-    @Column(name = "sequencia")
-    private Integer sequencia;
     @OneToOne
     @JoinColumn(name = "id_produto", referencedColumnName = "id")
     private Produto produto;
@@ -58,14 +56,6 @@ public class ItemVenda implements Serializable {
 
     public void setVenda(Venda venda) {
         this.venda = venda;
-    }
-
-    public Integer getSequencia() {
-        return sequencia;
-    }
-
-    public void setSequencia(Integer sequencia) {
-        this.sequencia = sequencia;
     }
 
     public Produto getProduto() {

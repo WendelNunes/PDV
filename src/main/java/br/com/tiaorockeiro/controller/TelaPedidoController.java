@@ -57,8 +57,6 @@ import javafx.scene.text.Font;
 public class TelaPedidoController implements Initializable {
 
     @FXML
-    private AnchorPane anchorPaneTelaPedido;
-    @FXML
     private Label titulo;
     @FXML
     private ScrollPane scrollCategorias;
