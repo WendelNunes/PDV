@@ -380,7 +380,7 @@ public class TelaFinalizarVendaController implements Initializable {
                     item.setVenda(this.venda);
                     item.setProduto(i.getProduto());
                     item.setQuantidade(i.getQuantidade());
-                    item.setValor(i.getValor());
+                    item.setValorUnitario(i.getValor());
                     this.venda.getItens().add(item);
                 });
                 // FORMA PAGAMENTO

@@ -23,6 +23,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -32,33 +33,23 @@ import javax.persistence.TemporalType;
 @Table(name = "venda")
 public class Venda implements Serializable {
 
+    private Long id;
+    private Pedido pedido;
+    private Usuario usuario;
+    private AberturaCaixa aberturaCaixa;
+    private Date dataHora;
+    private Usuario usuarioCancelamento;
+    private Date dataHoraCancelamento;
+    private Integer mesa;
+    private List<ItemVenda> itens;
+    private List<Pagamento> pagamentos;
+    private BigDecimal valorComissao;
+    private BigDecimal valorDesconto;
+    private BigDecimal valorTotal;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @OneToOne
-    @JoinColumn(name = "id_pedido", referencedColumnName = "id")
-    private Pedido pedido;
-    @ManyToOne
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
-    private Usuario usuario;
-    @ManyToOne
-    @JoinColumn(name = "id_abertura_caixa", referencedColumnName = "id")
-    private AberturaCaixa aberturaCaixa;
-    @Column(name = "data_hora")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataHora;
-    @Column(name = "mesa")
-    private Integer mesa;
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
-    private List<ItemVenda> itens;
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
-    private List<Pagamento> pagamentos;
-    @Column(name = "valor_comissao")
-    private BigDecimal valorComissao;
-    @Column(name = "valor_desconto")
-    private BigDecimal valorDesconto;
-
     public Long getId() {
         return id;
     }
@@ -67,6 +58,8 @@ public class Venda implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     public Usuario getUsuario() {
         return usuario;
     }
@@ -75,6 +68,8 @@ public class Venda implements Serializable {
         this.usuario = usuario;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "id_abertura_caixa", referencedColumnName = "id")
     public AberturaCaixa getAberturaCaixa() {
         return aberturaCaixa;
     }
@@ -83,6 +78,8 @@ public class Venda implements Serializable {
         this.aberturaCaixa = aberturaCaixa;
     }
 
+    @Column(name = "data_hora")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataHora() {
         return dataHora;
     }
@@ -91,6 +88,27 @@ public class Venda implements Serializable {
         this.dataHora = dataHora;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario_cancelamento", referencedColumnName = "id")
+    public Usuario getUsuarioCancelamento() {
+        return usuarioCancelamento;
+    }
+
+    public void setUsuarioCancelamento(Usuario usuarioCancelamento) {
+        this.usuarioCancelamento = usuarioCancelamento;
+    }
+
+    @Column(name = "data_hora_cancelamento")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getDataHoraCancelamento() {
+        return dataHoraCancelamento;
+    }
+
+    public void setDataHoraCancelamento(Date dataHoraCancelamento) {
+        this.dataHoraCancelamento = dataHoraCancelamento;
+    }
+
+    @Column(name = "mesa")
     public Integer getMesa() {
         return mesa;
     }
@@ -99,6 +117,7 @@ public class Venda implements Serializable {
         this.mesa = mesa;
     }
 
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
     public List<ItemVenda> getItens() {
         return itens;
     }
@@ -107,6 +126,8 @@ public class Venda implements Serializable {
         this.itens = itens;
     }
 
+    @OneToOne
+    @JoinColumn(name = "id_pedido", referencedColumnName = "id")
     public Pedido getPedido() {
         return pedido;
     }
@@ -115,6 +136,7 @@ public class Venda implements Serializable {
         this.pedido = pedido;
     }
 
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
     public List<Pagamento> getPagamentos() {
         return pagamentos;
     }
@@ -123,6 +145,7 @@ public class Venda implements Serializable {
         this.pagamentos = pagamentos;
     }
 
+    @Column(name = "valor_comissao")
     public BigDecimal getValorComissao() {
         return valorComissao;
     }
@@ -131,6 +154,7 @@ public class Venda implements Serializable {
         this.valorComissao = valorComissao;
     }
 
+    @Column(name = "valor_desconto")
     public BigDecimal getValorDesconto() {
         return valorDesconto;
     }
@@ -139,17 +163,25 @@ public class Venda implements Serializable {
         this.valorDesconto = valorDesconto;
     }
 
+    @Transient
     public BigDecimal getValorTotalItens() {
         return this.itens != null ? this.itens.stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 
+    @Transient
     public BigDecimal getQuantidadeItens() {
         return this.itens != null ? this.itens.stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
 
+    @Column(name = "valor_total")
     public BigDecimal getValorTotal() {
-        return this.getValorTotalItens().add(this.valorComissao != null ? this.valorComissao : BigDecimal.ZERO)
+        this.valorTotal = this.getValorTotalItens().add(this.valorComissao != null ? this.valorComissao : BigDecimal.ZERO)
                 .subtract(this.valorDesconto != null ? this.valorDesconto : BigDecimal.ZERO);
+        return this.valorTotal;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     @Override

@@ -27,21 +27,16 @@ import javax.persistence.Table;
 @Table(name = "item_venda")
 public class ItemVenda implements Serializable {
 
+    private Long id;
+    private Venda venda;
+    private Produto produto;
+    private BigDecimal quantidade;
+    private BigDecimal valorUnitario;
+    private BigDecimal valorTotal;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "id_venda", referencedColumnName = "id")
-    private Venda venda;
-    @OneToOne
-    @JoinColumn(name = "id_produto", referencedColumnName = "id")
-    private Produto produto;
-    @Column(name = "quantidade")
-    private BigDecimal quantidade;
-    @Column(name = "valor")
-    private BigDecimal valor;
-
     public Long getId() {
         return id;
     }
@@ -50,6 +45,8 @@ public class ItemVenda implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "id_venda", referencedColumnName = "id")
     public Venda getVenda() {
         return venda;
     }
@@ -58,6 +55,8 @@ public class ItemVenda implements Serializable {
         this.venda = venda;
     }
 
+    @OneToOne
+    @JoinColumn(name = "id_produto", referencedColumnName = "id")
     public Produto getProduto() {
         return produto;
     }
@@ -66,6 +65,7 @@ public class ItemVenda implements Serializable {
         this.produto = produto;
     }
 
+    @Column(name = "quantidade")
     public BigDecimal getQuantidade() {
         return quantidade;
     }
@@ -74,16 +74,23 @@ public class ItemVenda implements Serializable {
         this.quantidade = quantidade;
     }
 
-    public BigDecimal getValor() {
-        return valor;
+    @Column(name = "valor_unitario")
+    public BigDecimal getValorUnitario() {
+        return valorUnitario;
     }
 
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
+    public void setValorUnitario(BigDecimal valorUnitario) {
+        this.valorUnitario = valorUnitario;
     }
 
+    @Column(name = "valor_total")
     public BigDecimal getValorTotal() {
-        return this.quantidade.multiply(this.valor).setScale(2, RoundingMode.HALF_DOWN);
+        this.valorTotal = this.quantidade.multiply(this.valorUnitario).setScale(2, RoundingMode.HALF_DOWN);
+        return this.valorTotal;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     @Override
