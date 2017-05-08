@@ -4,8 +4,10 @@
 
 .botao-mesa-aberta {
     -fx-background-color: #F0FFF0;
+    -fx-border-color: #d0d0d0;
 }
 
 .botao-mesa-fechada {
     -fx-background-color: #FFE4E1;
+    -fx-border-color: #d0d0d0;
 }
