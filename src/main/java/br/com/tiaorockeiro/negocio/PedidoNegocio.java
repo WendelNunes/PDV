@@ -9,6 +9,7 @@ import br.com.tiaorockeiro.dao.PedidoDAO;
 import br.com.tiaorockeiro.dao.PedidoDAOImpl;
 import br.com.tiaorockeiro.modelo.Pedido;
 import static br.com.tiaorockeiro.util.JpaUtil.criaEntityManager;
+import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
@@ -22,6 +23,16 @@ public class PedidoNegocio extends NegocioImpl<Pedido, Long> {
         try {
             PedidoDAO pedidoDAO = new PedidoDAOImpl(entityManager);
             return pedidoDAO.obterAbertoPorMesa(mesa);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public List<Pedido> obterAbertos() {
+        EntityManager entityManager = criaEntityManager();
+        try {
+            PedidoDAO pedidoDAO = new PedidoDAOImpl(entityManager);
+            return pedidoDAO.obterAbertos();
         } finally {
             entityManager.close();
         }

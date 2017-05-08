@@ -85,7 +85,9 @@ public class ItemVenda implements Serializable {
 
     @Column(name = "valor_total")
     public BigDecimal getValorTotal() {
-        this.valorTotal = this.quantidade.multiply(this.valorUnitario).setScale(2, RoundingMode.HALF_DOWN);
+        BigDecimal qtde = this.quantidade != null ? this.quantidade : BigDecimal.ZERO;
+        BigDecimal vlUnitario = this.valorUnitario != null ? this.valorUnitario : BigDecimal.ZERO;
+        this.valorTotal = qtde.multiply(vlUnitario).setScale(2, RoundingMode.HALF_DOWN);
         return this.valorTotal;
     }
 

@@ -6,6 +6,7 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.Pedido;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ import br.com.tiaorockeiro.modelo.Pedido;
 public interface PedidoDAO extends DAO<Pedido, Long> {
 
     public Pedido obterAbertoPorMesa(Integer mesa);
+
+    public List<Pedido> obterAbertos();
 }

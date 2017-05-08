@@ -7,15 +7,16 @@ package br.com.tiaorockeiro.controller;
 
 import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.ConfiguracaoUsuario;
+import br.com.tiaorockeiro.modelo.Pedido;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
+import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import br.com.tiaorockeiro.util.SessaoUtil;
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,8 +47,13 @@ public class TelaMesasController implements Initializable {
     @FXML
     private Button btnSelecionarCaixa;
     private AberturaCaixa aberturaCaixa;
+    List<Pedido> pedidosAbertos = new ArrayList<>();
 
     private static final int QTDE_COLUNAS = 5;
+
+    public TelaMesasController() {
+        this.pedidosAbertos = new PedidoNegocio().obterAbertos();
+    }
 
     /**
      * Initializes the controller class.
@@ -69,8 +75,6 @@ public class TelaMesasController implements Initializable {
         if (SessaoUtil.getConfiguracao() != null && SessaoUtil.getConfiguracao().getQuantidadeMesas() > 0
                 && this.aberturaCaixa != null) {
             this.gridMesas = new GridPane();
-            this.gridMesas.setVgap(5);
-            this.gridMesas.setHgap(5);
 
             int coluna = 0;
             int linha = 0;
@@ -115,7 +119,8 @@ public class TelaMesasController implements Initializable {
         button.setContentDisplay(ContentDisplay.TOP);
         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         button.setPrefSize(300, 300);
-        button.setStyle("-fx-background-radius: 0");
+        button.getStyleClass().add("botao");
+        button.getStyleClass().add(this.pedidosAbertos.stream().anyMatch(i -> i.getMesa() == mesa) ? "botao-mesa-aberta" : "botao-mesa-fechada");
         button.setId("mesa-" + String.valueOf(mesa));
         button.setOnAction((ActionEvent event) -> {
             this.abreMesa(event);
