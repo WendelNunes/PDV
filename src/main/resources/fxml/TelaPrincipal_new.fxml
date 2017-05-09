@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="787.0" prefWidth="800.0" style="-fx-background-color: #FFFF;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fx:id="menuPrincipal" layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="665.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="96.0" style="-fx-background-color: #FFFF;" text="Mesas" textFill="#000000ad">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="109.0" style="-fx-background-color: #FFFF;" text="Abrir Caixa" textFill="#000000ad">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="121.0" style="-fx-background-color: #FFFF;" text="Fechar Caixa" textFill="#000000ad">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="121.0" style="-fx-background-color: #FFFF;" text="Consultas" textFill="#000000ad">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="121.0" style="-fx-background-color: #FFFF;" text="Relatórios" textFill="#000000ad">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Button>
+         </children></HBox>
+      <Button layoutX="673.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="85.0" style="-fx-background-color: #FFFF;" text="Sair" textFill="#000000ad" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <font>
+            <Font name="Arial" size="16.0" />
+         </font>
+      </Button>
+      <AnchorPane fx:id="content" layoutY="60.0" prefHeight="733.0" prefWidth="800.0" style="-fx-background-color: #F7F7F7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+         <children>
+            <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFF;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <effect>
+                  <DropShadow blurType="ONE_PASS_BOX" color="#00000065" offsetX="2.0" offsetY="2.0" />
+               </effect>
+            </AnchorPane>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>
