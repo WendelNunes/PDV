@@ -3,11 +3,29 @@
 }
 
 .botao-mesa-aberta {
-    -fx-background-color: #F0FFF0;
+    -fx-background-color: #BBFFBB;
     -fx-border-color: #d0d0d0;
+    -fx-border-insets: 1 1 1 1;
+}
+
+.botao-mesa-aberta:hover {
+    -fx-background-color: #F2FFF2;
+}
+
+.botao-mesa-aberta:pressed {
+    -fx-background-color: #9BFF9B;
 }
 
 .botao-mesa-fechada {
-    -fx-background-color: #FFE4E1;
+    -fx-background-color: #FFD9D9;
     -fx-border-color: #d0d0d0;
+    -fx-border-insets: 1 1 1 1;
+}
+
+.botao-mesa-fechada:hover {
+    -fx-background-color: #FFEAEA;
+}
+
+.botao-mesa-fechada:pressed {
+    -fx-background-color: #FFB9B9;
 }
