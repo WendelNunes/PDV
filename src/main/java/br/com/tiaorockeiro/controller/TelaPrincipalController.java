@@ -29,16 +29,23 @@ public class TelaPrincipalController implements Initializable {
     private AnchorPane content;
     @FXML
     private HBox menuPrincipal;
+    @FXML
+    private Button botaoMesas;
+    @FXML
+    private Button botaoAbrirCaixa;
+    @FXML
+    private Button botaoFecharCaixa;
+    @FXML
+    private Button botaoConsultas;
+    @FXML
+    private Button botaoRelatorios;
 
     private static TelaPrincipalController instance;
-
-    public TelaPrincipalController() {
-        instance = this;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            instance = this;
             this.ajustaMenu();
             AnchorPane telaMesa = FXMLLoader.load(getClass().getResource("/fxml/TelaMesas.fxml"));
             this.mudaTela(telaMesa);
@@ -49,38 +56,19 @@ public class TelaPrincipalController implements Initializable {
 
     private void ajustaMenu() {
         Usuario usuario = SessaoUtil.getUsuario();
-        if (usuario.isGerente() || usuario.isVendedor()) {
-            Button btnEntrarTelaMesa = new Button("Mesas");
-            btnEntrarTelaMesa.setOnAction(this::acaoEntrarTelaMesa);
-            this.aplicaEstiloBotoesMenu(btnEntrarTelaMesa);
-            this.menuPrincipal.getChildren().add(btnEntrarTelaMesa);
+        this.menuPrincipal.getChildren().remove(this.botaoConsultas);
+        if (!(usuario.isGerente() || usuario.isVendedor())) {
+            this.menuPrincipal.getChildren().remove(this.botaoMesas);
         }
-
-        if (usuario.isGerente() || usuario.isOperadorCaixa()) {
-            Button btnEntrarTelaAbrirCaixa = new Button("Abrir Caixa");
-            btnEntrarTelaAbrirCaixa.setOnAction(this::acaoEntrarTelaAbrirCaixa);
-            this.aplicaEstiloBotoesMenu(btnEntrarTelaAbrirCaixa);
-            this.menuPrincipal.getChildren().add(btnEntrarTelaAbrirCaixa);
-
-            Button btnEntrarTelaFecharCaixa = new Button("Fechar Caixa");
-            btnEntrarTelaFecharCaixa.setOnAction(this::acaoEntrarTelaFecharCaixa);
-            this.aplicaEstiloBotoesMenu(btnEntrarTelaFecharCaixa);
-            this.menuPrincipal.getChildren().add(btnEntrarTelaFecharCaixa);
-
-            Button btnEntrarTelaRelatorios = new Button("Relatórios");
-            btnEntrarTelaRelatorios.setOnAction(this::acaoEntrarTelaRelatorios);
-            this.aplicaEstiloBotoesMenu(btnEntrarTelaRelatorios);
-            this.menuPrincipal.getChildren().add(btnEntrarTelaRelatorios);
+        if (!(usuario.isGerente() || usuario.isOperadorCaixa())) {
+            this.menuPrincipal.getChildren().remove(this.botaoAbrirCaixa);
+            this.menuPrincipal.getChildren().remove(this.botaoFecharCaixa);
+            this.menuPrincipal.getChildren().remove(this.botaoRelatorios);
         }
     }
 
-    private void aplicaEstiloBotoesMenu(Button botao) {
-        botao.setPrefWidth(86);
-        botao.setPrefHeight(60);
-        botao.setStyle("-fx-background-radius: 0");
-    }
-
-    private void acaoEntrarTelaMesa(ActionEvent event) {
+    @FXML
+    public void acaoEntrarTelaMesa(ActionEvent event) {
         try {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaMesas.fxml"));
             this.mudaTela(tela);
@@ -89,7 +77,8 @@ public class TelaPrincipalController implements Initializable {
         }
     }
 
-    private void acaoEntrarTelaAbrirCaixa(ActionEvent event) {
+    @FXML
+    public void acaoEntrarTelaAbrirCaixa(ActionEvent event) {
         try {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaAberturaCaixa.fxml"));
             this.mudaTela(tela);
@@ -98,17 +87,14 @@ public class TelaPrincipalController implements Initializable {
         }
     }
 
-    private void acaoEntrarTelaFecharCaixa(ActionEvent event) {
+    @FXML
+    public void acaoEntrarTelaFecharCaixa(ActionEvent event) {
         try {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaFechamentoCaixa.fxml"));
             this.mudaTela(tela);
         } catch (IOException e) {
             MensagemUtil.enviarMensagemErro(e.getMessage());
         }
-    }
-
-    private void acaoEntrarTelaRelatorios(ActionEvent event) {
-
     }
 
     private void setAnchor(AnchorPane pane) {

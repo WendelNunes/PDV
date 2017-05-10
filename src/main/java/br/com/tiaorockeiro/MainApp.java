@@ -47,8 +47,7 @@ public class MainApp extends Application {
     }
 
     public void irParaTelaPrincipal() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaPrincipal.fxml"));
-        loader.setController(new TelaPrincipalController());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaPrincipal_new.fxml"));
         AnchorPane pane = loader.load();
         Scene scene = new Scene(pane);
         this.stage.setScene(scene);

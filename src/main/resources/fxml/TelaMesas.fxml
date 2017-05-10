@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -8,16 +9,20 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="586.0" prefWidth="1074.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaMesasController">
-   <children>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="10.0">
-         <content>
-            <AnchorPane fx:id="anchorPaneMesas" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
-         </content>
-      </ScrollPane>
-      <Separator layoutX="774.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="294.0" AnchorPane.topAnchor="10.0" />
-      <Button fx:id="btnSelecionarCaixa" layoutX="953.0" layoutY="90.0" mnemonicParsing="false" onAction="#acaoSelecionarCaixa" prefHeight="52.0" prefWidth="111.0" style="-fx-background-radius: 0;" text="Selecionar Caixa" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
-      <Separator layoutX="780.0" layoutY="145.0" prefHeight="6.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="145.0" />
-      <AnchorPane fx:id="paneInformacaoCaixa" layoutX="780.0" layoutY="10.0" prefHeight="78.0" prefWidth="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-   </children>
+<AnchorPane id="AnchorPane" prefHeight="586.0" prefWidth="1074.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaMesasController">
+    <children>
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="10.0">
+            <content>
+                <AnchorPane fx:id="anchorPaneMesas" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
+            </content>
+        </ScrollPane>
+        <AnchorPane fx:id="paneInformacaoCaixa" layoutX="774.0" layoutY="14.0" prefHeight="148.0" prefWidth="284.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="14.0">
+            <effect>
+                <DropShadow blurType="ONE_PASS_BOX" color="#00000065" offsetX="2.0" offsetY="2.0" />
+            </effect>
+            <children>
+                <Button fx:id="btnSelecionarCaixa" layoutX="182.0" layoutY="86.0" mnemonicParsing="false" onAction="#acaoSelecionarCaixa" prefHeight="52.0" prefWidth="111.0" style="-fx-background-radius: 0;" text="Selecionar Caixa" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+            </children>
+        </AnchorPane>
+    </children>
 </AnchorPane>

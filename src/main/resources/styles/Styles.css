@@ -2,6 +2,16 @@
     -fx-background-radius: 0;
 }
 
+.botao-menu {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #000000ad;
+}
+
+.botao-menu:hover {
+    -fx-background-color:  #F7F7F7;
+    -fx-cursor: hand;
+}
+
 .botao-mesa-aberta {
     -fx-background-color: #BBFFBB;
     -fx-border-color: #d0d0d0;
