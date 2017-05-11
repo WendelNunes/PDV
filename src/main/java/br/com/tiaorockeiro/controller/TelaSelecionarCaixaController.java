@@ -35,7 +35,7 @@ import javafx.util.StringConverter;
  * @author Wendel
  */
 public class TelaSelecionarCaixaController implements Initializable {
-    
+
     @FXML
     private ComboBox<AberturaCaixa> cbCaixa;
     @FXML
@@ -70,7 +70,7 @@ public class TelaSelecionarCaixaController implements Initializable {
                 public String toString(AberturaCaixa aberturaCaixa) {
                     return aberturaCaixa != null ? aberturaCaixa.getCaixa().getCodigo() + " - " + aberturaCaixa.getCaixa().getDescricao() : null;
                 }
-                
+
                 @Override
                 public AberturaCaixa fromString(String string) {
                     return null;
@@ -89,7 +89,7 @@ public class TelaSelecionarCaixaController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoBotaoSelecionarCaixa(ActionEvent event) {
         try {
@@ -112,13 +112,13 @@ public class TelaSelecionarCaixaController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoBotaoVoltar(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaCaixa.fxml"));
             AnchorPane tela = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(tela, "Mesas");
+            TelaPrincipalController.getInstance().mudaTela(tela, "Caixa");
         } catch (IOException | NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }

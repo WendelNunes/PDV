@@ -30,6 +30,10 @@ public class TelaCaixaController implements Initializable {
     @FXML
     private Button botaoAbrirCaixa;
     @FXML
+    private Button botaoSuprirCaixa;
+    @FXML
+    private Button botaoSangrarCaixa;
+    @FXML
     private Button botaoFecharCaixa;
 
     /**
@@ -51,6 +55,8 @@ public class TelaCaixaController implements Initializable {
         Usuario usuario = SessaoUtil.getUsuario();
         if (!(usuario.isGerente() || usuario.isOperadorCaixa())) {
             this.panelPrincipal.getChildren().remove(this.botaoAbrirCaixa);
+            this.panelPrincipal.getChildren().remove(this.botaoSuprirCaixa);
+            this.panelPrincipal.getChildren().remove(this.botaoSangrarCaixa);
             this.panelPrincipal.getChildren().remove(this.botaoFecharCaixa);
         }
     }
@@ -80,6 +86,26 @@ public class TelaCaixaController implements Initializable {
         try {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaSelecionarCaixa.fxml"));
             TelaPrincipalController.getInstance().mudaTela(tela, "Selecionar Caixa");
+        } catch (IOException e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoBotaoSuprirCaixa(ActionEvent event) {
+        try {
+            AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaSuprimentoCaixa.fxml"));
+            TelaPrincipalController.getInstance().mudaTela(tela, "Suprimento de Caixa");
+        } catch (IOException e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoBotaoSangrarCaixa(ActionEvent event) {
+        try {
+            AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaSangriaCaixa.fxml"));
+            TelaPrincipalController.getInstance().mudaTela(tela, "Sagria de Caixa");
         } catch (IOException e) {
             enviarMensagemErro(e.getMessage());
         }

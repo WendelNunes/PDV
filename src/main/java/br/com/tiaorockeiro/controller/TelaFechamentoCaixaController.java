@@ -187,7 +187,7 @@ public class TelaFechamentoCaixaController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaCaixa.fxml"));
             AnchorPane tela = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(tela, "Mesas");
+            TelaPrincipalController.getInstance().mudaTela(tela, "Caixa");
         } catch (IOException | NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }

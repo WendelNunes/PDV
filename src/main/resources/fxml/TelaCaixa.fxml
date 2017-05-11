@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="AnchorPane" fx:id="panelPrincipal" prefHeight="181.0" prefWidth="600.0" style="-fx-background-color: #ECEFF1;" styleClass="botao-menu-solto" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaCaixaController">
+<AnchorPane id="AnchorPane" fx:id="panelPrincipal" prefHeight="181.0" prefWidth="600.0" style="-fx-background-color: #ECEFF1;" styleClass="botao-menu-solto" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaCaixaController">
     <children>
         <HBox layoutX="10.0" layoutY="14.0" prefHeight="65.0" prefWidth="580.0" spacing="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
                 <Button fx:id="botaoAbrirCaixa" mnemonicParsing="false" onAction="#acaoBotaoAbrirCaixa" prefHeight="65.0" prefWidth="85.0" styleClass="botao-menu-solto" text="Abrir Caixa" />
-                <Button fx:id="botaoFecharCaixa" mnemonicParsing="false" onAction="#acaoBotaoFecharCaixa" prefHeight="65.0" prefWidth="89.0" styleClass="botao-menu-solto" text="Fechar Caixa" />
                 <Button mnemonicParsing="false" onAction="#acaoBotaoSelecionarCaixa" prefHeight="65.0" prefWidth="112.0" styleClass="botao-menu-solto" text="Selecionar Caixa">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>
                 </Button>
+            <Button fx:id="botaoSuprirCaixa" mnemonicParsing="false" onAction="#acaoBotaoSuprirCaixa" prefHeight="65.0" prefWidth="85.0" styleClass="botao-menu-solto" text="Suprir Caixa" />
+            <Button fx:id="botaoSangrarCaixa" mnemonicParsing="false" onAction="#acaoBotaoSangrarCaixa" prefHeight="65.0" prefWidth="94.0" styleClass="botao-menu-solto" text="Sangrar Caixa" />
+                <Button fx:id="botaoFecharCaixa" mnemonicParsing="false" onAction="#acaoBotaoFecharCaixa" prefHeight="65.0" prefWidth="89.0" styleClass="botao-menu-solto" text="Fechar Caixa" />
             </children>
         </HBox>
     </children>
