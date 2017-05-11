@@ -4,11 +4,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaSuprimentoCaixaController">
+<AnchorPane id="AnchorPane" prefHeight="503.0" prefWidth="681.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaSuprimentoCaixaController">
    <children>
       <Label fx:id="titulo11" layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="661.0" text="Caixa:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
@@ -16,37 +18,51 @@
          </font>
       </Label>
       <ComboBox layoutX="10.0" layoutY="28.0" prefHeight="52.0" prefWidth="663.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="28.0" />
-      <Label fx:id="titulo111" layoutX="10.0" layoutY="83.0" prefHeight="18.0" prefWidth="149.0" text="Data do Suprimento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="83.0">
+      <Label fx:id="titulo111" layoutX="10.0" layoutY="88.0" prefHeight="18.0" prefWidth="149.0" text="Data do Suprimento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="88.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField disable="true" editable="false" layoutX="10.0" layoutY="101.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="101.0" />
-      <Label fx:id="titulo1" layoutX="10.0" layoutY="156.0" prefHeight="18.0" prefWidth="149.0" text="Valor do Suprimento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="156.0">
+      <TextField disable="true" editable="false" layoutX="10.0" layoutY="106.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="106.0" />
+      <Label fx:id="titulo1" layoutX="10.0" layoutY="165.0" prefHeight="18.0" prefWidth="149.0" text="Valor do Suprimento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="165.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <Button layoutX="351.0" layoutY="174.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="2" AnchorPane.leftAnchor="351.0" AnchorPane.topAnchor="174.0" />
-      <Button layoutX="288.0" layoutY="174.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" AnchorPane.leftAnchor="288.0" AnchorPane.topAnchor="174.0" />
-      <Button layoutX="414.0" layoutY="174.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="3" AnchorPane.leftAnchor="414.0" AnchorPane.topAnchor="174.0" />
-      <Button layoutX="351.0" layoutY="237.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="5" AnchorPane.leftAnchor="351.0" AnchorPane.topAnchor="237.0" />
-      <Button layoutX="414.0" layoutY="237.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="6" AnchorPane.leftAnchor="414.0" AnchorPane.topAnchor="237.0" />
-      <Button layoutX="288.0" layoutY="237.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="4" AnchorPane.leftAnchor="288.0" AnchorPane.topAnchor="237.0" />
-      <Button layoutX="288.0" layoutY="300.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="7" AnchorPane.leftAnchor="288.0" AnchorPane.topAnchor="300.0" />
-      <Button layoutX="414.0" layoutY="300.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" AnchorPane.leftAnchor="414.0" AnchorPane.topAnchor="300.0" />
-      <Button layoutX="351.0" layoutY="300.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="8" AnchorPane.leftAnchor="351.0" AnchorPane.topAnchor="300.0" />
-      <Button layoutX="351.0" layoutY="363.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" AnchorPane.leftAnchor="351.0" AnchorPane.topAnchor="363.0" />
-      <ToggleButton layoutX="167.0" layoutY="174.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="S" AnchorPane.leftAnchor="167.0" AnchorPane.topAnchor="174.0" />
-      <Button layoutX="222.0" layoutY="174.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" style="-fx-background-radius: 0;" text="L" AnchorPane.leftAnchor="222.0" AnchorPane.topAnchor="174.0" />
-      <TextField disable="true" editable="false" layoutX="10.0" layoutY="174.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="174.0" />
-      <Button layoutX="468.0" layoutY="429.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="127.0" style="-fx-background-radius: 0;" text="Finalizar Suprimento" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="113.0" />
+      <TextField disable="true" editable="false" layoutX="10.0" layoutY="183.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="183.0" />
+      <Button layoutX="442.0" layoutY="421.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="127.0" style="-fx-background-radius: 0;" text="Finalizar Suprimento" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="112.0" />
       <Button layoutX="567.0" layoutY="429.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Voltar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <Label fx:id="titulo1111" layoutX="162.0" layoutY="83.0" prefHeight="18.0" prefWidth="149.0" text="Hora do Suprimento:" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="83.0">
+      <Label fx:id="titulo1111" layoutX="161.0" layoutY="88.0" prefHeight="18.0" prefWidth="149.0" text="Hora do Suprimento:" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="88.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField disable="true" editable="false" layoutX="162.0" layoutY="101.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="101.0" />
+      <TextField disable="true" editable="false" layoutX="161.0" layoutY="106.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="106.0" />
+      <GridPane hgap="2.0" layoutX="160.0" layoutY="183.0" vgap="2.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="183.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" onAction="#acaoBotao1" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao2" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="2" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao3" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="3" GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao4" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="4" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao5" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao6" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao7" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="7" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao8" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao9" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#acaoBotao0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button mnemonicParsing="false" onAction="#acaoBotaoLimparSaldoInicial" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Limpar" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

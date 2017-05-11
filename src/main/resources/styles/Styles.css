@@ -1,38 +1,88 @@
-/** BOTÕES DO MENU **/
+.combo-box {
+    -fx-background-radius: 0px;
+    -fx-pref-height: 60px;
+}
+
+.text-field {
+    -fx-background-radius: 0px;
+    -fx-pref-height: 60px;
+}
+
+.button {
+    -fx-font: normal 12px "System";
+    -fx-background-radius: 0px;
+    -fx-pref-height: 60px;
+}
+
+.label {
+    -fx-font: normal 12px "System";
+}
+
+/** BOTOES DO MENU **/
 .botao-menu {
-	-fx-background-radius: 0px;
-    -fx-background-color: #FFFFFF;
-    -fx-text-fill: #000000ad;
+    -fx-font: normal 16px "System";
+    -fx-background-radius: 0px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-pref-height: 60px;
 }
 
 .botao-menu:hover {
-    -fx-background-color: #F7F7F7;
+    -fx-background-color: #2196F3;
     -fx-cursor: hand;
 }
 
-/** BOTÕES FLATS */
+.botao-menu:pressed {
+    -fx-background-color: #1976D2;
+    -fx-cursor: hand;
+}
+
+/** TITULO **/
+.titulo {
+    -fx-font: bold 18px "System";
+    -fx-text-fill: #000000ad;
+}
+
+/** RODA PE **/
+.texto-rodape {
+    -fx-font: normal 14px "System";
+    -fx-text-fill: #FFFFFF;
+}
+
+/** SCROLL PANE **/
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #ECEFF1;
+}
+
+
+/** BOTOES FLATS */
 .botao-flat {
-	-fx-font: bold 12px "System";
-	-fx-background-radius: 0px;
-	-fx-background-color: transparent;
-	-fx-text-fill: #000000ad;
+    -fx-font: bold 12px "System";
+    -fx-background-radius: 0px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000ad;
 }
 
 .botao-flat:hover {
-	-fx-background-color: #B0BEC5;
+    -fx-background-color: #B0BEC5;
     -fx-cursor: hand;
 }
 
 .botao-flat:pressed {
-	-fx-background-color: #90A4AE;
+    -fx-background-color: #90A4AE;
 }
 
-/** BOTÕES DA MESAS **/
+/** BOTOES DA MESAS **/
 .botao-mesa-aberta {
-	-fx-background-radius: 0px;
+    -fx-font: bold 12px "System";
+    -fx-background-radius: 0px;
     -fx-background-color: #BBFFBB;
     -fx-border-color: #d0d0d0;
-    -fx-border-insets: 1 1 1 1;
+    -fx-pref-height: 125px;
 }
 
 .botao-mesa-aberta:hover {
@@ -44,10 +94,11 @@
 }
 
 .botao-mesa-fechada {
-	-fx-background-radius: 0px;
+    -fx-font: bold 12px "System";
+    -fx-background-radius: 0px;
     -fx-background-color: #FFD9D9;
     -fx-border-color: #d0d0d0;
-    -fx-border-insets: 1 1 1 1;
+    -fx-pref-height: 125px;
 }
 
 .botao-mesa-fechada:hover {
@@ -56,4 +107,23 @@
 
 .botao-mesa-fechada:pressed {
     -fx-background-color: #FFB9B9;
+}
+
+/** BOTOES MENU SOLTO **/
+.botao-menu-solto {
+    -fx-background-color: #1E88E5;
+    -fx-background-radius: 0px;
+    -fx-font: bold 12px "System";
+    -fx-text-fill: #FFFFFF;
+    -fx-pref-height: 60px;
+}
+
+.botao-menu-solto:hover {
+    -fx-background-color: #2196F3;
+    -fx-cursor: hand;
+}
+
+.botao-menu-solto:pressed {
+    -fx-background-color: #1976D2;
+    -fx-cursor: hand;
 }

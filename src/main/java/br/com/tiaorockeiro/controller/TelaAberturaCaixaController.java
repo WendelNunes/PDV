@@ -170,9 +170,9 @@ public class TelaAberturaCaixaController implements Initializable {
     @FXML
     public void acaoBotaoVoltar(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
-            AnchorPane telaMesas = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(telaMesas);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaCaixa.fxml"));
+            AnchorPane tela = loader.load();
+            TelaPrincipalController.getInstance().mudaTela(tela, "Caixa");
         } catch (IOException | NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }

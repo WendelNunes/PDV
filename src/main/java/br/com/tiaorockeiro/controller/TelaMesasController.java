@@ -13,7 +13,6 @@ import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -24,12 +23,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 
 /**
  * FXML Controller class
@@ -42,14 +39,10 @@ public class TelaMesasController implements Initializable {
     private AnchorPane anchorPaneMesas;
     @FXML
     private GridPane gridMesas;
-    @FXML
-    private AnchorPane paneInformacaoCaixa;
-    @FXML
-    private Button btnSelecionarCaixa;
     private AberturaCaixa aberturaCaixa;
     List<Pedido> pedidosAbertos = new ArrayList<>();
 
-    private static final int QTDE_COLUNAS = 5;
+    private static final int QTDE_COLUNAS = 10;
 
     public TelaMesasController() {
         this.pedidosAbertos = new PedidoNegocio().obterAbertos();
@@ -75,14 +68,16 @@ public class TelaMesasController implements Initializable {
         if (SessaoUtil.getConfiguracao() != null && SessaoUtil.getConfiguracao().getQuantidadeMesas() > 0
                 && this.aberturaCaixa != null) {
             this.gridMesas = new GridPane();
-
+            this.gridMesas.setHgap(3);
+            this.gridMesas.setVgap(3);
             int coluna = 0;
             int linha = 0;
             for (int i = 1; i <= SessaoUtil.getConfiguracao().getQuantidadeMesas(); i++) {
                 AnchorPane anchorPaneMesa = new AnchorPane();
-                setAnchor(anchorPaneMesa);
+                AnchorPane.setLeftAnchor(anchorPaneMesa, 0.0);
+                AnchorPane.setTopAnchor(anchorPaneMesa, 0.0);
+                AnchorPane.setRightAnchor(anchorPaneMesa, 0.0);
                 Button botaoMesa = criaBotao(i);
-                setAnchor(botaoMesa);
                 anchorPaneMesa.getChildren().add(botaoMesa);
                 this.gridMesas.add(anchorPaneMesa, coluna, linha);
                 ++coluna;
@@ -94,23 +89,8 @@ public class TelaMesasController implements Initializable {
             AnchorPane.setLeftAnchor(this.gridMesas, 0.0);
             AnchorPane.setTopAnchor(this.gridMesas, 0.0);
             AnchorPane.setRightAnchor(this.gridMesas, 0.0);
-            AnchorPane.setBottomAnchor(this.gridMesas, 0.0);
             this.anchorPaneMesas.getChildren().add(this.gridMesas);
         }
-    }
-
-    private void setAnchor(AnchorPane pane) {
-        AnchorPane.setLeftAnchor(pane, 0.0);
-        AnchorPane.setTopAnchor(pane, 0.0);
-        AnchorPane.setRightAnchor(pane, 0.0);
-        AnchorPane.setBottomAnchor(pane, 0.0);
-    }
-
-    private void setAnchor(Button button) {
-        AnchorPane.setLeftAnchor(button, 0.0);
-        AnchorPane.setTopAnchor(button, 0.0);
-        AnchorPane.setRightAnchor(button, 0.0);
-        AnchorPane.setBottomAnchor(button, 0.0);
     }
 
     private Button criaBotao(int mesa) {
@@ -118,13 +98,16 @@ public class TelaMesasController implements Initializable {
         Button button = new Button("Mesa " + mesa, new ImageView(image));
         button.setContentDisplay(ContentDisplay.TOP);
         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        button.setPrefSize(300, 300);
+        button.setPrefSize(300, 125);
         button.getStyleClass().add("botao");
         button.getStyleClass().add(this.pedidosAbertos.stream().anyMatch(i -> i.getMesa() == mesa) ? "botao-mesa-aberta" : "botao-mesa-fechada");
         button.setId("mesa-" + String.valueOf(mesa));
         button.setOnAction((ActionEvent event) -> {
             this.abreMesa(event);
         });
+        AnchorPane.setLeftAnchor(button, 0.0);
+        AnchorPane.setRightAnchor(button, 0.0);
+        AnchorPane.setTopAnchor(button, 0.0);
         return button;
     }
 
@@ -135,7 +118,7 @@ public class TelaMesasController implements Initializable {
             AnchorPane telaPedido = loader.load();
             TelaPedidoController telaPedidoController = loader.getController();
             telaPedidoController.inicializaDados(mesa);
-            TelaPrincipalController.getInstance().mudaTela(telaPedido);
+            TelaPrincipalController.getInstance().mudaTela(telaPedido, "Pedido - Mesa " + mesa);
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
@@ -143,52 +126,9 @@ public class TelaMesasController implements Initializable {
 
     private void carregaCaixaSelecionado() throws Exception {
         ConfiguracaoUsuario configuracaoUsuario = SessaoUtil.getUsuario().getConfiguracao();
-        GridPane gridPane = new GridPane();
         if (configuracaoUsuario != null && configuracaoUsuario.getCaixaSelecionado() != null) {
             this.aberturaCaixa = new AberturaCaixaNegocio().obterAbertoPorCaixa(configuracaoUsuario.getCaixaSelecionado());
-            if (this.aberturaCaixa != null) {
-                Font font = new Font("Arial", 14);
-                Label labelCaixa = new Label("Caixa:");
-                labelCaixa.setFont(font);
-                gridPane.add(labelCaixa, 0, 0);
-                Label labelDescricaoCaixa = new Label(this.aberturaCaixa.getCaixa().getDescricao());
-                labelDescricaoCaixa.setFont(font);
-                gridPane.add(labelDescricaoCaixa, 1, 0);
-                Label labelData = new Label("Data:");
-                labelData.setFont(font);
-                gridPane.add(labelData, 0, 1);
-                Label labelDataDescricao = new Label(new SimpleDateFormat("dd/MM/yyyy").format(this.aberturaCaixa.getDataHora()));
-                labelDataDescricao.setFont(font);
-                gridPane.add(labelDataDescricao, 1, 1);
-                Label labelHora = new Label("Hora:");
-                labelHora.setFont(font);
-                gridPane.add(labelHora, 0, 2);
-                Label labelHoraDescricao = new Label(new SimpleDateFormat("HH:mm:ss").format(this.aberturaCaixa.getDataHora()));
-                labelHoraDescricao.setFont(font);
-                gridPane.add(labelHoraDescricao, 1, 2);
-                Label labelUsuario = new Label("Usuário:");
-                labelUsuario.setFont(font);
-                gridPane.add(labelUsuario, 0, 3);
-                Label labelUsuarioDescricao = new Label(this.aberturaCaixa.getUsuario().getDescricao());
-                labelUsuarioDescricao.setFont(font);
-                gridPane.add(labelUsuarioDescricao, 1, 3);
-                this.btnSelecionarCaixa.setText("Mudar Caixa");
-                this.paneInformacaoCaixa.getChildren().add(gridPane);
-                return;
-            }
-        }
-        gridPane.add(new Label("Nenhum caixa selecionado!"), 0, 0);
-        this.paneInformacaoCaixa.getChildren().add(gridPane);
-    }
 
-    @FXML
-    public void acaoSelecionarCaixa(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaSelecionarCaixa.fxml"));
-            AnchorPane telaPedido = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(telaPedido);
-        } catch (Exception e) {
-            enviarMensagemErro(e.getMessage());
         }
     }
 }

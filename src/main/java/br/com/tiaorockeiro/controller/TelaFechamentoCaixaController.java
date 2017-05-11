@@ -158,7 +158,7 @@ public class TelaFechamentoCaixaController implements Initializable {
     }
 
     @FXML
-    public void acaoBotaoLimparSaldoFinal(ActionEvent event) {
+    public void acaoBotaoLimpar(ActionEvent event) {
         this.inputSaldoFinal.setText(formataMoeda(BigDecimal.ZERO));
     }
 
@@ -185,9 +185,9 @@ public class TelaFechamentoCaixaController implements Initializable {
     @FXML
     public void acaoBotaoVoltar(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
-            AnchorPane telaMesas = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(telaMesas);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaCaixa.fxml"));
+            AnchorPane tela = loader.load();
+            TelaPrincipalController.getInstance().mudaTela(tela, "Mesas");
         } catch (IOException | NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }

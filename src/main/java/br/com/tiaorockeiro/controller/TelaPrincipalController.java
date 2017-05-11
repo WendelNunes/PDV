@@ -5,8 +5,12 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.AberturaCaixa;
+import br.com.tiaorockeiro.modelo.ConfiguracaoUsuario;
 import br.com.tiaorockeiro.modelo.Usuario;
+import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.util.MensagemUtil;
+import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
@@ -32,13 +37,15 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private Button botaoMesas;
     @FXML
-    private Button botaoAbrirCaixa;
-    @FXML
-    private Button botaoFecharCaixa;
-    @FXML
     private Button botaoConsultas;
     @FXML
     private Button botaoRelatorios;
+    @FXML
+    private Label titulo;
+    @FXML
+    private Label labelCaixaSelecionado;
+    @FXML
+    private Label labelUsuario;
 
     private static TelaPrincipalController instance;
 
@@ -47,10 +54,11 @@ public class TelaPrincipalController implements Initializable {
         try {
             instance = this;
             this.ajustaMenu();
+            this.ajustaRodape();
             AnchorPane telaMesa = FXMLLoader.load(getClass().getResource("/fxml/TelaMesas.fxml"));
-            this.mudaTela(telaMesa);
-        } catch (IOException e) {
-            System.err.println(e);
+            this.mudaTela(telaMesa, "Mesas");
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
         }
     }
 
@@ -61,9 +69,23 @@ public class TelaPrincipalController implements Initializable {
             this.menuPrincipal.getChildren().remove(this.botaoMesas);
         }
         if (!(usuario.isGerente() || usuario.isOperadorCaixa())) {
-            this.menuPrincipal.getChildren().remove(this.botaoAbrirCaixa);
-            this.menuPrincipal.getChildren().remove(this.botaoFecharCaixa);
             this.menuPrincipal.getChildren().remove(this.botaoRelatorios);
+        }
+    }
+
+    private void ajustaRodape() throws Exception {
+        Usuario usuario = SessaoUtil.getUsuario();
+        this.setLabelUsuario("Usuário: " + usuario.getDescricao());
+        ConfiguracaoUsuario configuracaoUsuario = usuario.getConfiguracao();
+        if (configuracaoUsuario != null && configuracaoUsuario.getCaixaSelecionado() != null) {
+            AberturaCaixa aberturaCaixa = new AberturaCaixaNegocio().obterAbertoPorCaixa(configuracaoUsuario.getCaixaSelecionado());
+            if (aberturaCaixa != null) {
+                this.setLabelCaixaSelecionado("Caixa: " + aberturaCaixa.getCaixa().getDescricao());
+            } else {
+                this.setLabelCaixaSelecionado("Nenhum caixa selecionado!");
+            }
+        } else {
+            this.setLabelCaixaSelecionado("Nenhum caixa selecionado!");
         }
     }
 
@@ -71,27 +93,17 @@ public class TelaPrincipalController implements Initializable {
     public void acaoEntrarTelaMesa(ActionEvent event) {
         try {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaMesas.fxml"));
-            this.mudaTela(tela);
+            this.mudaTela(tela, "Mesas");
         } catch (IOException e) {
             MensagemUtil.enviarMensagemErro(e.getMessage());
         }
     }
 
     @FXML
-    public void acaoEntrarTelaAbrirCaixa(ActionEvent event) {
+    public void acaoEntrarTelaCaixa(ActionEvent event) {
         try {
-            AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaAberturaCaixa.fxml"));
-            this.mudaTela(tela);
-        } catch (IOException e) {
-            MensagemUtil.enviarMensagemErro(e.getMessage());
-        }
-    }
-
-    @FXML
-    public void acaoEntrarTelaFecharCaixa(ActionEvent event) {
-        try {
-            AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaFechamentoCaixa.fxml"));
-            this.mudaTela(tela);
+            AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaCaixa.fxml"));
+            this.mudaTela(tela, "Caixa");
         } catch (IOException e) {
             MensagemUtil.enviarMensagemErro(e.getMessage());
         }
@@ -104,13 +116,22 @@ public class TelaPrincipalController implements Initializable {
         AnchorPane.setBottomAnchor(pane, 0.0);
     }
 
-    public void mudaTela(AnchorPane pane) {
+    public void mudaTela(AnchorPane pane, String titulo) {
         this.setAnchor(pane);
         this.content.getChildren().clear();
         this.content.getChildren().add(pane);
+        this.titulo.setText(titulo);
     }
 
     public static TelaPrincipalController getInstance() {
         return instance;
+    }
+
+    public void setLabelCaixaSelecionado(String texto) {
+        this.labelCaixaSelecionado.setText(texto);
+    }
+
+    public void setLabelUsuario(String usuario) {
+        this.labelUsuario.setText(usuario);
     }
 }

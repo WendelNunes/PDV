@@ -57,8 +57,6 @@ import javafx.scene.text.Font;
 public class TelaPedidoController implements Initializable {
 
     @FXML
-    private Label titulo;
-    @FXML
     private ScrollPane scrollCategorias;
     @FXML
     private GridPane gridCategorias;
@@ -111,7 +109,7 @@ public class TelaPedidoController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
             AnchorPane telaMesas = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(telaMesas);
+            TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
         } catch (IOException | NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }
@@ -370,7 +368,7 @@ public class TelaPedidoController implements Initializable {
                 AnchorPane telaFinalizarVenda = loader.load();
                 TelaFinalizarVendaController telaFinalizarVendaController = loader.getController();
                 telaFinalizarVendaController.inicializaDados(this.pedido.getId());
-                TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda);
+                TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda, "Fechamento de Venda");
             } else {
                 enviarMensagemInformacao("Não existe nenhum pedido finalizado para a mesa!");
             }
@@ -390,7 +388,7 @@ public class TelaPedidoController implements Initializable {
                 new PedidoNegocio().salvar(this.pedido);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
                 AnchorPane telaMesas = loader.load();
-                TelaPrincipalController.getInstance().mudaTela(telaMesas);
+                TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
                 enviarMensagemInformacao("Venda cancelada com sucesso!");
             }
         } catch (IOException e) {
@@ -401,7 +399,6 @@ public class TelaPedidoController implements Initializable {
     public void inicializaDados(Integer mesa) throws Exception {
         this.pedido = new Pedido();
         this.pedido.setMesa(mesa);
-        this.titulo.setText("Mesa " + this.pedido.getMesa());
         Pedido pedidoEmAberto = new PedidoNegocio().obterAbertoPorMesa(this.pedido.getMesa());
         if (pedidoEmAberto != null) {
             this.pedido = pedidoEmAberto;

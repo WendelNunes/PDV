@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="787.0" prefWidth="800.0" style="-fx-background-color: #FFFF;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPrincipalController">
+<AnchorPane id="AnchorPane" prefHeight="787.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPrincipalController">
     <children>
-        <HBox fx:id="menuPrincipal" layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="665.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #1E88E5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+              <HBox fx:id="menuPrincipal" prefHeight="60.0" prefWidth="665.0" style="-fx-background-color: transparent;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                      <Button fx:id="botaoMesas" mnemonicParsing="false" onAction="#acaoEntrarTelaMesa" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" stylesheets="@../styles/Styles.css" text="Mesas" textFill="#000000ad">
+                          <font>
+                              <Font name="Arial" size="16.0" />
+                          </font>
+                      </Button>
+                      <Button mnemonicParsing="false" onAction="#acaoEntrarTelaCaixa" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Caixa" textFill="#000000ad">
+                          <font>
+                              <Font name="Arial" size="16.0" />
+                          </font>
+                      </Button>
+                      <Button fx:id="botaoConsultas" mnemonicParsing="false" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Consultas" textFill="#000000ad">
+                          <font>
+                              <Font name="Arial" size="16.0" />
+                          </font>
+                      </Button>
+                      <Button fx:id="botaoRelatorios" mnemonicParsing="false" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Relatórios" textFill="#000000ad">
+                          <font>
+                              <Font name="Arial" size="16.0" />
+                          </font>
+                      </Button>
+                  </children>
+              </HBox>
+              <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Sair" textFill="#000000ad" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <font>
+                      <Font name="Arial" size="16.0" />
+                  </font>
+              </Button>
+         </children>
+      </AnchorPane>
+        <AnchorPane layoutY="60.0" prefHeight="714.0" prefWidth="800.0" style="-fx-background-color: #F7F7F7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
             <children>
-                <Button fx:id="botaoMesas" mnemonicParsing="false" onAction="#acaoEntrarTelaMesa" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" stylesheets="@../styles/Styles.css" text="Mesas" textFill="#000000ad">
-                    <font>
-                        <Font name="Arial" size="16.0" />
-                    </font>
-                </Button>
-                <Button fx:id="botaoAbrirCaixa" mnemonicParsing="false" onAction="#acaoEntrarTelaAbrirCaixa" prefHeight="60.0" prefWidth="109.0" styleClass="botao-menu" text="Abrir Caixa" textFill="#000000ad">
-                    <font>
-                        <Font name="Arial" size="16.0" />
-                    </font>
-                </Button>
-                <Button fx:id="botaoFecharCaixa" mnemonicParsing="false" onAction="#acaoEntrarTelaFecharCaixa" prefHeight="60.0" prefWidth="121.0" styleClass="botao-menu" text="Fechar Caixa" textFill="#000000ad">
-                    <font>
-                        <Font name="Arial" size="16.0" />
-                    </font>
-                </Button>
-                <Button fx:id="botaoConsultas" mnemonicParsing="false" prefHeight="60.0" prefWidth="121.0" styleClass="botao-menu" text="Consultas" textFill="#000000ad">
-                    <font>
-                        <Font name="Arial" size="16.0" />
-                    </font>
-                </Button>
-                <Button fx:id="botaoRelatorios" mnemonicParsing="false" prefHeight="60.0" prefWidth="121.0" styleClass="botao-menu" text="Relatórios" textFill="#000000ad">
-                    <font>
-                        <Font name="Arial" size="16.0" />
-                    </font>
-                </Button>
-            </children>
-        </HBox>
-        <Button layoutX="673.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="85.0" styleClass="botao-menu" text="Sair" textFill="#000000ad" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <font>
-                <Font name="Arial" size="16.0" />
-            </font>
-        </Button>
-        <AnchorPane layoutY="60.0" prefHeight="733.0" prefWidth="800.0" style="-fx-background-color: #F7F7F7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
-            <children>
-                <AnchorPane fx:id="content" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFF;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                    <effect>
-                        <DropShadow blurType="ONE_PASS_BOX" color="#00000065" offsetX="2.0" offsetY="2.0" />
-                    </effect>
+            <Label fx:id="titulo" layoutX="14.0" layoutY="5.0" prefHeight="29.0" prefWidth="774.0" styleClass="titulo" text="Mesas" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                <AnchorPane fx:id="content" layoutX="10.0" layoutY="36.0" prefHeight="655.0" prefWidth="780.0" style="-fx-background-color: #ECEFF1;" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="36.0">
+               <effect>
+                  <DropShadow color="#00000079" />
+               </effect>
                 </AnchorPane>
             </children>
         </AnchorPane>
+      <AnchorPane prefHeight="25.0" prefWidth="800.0" style="-fx-background-color: #1E88E5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label fx:id="labelCaixaSelecionado" layoutX="7.0" layoutY="4.0" prefHeight="21.0" prefWidth="356.0" styleClass="texto-rodape" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="2.0" />
+            <Label fx:id="labelUsuario" alignment="CENTER_RIGHT" layoutX="79.0" prefHeight="21.0" prefWidth="356.0" styleClass="texto-rodape" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="2.0" />
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>

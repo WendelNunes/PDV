@@ -418,7 +418,7 @@ public class TelaFinalizarVendaController implements Initializable {
                 }
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
                 AnchorPane telaMesas = loader.load();
-                TelaPrincipalController.getInstance().mudaTela(telaMesas);
+                TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
                 enviarMensagemInformacao("Venda finalizada com sucesso!");
             }
         } catch (Exception e) {
@@ -435,7 +435,7 @@ public class TelaFinalizarVendaController implements Initializable {
                 new PedidoNegocio().salvar(this.venda.getPedido());
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
                 AnchorPane telaMesas = loader.load();
-                TelaPrincipalController.getInstance().mudaTela(telaMesas);
+                TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
                 enviarMensagemInformacao("Venda cancelada com sucesso!");
             }
         } catch (IOException e) {
@@ -450,7 +450,7 @@ public class TelaFinalizarVendaController implements Initializable {
             AnchorPane telaPedido = loader.load();
             TelaPedidoController telaPedidoController = loader.getController();
             telaPedidoController.inicializaDados(this.venda.getMesa());
-            TelaPrincipalController.getInstance().mudaTela(telaPedido);
+            TelaPrincipalController.getInstance().mudaTela(telaPedido, "Pedido");
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
