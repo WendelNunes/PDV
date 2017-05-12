@@ -47,6 +47,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
 /**
@@ -58,8 +59,6 @@ public class TelaPedidoController implements Initializable {
 
     @FXML
     private ScrollPane scrollCategorias;
-    @FXML
-    private GridPane gridCategorias;
     @FXML
     private ScrollPane scrollProdutos;
     @FXML
@@ -117,24 +116,19 @@ public class TelaPedidoController implements Initializable {
 
     private void criaGridCategorias() {
         this.categorias = new CategoriaProdutoNegocio().listarTodos(CategoriaProduto.class);
-        this.gridCategorias = new GridPane();
-        this.gridCategorias.setVgap(10);
-        this.gridCategorias.setHgap(10);
+        HBox listaCategorias = new HBox();
+        listaCategorias.setSpacing(2);
         if (this.categorias != null && !this.categorias.isEmpty()) {
-            int posicao = 0;
-            for (CategoriaProduto categoria : this.categorias) {
-                this.gridCategorias.add(this.criaBotaoCategorias(categoria), ++posicao, 0);
-            }
+            this.categorias.stream().forEach((categoria) -> {
+                listaCategorias.getChildren().add(this.criaBotaoCategorias(categoria));
+            });
         }
-        this.scrollCategorias.setContent(this.gridCategorias);
+        this.scrollCategorias.setContent(listaCategorias);
     }
 
     private Button criaBotaoCategorias(CategoriaProduto categoriaProduto) {
-        Image image = new Image("/imagens/icon-table.png");
-        Button button = new Button(categoriaProduto.getDescricao(), new ImageView(image));
-        button.setContentDisplay(ContentDisplay.TOP);
-        button.setPrefSize(123, 107);
-        button.setStyle("-fx-background-radius: 0");
+        Button button = new Button(categoriaProduto.getDescricao());
+        button.getStyleClass().add("botao-menu-solto");
         button.setId(categoriaProduto.getId().toString());
         button.setOnAction((ActionEvent event) -> {
             this.selecionaCategoria(event);
@@ -368,7 +362,7 @@ public class TelaPedidoController implements Initializable {
                 AnchorPane telaFinalizarVenda = loader.load();
                 TelaFinalizarVendaController telaFinalizarVendaController = loader.getController();
                 telaFinalizarVendaController.inicializaDados(this.pedido.getId());
-                TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda, "Fechamento de Venda");
+                TelaPrincipalController.getInstance().mudaTela(telaFinalizarVenda, "Fechamento de Venda - Mesa " + this.pedido.getMesa());
             } else {
                 enviarMensagemInformacao("Não existe nenhum pedido finalizado para a mesa!");
             }

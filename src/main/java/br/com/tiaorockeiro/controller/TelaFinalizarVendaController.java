@@ -450,7 +450,7 @@ public class TelaFinalizarVendaController implements Initializable {
             AnchorPane telaPedido = loader.load();
             TelaPedidoController telaPedidoController = loader.getController();
             telaPedidoController.inicializaDados(this.venda.getMesa());
-            TelaPrincipalController.getInstance().mudaTela(telaPedido, "Pedido");
+            TelaPrincipalController.getInstance().mudaTela(telaPedido, "Pedido - Mesa " + this.venda.getMesa());
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }

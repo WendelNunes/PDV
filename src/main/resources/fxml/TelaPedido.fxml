@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -9,11 +13,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPaneTelaPedido" prefHeight="579.0" prefWidth="1299.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPedidoController">
+<AnchorPane id="AnchorPane" fx:id="anchorPaneTelaPedido" prefHeight="579.0" prefWidth="1299.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPedidoController">
     <children>
         <Button layoutX="524.0" layoutY="361.0" mnemonicParsing="false" onAction="#acaoVoltar" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Voltar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <ScrollPane fx:id="scrollCategorias" layoutX="10.0" layoutY="14.0" prefHeight="130.0" prefWidth="639.0" vbarPolicy="NEVER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <TableView fx:id="tableViewItens" layoutX="14.0" layoutY="146.0" prefHeight="352.0" prefWidth="663.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="626.0" AnchorPane.topAnchor="142.0">
+      <ScrollPane fx:id="scrollCategorias" layoutX="10.0" layoutY="14.0" prefHeight="75.0" prefWidth="639.0" vbarPolicy="NEVER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <TableView fx:id="tableViewItens" layoutX="10.0" layoutY="90.0" prefHeight="397.0" prefWidth="663.0" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="626.0" AnchorPane.topAnchor="90.0">
         <columns>
             <TableColumn fx:id="tableColumnSequencia" editable="false" prefWidth="42.0" sortable="false" />
           <TableColumn fx:id="tableColumnProduto" editable="false" prefWidth="345.0" resizable="false" sortable="false" text="Produto" />
@@ -22,8 +26,8 @@
             <TableColumn fx:id="tableColumnTotal" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Total" />
         </columns>
       </TableView>
-      <ScrollPane fx:id="scrollProdutos" hbarPolicy="NEVER" layoutX="685.0" layoutY="162.0" prefHeight="350.0" prefWidth="600.0" AnchorPane.bottomAnchor="65.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="162.0" />
-      <Label fx:id="titulo1" layoutX="689.0" layoutY="142.0" prefHeight="18.0" prefWidth="69.0" text="Produtos" AnchorPane.rightAnchor="541.0" AnchorPane.topAnchor="142.0">
+      <ScrollPane fx:id="scrollProdutos" hbarPolicy="NEVER" layoutX="683.0" layoutY="108.0" prefHeight="370.0" prefWidth="600.0" AnchorPane.bottomAnchor="92.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="108.0" />
+      <Label fx:id="titulo1" layoutX="683.0" layoutY="90.0" prefHeight="18.0" prefWidth="69.0" text="Produtos" AnchorPane.rightAnchor="547.0" AnchorPane.topAnchor="90.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
@@ -32,13 +36,13 @@
       <Button layoutX="603.0" layoutY="516.0" mnemonicParsing="false" onAction="#acaoExcluirProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="Excluir" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="626.0" />
       <Button layoutX="530.0" layoutY="516.0" mnemonicParsing="false" onAction="#acaoMenosProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="699.0" />
       <Button layoutX="1086.0" layoutY="517.0" mnemonicParsing="false" onAction="#acaoCancelarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Cancelar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="113.0" />
-      <Label fx:id="titulo2" layoutX="164.0" layoutY="499.0" prefHeight="18.0" prefWidth="42.0" text="Total:" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="164.0">
+      <Label fx:id="titulo2" layoutX="159.0" layoutY="491.0" prefHeight="18.0" prefWidth="42.0" text="Total:" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="164.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
       <TextField fx:id="textFieldValorTotal" disable="true" editable="false" layoutX="164.0" layoutY="517.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="164.0" />
-      <Label fx:id="titulo21" layoutX="10.0" layoutY="499.0" prefHeight="18.0" prefWidth="77.0" text="Qtde Itens:" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="10.0">
+      <Label fx:id="titulo21" layoutX="10.0" layoutY="491.0" prefHeight="18.0" prefWidth="77.0" text="Qtde Itens:" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="10.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
