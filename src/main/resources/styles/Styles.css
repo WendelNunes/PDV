@@ -155,7 +155,7 @@
     -fx-pref-width: 60px;
 }
 
-    /** BOTAO PRODUTO **/
+/** BOTAO PRODUTO **/
 .botao-produto {
     -fx-border-color: #d0d0d0;
     -fx-font: bold 12px "System";
