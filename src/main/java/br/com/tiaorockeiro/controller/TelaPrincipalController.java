@@ -9,7 +9,6 @@ import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.ConfiguracaoUsuario;
 import br.com.tiaorockeiro.modelo.Usuario;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
-import br.com.tiaorockeiro.util.MensagemUtil;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
@@ -64,7 +63,6 @@ public class TelaPrincipalController implements Initializable {
 
     private void ajustaMenu() {
         Usuario usuario = SessaoUtil.getUsuario();
-        this.menuPrincipal.getChildren().remove(this.botaoConsultas);
         if (!(usuario.isGerente() || usuario.isVendedor())) {
             this.menuPrincipal.getChildren().remove(this.botaoMesas);
         }
@@ -95,7 +93,7 @@ public class TelaPrincipalController implements Initializable {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaMesas.fxml"));
             this.mudaTela(tela, "Mesas");
         } catch (IOException e) {
-            MensagemUtil.enviarMensagemErro(e.getMessage());
+            enviarMensagemErro(e.getMessage());
         }
     }
 
@@ -105,7 +103,17 @@ public class TelaPrincipalController implements Initializable {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaCaixa.fxml"));
             this.mudaTela(tela, "Caixa");
         } catch (IOException e) {
-            MensagemUtil.enviarMensagemErro(e.getMessage());
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoBotaoConsultas(ActionEvent event) {
+        try {
+            AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaConsultas.fxml"));
+            this.mudaTela(tela, "Consultas");
+        } catch (IOException e) {
+            enviarMensagemErro(e.getMessage());
         }
     }
 

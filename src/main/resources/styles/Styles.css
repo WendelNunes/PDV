@@ -3,6 +3,10 @@
     -fx-pref-height: 60px;
 }
 
+.check-box > .box > .mark {
+    -fx-padding: 10px;
+}
+
 .text-field {
     -fx-background-radius: 0px;
     -fx-pref-height: 60px;
@@ -126,4 +130,14 @@
 .botao-menu-solto:pressed {
     -fx-background-color: #1976D2;
     -fx-cursor: hand;
+}
+
+/** BOTAO PRODUTO **/
+.botao-produto {
+    -fx-border-color: #d0d0d0;
+    -fx-font: bold 12px "System";
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 0px;
+    -fx-pref-height: 100px;
+    -fx-pref-width: 150px;
 }

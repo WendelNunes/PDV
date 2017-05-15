@@ -149,8 +149,8 @@ public class TelaPedidoController implements Initializable {
     private void criaGridProdutos(Long idCategoria) throws Exception {
         this.produtos = new ProdutoNegocio().listarPorCategoria(idCategoria);
         this.gridProdutos = new GridPane();
-        this.gridProdutos.setVgap(10);
-        this.gridProdutos.setHgap(10);
+        this.gridProdutos.setVgap(3);
+        this.gridProdutos.setHgap(3);
         if (this.produtos != null && !this.produtos.isEmpty()) {
             int coluna = 0;
             int linha = 0;
@@ -170,8 +170,7 @@ public class TelaPedidoController implements Initializable {
         Image image = new Image("/imagens/icon-table.png");
         Button button = new Button(produto.getDescricao(), new ImageView(image));
         button.setContentDisplay(ContentDisplay.TOP);
-        button.setPrefSize(107, 107);
-        button.setStyle("-fx-background-radius: 0");
+        button.getStyleClass().add("botao-produto");
         button.setId(produto.getId().toString());
         button.setOnAction((ActionEvent event) -> {
             this.acaoAdicionaProduto(event);
