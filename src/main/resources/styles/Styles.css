@@ -127,3 +127,26 @@
     -fx-background-color: #1976D2;
     -fx-cursor: hand;
 }
+
+.date-picker {
+    -fx-background-radius: 0px;
+    -fx-font: normal 12px "System";
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-pref-width: 30px;
+    -fx-pref-height: 30px;
+}
+
+.date-cell {
+    -fx-pref-width: 60px;
+    -fx-pref-height: 60px;
+}
+
+.date-picker-popup {
+    -fx-font: normal 12px "System";
+}
+
+.date-picker-popup > * > .spinner > .button {
+    -fx-pref-width: 60px;
+}
