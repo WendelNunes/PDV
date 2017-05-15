@@ -23,7 +23,7 @@
                               <Font name="Arial" size="16.0" />
                           </font>
                       </Button>
-                      <Button fx:id="botaoConsultas" mnemonicParsing="false" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Consultas" textFill="#000000ad">
+                      <Button fx:id="botaoConsultas" mnemonicParsing="false" onAction="#acaoBotaoConsultas" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Consultas" textFill="#000000ad">
                           <font>
                               <Font name="Arial" size="16.0" />
                           </font>

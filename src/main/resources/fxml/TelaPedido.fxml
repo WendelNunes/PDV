@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -13,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPaneTelaPedido" prefHeight="579.0" prefWidth="1299.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPedidoController">
+<AnchorPane id="AnchorPane" fx:id="anchorPaneTelaPedido" prefHeight="579.0" prefWidth="1299.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPedidoController">
     <children>
         <Button layoutX="524.0" layoutY="361.0" mnemonicParsing="false" onAction="#acaoVoltar" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Voltar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <ScrollPane fx:id="scrollCategorias" layoutX="10.0" layoutY="14.0" prefHeight="75.0" prefWidth="639.0" vbarPolicy="NEVER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
@@ -26,12 +22,7 @@
             <TableColumn fx:id="tableColumnTotal" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Total" />
         </columns>
       </TableView>
-      <ScrollPane fx:id="scrollProdutos" hbarPolicy="NEVER" layoutX="683.0" layoutY="108.0" prefHeight="370.0" prefWidth="600.0" AnchorPane.bottomAnchor="92.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="108.0" />
-      <Label fx:id="titulo1" layoutX="683.0" layoutY="90.0" prefHeight="18.0" prefWidth="69.0" text="Produtos" AnchorPane.rightAnchor="547.0" AnchorPane.topAnchor="90.0">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
+      <ScrollPane fx:id="scrollProdutos" fitToWidth="true" hbarPolicy="NEVER" layoutX="683.0" layoutY="108.0" prefHeight="370.0" prefWidth="600.0" AnchorPane.bottomAnchor="92.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="90.0" />
       <Button layoutX="983.0" layoutY="517.0" mnemonicParsing="false" onAction="#acaoFinalizarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Finalizar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="216.0" />
       <Button layoutX="603.0" layoutY="516.0" mnemonicParsing="false" onAction="#acaoExcluirProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="Excluir" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="626.0" />
       <Button layoutX="530.0" layoutY="516.0" mnemonicParsing="false" onAction="#acaoMenosProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="699.0" />
