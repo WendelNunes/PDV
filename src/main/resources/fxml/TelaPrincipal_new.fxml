@@ -45,7 +45,7 @@
         <AnchorPane layoutY="60.0" prefHeight="714.0" prefWidth="800.0" style="-fx-background-color: #F7F7F7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
             <children>
             <Label fx:id="titulo" layoutX="14.0" layoutY="5.0" prefHeight="29.0" prefWidth="774.0" styleClass="titulo" text="Mesas" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
-                <AnchorPane fx:id="content" layoutX="10.0" layoutY="36.0" prefHeight="655.0" prefWidth="780.0" style="-fx-background-color: #ECEFF1;" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="36.0">
+                <AnchorPane fx:id="content" layoutX="10.0" layoutY="36.0" prefHeight="655.0" prefWidth="800.0" style="-fx-background-color: #ECEFF1;" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="36.0">
                <effect>
                   <DropShadow color="#00000079" />
                </effect>
