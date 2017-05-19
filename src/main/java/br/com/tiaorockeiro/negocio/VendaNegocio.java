@@ -19,7 +19,7 @@ import javax.persistence.EntityManager;
  */
 public class VendaNegocio extends NegocioImpl<Venda, Long> {
 
-    public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Integer idUsuario, Integer idCaixa, Integer mesa, boolean ativa, boolean cancelada) {
+    public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa, boolean ativa, boolean cancelada) {
         EntityManager entityManager = criaEntityManager();
         try {
             VendaDAO vendaDAO = new VendaDAOImpl(entityManager);
@@ -29,7 +29,7 @@ public class VendaNegocio extends NegocioImpl<Venda, Long> {
         }
     }
 
-    public List<Object[]> listaConsultaVenda(Date periodoInicial, Date periodoFinal, Integer idUsuario, Integer idCaixa, Integer mesa,
+    public List<Object[]> listaConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa,
             boolean ativa, boolean cancelada, Integer qtdeRegistro, Integer pagina) {
         EntityManager entityManager = criaEntityManager();
         try {

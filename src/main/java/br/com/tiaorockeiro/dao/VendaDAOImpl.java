@@ -25,7 +25,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
     }
 
     @Override
-    public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Integer idUsuario, Integer idCaixa, Integer mesa, boolean ativa, boolean cancelada) {
+    public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa, boolean ativa, boolean cancelada) {
         StringBuilder sql = new StringBuilder();
         sql.append("    SELECT COUNT(v.id_venda)\n");
         sql.append("      FROM venda v\n");
@@ -59,7 +59,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
     }
 
     @Override
-    public List<Object[]> listaConsultaVenda(Date periodoInicial, Date periodoFinal, Integer idUsuario, Integer idCaixa, Integer mesa,
+    public List<Object[]> listaConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa,
             boolean ativa, boolean cancelada, Integer qtdeRegistro, Integer pagina) {
         StringBuilder sql = new StringBuilder();
         sql.append("    SELECT v.id_venda,\n");
