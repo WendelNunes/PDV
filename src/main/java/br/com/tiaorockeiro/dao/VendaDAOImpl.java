@@ -27,7 +27,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
     @Override
     public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa, boolean ativa, boolean cancelada) {
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT COUNT(v.id_venda)\n");
+        sql.append("    SELECT CAST(COUNT(v.id) AS INTEGER)\n");
         sql.append("      FROM venda v\n");
         sql.append("INNER JOIN abertura_caixa ac ON ac.id = v.id_abertura_caixa\n");
         sql.append("     WHERE v.data_hora BETWEEN :periodoInicial AND :periodoFinal\n");
@@ -55,29 +55,29 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         if (mesa != null) {
             query.setParameter("mesa", mesa);
         }
-        return ((Integer[]) query.getSingleResult())[0];
+        return (Integer) query.getSingleResult();
     }
 
     @Override
     public List<Object[]> listaConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa,
             boolean ativa, boolean cancelada, Integer qtdeRegistro, Integer pagina) {
         StringBuilder sql = new StringBuilder();
-        sql.append("    SELECT v.id_venda,\n");
-        sql.append("           v.mesa,\n");
+        sql.append("    SELECT v.id,\n");
+        sql.append("           CAST(v.mesa AS INTEGER) AS mesa,\n");
         sql.append("           v.data_hora,\n");
-        sql.append("           u.descricao,\n");
-        sql.append("           c.descricao,\n");
-        sql.append("           v.data_hora_cancelamento,\n");
+        sql.append("           u.descricao AS descricao_usuario,\n");
+        sql.append("           c.descricao AS descricao_caixa,\n");
+        sql.append("           v.data_hora_cancelamento\n");
         sql.append("      FROM venda v\n");
         sql.append("INNER JOIN usuario u ON u.id = v.id_usuario\n");
         sql.append("INNER JOIN abertura_caixa ac ON ac.id = v.id_abertura_caixa\n");
         sql.append("INNER JOIN caixa c ON c.id = ac.id_caixa\n");
         sql.append("     WHERE v.data_hora BETWEEN :periodoInicial AND :periodoFinal\n");
         if (idUsuario != null) {
-            sql.append("       AND u.id_usuario = :idUsuario");
+            sql.append("       AND u.id = :idUsuario");
         }
         if (idCaixa != null) {
-            sql.append("       AND c.id_caixa = :idCaixa");
+            sql.append("       AND c.id = :idCaixa");
         }
         if (mesa != null) {
             sql.append("       AND v.mesa = :mesa");
@@ -100,8 +100,8 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         if (mesa != null) {
             query.setParameter("mesa", mesa);
         }
-        query.setParameter(":qtdeRegistro", pagina);
-        query.setParameter(":pagina", pagina);
+        query.setParameter("qtdeRegistro", pagina);
+        query.setParameter("pagina", pagina);
         return query.getResultList();
     }
 }
