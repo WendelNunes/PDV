@@ -30,7 +30,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         sql.append("    SELECT CAST(COUNT(v.id) AS INTEGER)\n");
         sql.append("      FROM venda v\n");
         sql.append("INNER JOIN abertura_caixa ac ON ac.id = v.id_abertura_caixa\n");
-        sql.append("     WHERE v.data_hora BETWEEN :periodoInicial AND :periodoFinal\n");
+        sql.append("     WHERE CAST(v.data_hora AS DATE) BETWEEN :periodoInicial AND :periodoFinal\n");
         if (idUsuario != null) {
             sql.append("       AND v.id_usuario = :idUsuario");
         }
@@ -63,7 +63,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
             boolean ativa, boolean cancelada, Integer qtdeRegistro, Integer pagina) {
         StringBuilder sql = new StringBuilder();
         sql.append("    SELECT v.id,\n");
-        sql.append("           CAST(v.mesa AS INTEGER) AS mesa,\n");
+        sql.append("           v.mesa,\n");
         sql.append("           v.data_hora,\n");
         sql.append("           u.descricao AS descricao_usuario,\n");
         sql.append("           c.descricao AS descricao_caixa,\n");
@@ -72,7 +72,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         sql.append("INNER JOIN usuario u ON u.id = v.id_usuario\n");
         sql.append("INNER JOIN abertura_caixa ac ON ac.id = v.id_abertura_caixa\n");
         sql.append("INNER JOIN caixa c ON c.id = ac.id_caixa\n");
-        sql.append("     WHERE v.data_hora BETWEEN :periodoInicial AND :periodoFinal\n");
+        sql.append("     WHERE CAST(v.data_hora AS DATE) BETWEEN :periodoInicial AND :periodoFinal\n");
         if (idUsuario != null) {
             sql.append("       AND u.id = :idUsuario");
         }
@@ -100,7 +100,7 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         if (mesa != null) {
             query.setParameter("mesa", mesa);
         }
-        query.setParameter("qtdeRegistro", pagina);
+        query.setParameter("qtdeRegistro", qtdeRegistro);
         query.setParameter("pagina", pagina);
         return query.getResultList();
     }

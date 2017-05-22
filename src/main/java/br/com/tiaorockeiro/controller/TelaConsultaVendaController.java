@@ -16,24 +16,28 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.time.Instant;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleObjectProperty;
 import static javafx.collections.FXCollections.observableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 
 /**
  * FXML Controller class
@@ -60,13 +64,13 @@ public class TelaConsultaVendaController implements Initializable {
     @FXML
     private TableView<Object[]> listaVendas;
     @FXML
-    private TableColumn<Object[], Integer> colunaCodigo;
+    private TableColumn<Object[], Long> colunaCodigo;
     @FXML
     private TableColumn<Object[], Integer> colunaMesa;
     @FXML
-    private TableColumn<Object[], String> colunaData;
+    private TableColumn<Object[], Date> colunaData;
     @FXML
-    private TableColumn<Object[], String> colunaHora;
+    private TableColumn<Object[], Date> colunaHora;
     @FXML
     private TableColumn<Object[], String> colunaUsuario;
     @FXML
@@ -109,9 +113,112 @@ public class TelaConsultaVendaController implements Initializable {
                     this.mesas.getItems().add(i);
                 }
             }
+            this.ajustaTabela();
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
+    }
+
+    private void ajustaTabela() {
+        this.listaVendas.setFixedCellSize(45);
+        this.colunaCodigo.setCellValueFactory(i -> new SimpleObjectProperty<>(Long.valueOf(i.getValue()[0].toString())));
+        this.colunaCodigo.setCellFactory((TableColumn<Object[], Long> param) -> new TableCell<Object[], Long>() {
+            @Override
+            protected void updateItem(Long item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.toString());
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_RIGHT);
+                } else {
+                    setText("");
+                }
+            }
+        });
+        this.colunaMesa.setCellValueFactory(i -> new SimpleObjectProperty<>(Integer.valueOf(i.getValue()[1].toString())));
+        this.colunaMesa.setCellFactory((TableColumn<Object[], Integer> param) -> new TableCell<Object[], Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.toString());
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_RIGHT);
+                } else {
+                    setText("");
+                }
+            }
+        });
+        this.colunaData.setCellValueFactory(i -> new SimpleObjectProperty<>((Date) i.getValue()[2]));
+        this.colunaData.setCellFactory((TableColumn<Object[], Date> param) -> new TableCell<Object[], Date>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(new SimpleDateFormat("dd/MM/yyyy").format(item));
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_LEFT);
+                } else {
+                    setText("");
+                }
+            }
+        });
+        this.colunaHora.setCellValueFactory(i -> new SimpleObjectProperty<>((Date) i.getValue()[2]));
+        this.colunaHora.setCellFactory((TableColumn<Object[], Date> param) -> new TableCell<Object[], Date>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(new SimpleDateFormat("HH:mm:ss").format(item));
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_LEFT);
+                } else {
+                    setText("");
+                }
+            }
+        });
+        this.colunaUsuario.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue()[3].toString()));
+        this.colunaUsuario.setCellFactory((TableColumn<Object[], String> param) -> new TableCell<Object[], String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item);
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_LEFT);
+                } else {
+                    setText("");
+                }
+            }
+        });
+        this.colunaCaixa.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue()[4].toString()));
+        this.colunaCaixa.setCellFactory((TableColumn<Object[], String> param) -> new TableCell<Object[], String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item);
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_LEFT);
+                } else {
+                    setText("");
+                }
+            }
+        });
+        this.colunaStatus.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue()[5] != null ? "0" : "1"));
+        this.colunaStatus.setCellFactory((TableColumn<Object[], String> param) -> new TableCell<Object[], String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.equals("1") ? "Ativa" : "Cancelada");
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_LEFT);
+                } else {
+                    setText("");
+                }
+            }
+        });
     }
 
     @FXML
@@ -128,7 +235,7 @@ public class TelaConsultaVendaController implements Initializable {
                     this.filtroCaixa != null ? this.filtroCaixa.getId() : null, this.filtroMesa != null ? this.filtroMesa : null, this.filtroAtiva, this.filtroCancelada);
             this.paginas.getItems().clear();
             if (qtdeRegistrosConsulta > 0) {
-                BigDecimal qtdePaginas = new BigDecimal(qtdeRegistrosConsulta).divide(new BigDecimal(qtdeRegistrosConsulta), RoundingMode.UP);
+                BigDecimal qtdePaginas = new BigDecimal(qtdeRegistrosConsulta).divide(new BigDecimal(QTDE_REGISTROS), RoundingMode.UP);
                 for (int i = 1; i <= qtdePaginas.intValue(); i++) {
                     this.paginas.getItems().add(i);
                 }
