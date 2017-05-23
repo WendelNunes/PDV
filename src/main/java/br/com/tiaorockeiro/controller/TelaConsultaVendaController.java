@@ -26,6 +26,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import static javafx.collections.FXCollections.observableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -107,14 +110,61 @@ public class TelaConsultaVendaController implements Initializable {
             this.dataFinal.setValue(LocalDate.now());
             this.usuarios.getItems().add(null);
             this.usuarios.getItems().addAll(observableList(new UsuarioNegocio().listarTodos(Usuario.class)));
+            this.usuarios.setCellFactory((ListView<Usuario> param) -> new ListCell<Usuario>() {
+                @Override
+                protected void updateItem(Usuario item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null) {
+                        setText(item.getDescricao());
+                    } else {
+                        setText(null);
+                    }
+                }
+            });
+            this.usuarios.setConverter(new StringConverter<Usuario>() {
+                @Override
+                public String toString(Usuario item) {
+                    return item != null ? item.getDescricao() : null;
+                }
+
+                @Override
+                public Usuario fromString(String string) {
+                    return null;
+                }
+            });
+
             this.caixas.getItems().add(null);
             this.caixas.getItems().addAll(observableList(new CaixaNegocio().listarTodos(Caixa.class)));
+            this.caixas.setCellFactory((ListView<Caixa> param) -> new ListCell<Caixa>() {
+                @Override
+                protected void updateItem(Caixa item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null) {
+                        setText(item.getCodigo() + " - " + item.getDescricao());
+                    } else {
+                        setText(null);
+                    }
+                }
+            });
+            this.caixas.setConverter(new StringConverter<Caixa>() {
+                @Override
+                public String toString(Caixa item) {
+                    return item != null ? item.getCodigo() + " - " + item.getDescricao() : null;
+                }
+
+                @Override
+                public Caixa fromString(String string) {
+                    return null;
+                }
+            });
+
             this.mesas.getItems().add(null);
             if (SessaoUtil.getConfiguracao() != null && SessaoUtil.getConfiguracao().getQuantidadeMesas() != null) {
                 for (int i = 1; i <= SessaoUtil.getConfiguracao().getQuantidadeMesas(); i++) {
                     this.mesas.getItems().add(i);
                 }
             }
+
             this.status.getItems().add(null);
             Map<String, String> ativa = new HashMap<>();
             ativa.put("STATUS", "1");
@@ -146,11 +196,10 @@ public class TelaConsultaVendaController implements Initializable {
                     return null;
                 }
             });
-            this.paginas.valueProperty()
-                    .addListener((observable) -> {
-                        this.preencheListaVendas();
-                    }
-                    );
+
+            this.paginas.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+                preencheListaVendas();
+            });
 
             this.ajustaTabela();
         } catch (Exception e) {
@@ -286,9 +335,11 @@ public class TelaConsultaVendaController implements Initializable {
     }
 
     private void preencheListaVendas() {
-        this.listaVendas.setItems(observableList(new VendaNegocio().listaConsultaVenda(this.filtroDataInicial, this.filtroDataFinal,
-                this.filtroUsuario != null ? this.filtroUsuario.getId() : null, this.filtroCaixa != null ? this.filtroCaixa.getId() : null,
-                this.filtroMesa != null ? this.filtroMesa : null, this.filtroStatus, QTDE_REGISTROS, this.paginas.getValue())));
+        if (this.paginas.getValue() != null) {
+            this.listaVendas.setItems(observableList(new VendaNegocio().listaConsultaVenda(this.filtroDataInicial, this.filtroDataFinal,
+                    this.filtroUsuario != null ? this.filtroUsuario.getId() : null, this.filtroCaixa != null ? this.filtroCaixa.getId() : null,
+                    this.filtroMesa != null ? this.filtroMesa : null, this.filtroStatus, QTDE_REGISTROS, this.paginas.getValue())));
+        }
     }
 
     @FXML
@@ -311,7 +362,6 @@ public class TelaConsultaVendaController implements Initializable {
         try {
             if (this.paginas.getSelectionModel().getSelectedItem() > 1) {
                 this.paginas.getSelectionModel().selectFirst();
-                this.preencheListaVendas();
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
@@ -323,7 +373,6 @@ public class TelaConsultaVendaController implements Initializable {
         try {
             if (!Objects.equals(this.paginas.getSelectionModel().getSelectedItem(), this.paginas.getItems().stream().max((m1, m2) -> m1.compareTo(m2)).get())) {
                 this.paginas.getSelectionModel().selectNext();
-                this.preencheListaVendas();
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
