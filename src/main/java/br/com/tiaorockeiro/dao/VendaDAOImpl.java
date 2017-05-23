@@ -16,16 +16,16 @@ import javax.persistence.Query;
  * @author Wendel
  */
 public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
-
+    
     private final EntityManager entityManager;
-
+    
     public VendaDAOImpl(EntityManager entityManager) {
         super(entityManager);
         this.entityManager = entityManager;
     }
-
+    
     @Override
-    public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa, boolean ativa, boolean cancelada) {
+    public Integer quantidadeRegistroConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa, String status) {
         StringBuilder sql = new StringBuilder();
         sql.append("    SELECT CAST(COUNT(v.id) AS INTEGER)\n");
         sql.append("      FROM venda v\n");
@@ -40,8 +40,8 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         if (mesa != null) {
             sql.append("       AND v.mesa = :mesa");
         }
-        if (!(ativa && cancelada) || !(!ativa && !cancelada)) {
-            sql.append("       AND v.data_hora_cancelamento ").append(ativa ? "ISNULL" : "NOTNULL");
+        if (status != null) {
+            sql.append("       AND v.data_hora_cancelamento ").append(status.equals("1") ? "ISNULL" : "NOTNULL");
         }
         Query query = this.entityManager.createNativeQuery(sql.toString());
         query.setParameter("periodoInicial", periodoInicial);
@@ -57,10 +57,10 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         }
         return (Integer) query.getSingleResult();
     }
-
+    
     @Override
     public List<Object[]> listaConsultaVenda(Date periodoInicial, Date periodoFinal, Long idUsuario, Long idCaixa, Integer mesa,
-            boolean ativa, boolean cancelada, Integer qtdeRegistro, Integer pagina) {
+            String status, Integer qtdeRegistro, Integer pagina) {
         StringBuilder sql = new StringBuilder();
         sql.append("    SELECT v.id,\n");
         sql.append("           v.mesa,\n");
@@ -82,8 +82,8 @@ public class VendaDAOImpl extends DAOImpl<Venda, Long> implements VendaDAO {
         if (mesa != null) {
             sql.append("       AND v.mesa = :mesa");
         }
-        if (!(ativa && cancelada) || !(!ativa && !cancelada)) {
-            sql.append("       AND v.data_hora_cancelamento ").append(ativa ? "ISNULL" : "NOTNULL");
+        if (status != null) {
+            sql.append("       AND v.data_hora_cancelamento ").append(status.equals("1") ? "ISNULL" : "NOTNULL");
         }
         sql.append("  ORDER BY v.data_hora\n");
         sql.append("     LIMIT :qtdeRegistro");
