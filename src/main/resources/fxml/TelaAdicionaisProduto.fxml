@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="892.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="br.com.tiaorockeiro.controller.TelaAdicionaisProdutoController">
+    <children>
+        <Label layoutX="14.0" layoutY="14.0" text="Adicionais:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+        <TableView layoutX="10.0" layoutY="27.0" prefHeight="302.0" prefWidth="459.0" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="421.0" AnchorPane.topAnchor="27.0">
+            <columns>
+                <TableColumn prefWidth="90.0" text="Produto" />
+                <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" text="Qtde" />
+                <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" text="Preço" />
+                <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" text="Total" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <Button layoutX="257.0" layoutY="331.0" mnemonicParsing="false" onAction="" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="+" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="565.0" />
+        <Button layoutX="329.0" layoutY="331.0" mnemonicParsing="false" onAction="" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="493.0" />
+        <Button layoutX="401.0" layoutY="331.0" mnemonicParsing="false" onAction="" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="Excluir" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="421.0" />
+        <ScrollPane fx:id="scrollProdutos" fitToWidth="true" hbarPolicy="NEVER" layoutX="480.0" layoutY="27.0" prefHeight="302.0" prefWidth="400.0" AnchorPane.bottomAnchor="72.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0" />
+        <Button layoutX="577.0" layoutY="439.0" mnemonicParsing="false" onAction="" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Fechar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+    </children>
+</AnchorPane>
