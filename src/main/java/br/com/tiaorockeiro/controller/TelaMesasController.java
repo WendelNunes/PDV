@@ -128,7 +128,6 @@ public class TelaMesasController implements Initializable {
         ConfiguracaoUsuario configuracaoUsuario = SessaoUtil.getUsuario().getConfiguracao();
         if (configuracaoUsuario != null && configuracaoUsuario.getCaixaSelecionado() != null) {
             this.aberturaCaixa = new AberturaCaixaNegocio().obterAbertoPorCaixa(configuracaoUsuario.getCaixaSelecionado());
-
         }
     }
 }

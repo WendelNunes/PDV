@@ -13,6 +13,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -117,7 +118,7 @@ public class Venda implements Serializable {
         this.mesa = mesa;
     }
 
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<ItemVenda> getItens() {
         return itens;
     }
@@ -136,7 +137,7 @@ public class Venda implements Serializable {
         this.pedido = pedido;
     }
 
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<Pagamento> getPagamentos() {
         return pagamentos;
     }

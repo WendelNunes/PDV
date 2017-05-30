@@ -36,8 +36,6 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     private Button botaoMesas;
     @FXML
-    private Button botaoConsultas;
-    @FXML
     private Button botaoRelatorios;
     @FXML
     private Label titulo;
