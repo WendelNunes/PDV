@@ -5,7 +5,6 @@
  */
 package br.com.tiaorockeiro.controller;
 
-import br.com.tiaorockeiro.util.MensagemUtil;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import java.io.IOException;
 import java.net.URL;
@@ -42,7 +41,6 @@ public class TelaConsultasController implements Initializable {
     public void acaoBotaoVendas(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaConsultaVenda.fxml"));
-            loader.setController(new TelaConsultaVendaController());
             AnchorPane tela = loader.load();
             TelaPrincipalController.getInstance().mudaTela(tela, "Consulta de Vendas");
         } catch (IOException e) {

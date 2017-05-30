@@ -11,22 +11,21 @@ import br.com.tiaorockeiro.modelo.Venda;
 import br.com.tiaorockeiro.negocio.ItemVendaNegocio;
 import br.com.tiaorockeiro.negocio.PagamentoNegocio;
 import br.com.tiaorockeiro.negocio.VendaNegocio;
-import br.com.tiaorockeiro.util.MensagemUtil;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
 import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
-import java.io.IOException;
+import br.com.tiaorockeiro.util.SessaoUtil;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -43,10 +42,10 @@ import javafx.scene.text.Font;
  * @author Wendel
  */
 public class TelaVisualizarVendaController implements Initializable {
-    
+
     private Venda venda;
     private TelaConsultaVendaController telaConsultaVenda;
-    
+
     @FXML
     private Label titulo;
     @FXML
@@ -93,7 +92,7 @@ public class TelaVisualizarVendaController implements Initializable {
         // TODO
         this.ajustaTabelaItens();
     }
-    
+
     @SuppressWarnings("Convert2Lambda")
     private void ajustaTabelaItens() {
         this.tableViewProdutos.setFixedCellSize(45);
@@ -168,12 +167,15 @@ public class TelaVisualizarVendaController implements Initializable {
             }
         });
     }
-    
+
     @FXML
     public void acaoCancelarVenda(ActionEvent event) {
         try {
             if (enviarMensagemConfirmacao("Deseja realmente cancelar a venda?")) {
-                new VendaNegocio().remover(this.venda);
+                this.venda.setDataHoraCancelamento(new Date());
+                this.venda.setUsuarioCancelamento(SessaoUtil.getUsuario());
+                new VendaNegocio().salvar(this.venda);
+                this.telaConsultaVenda.preencheListaVendas();
                 this.acaoVoltar(null);
                 enviarMensagemInformacao("Venda cancelada com sucesso!");
             }
@@ -181,24 +183,21 @@ public class TelaVisualizarVendaController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoEmitirExtrato(ActionEvent event) {
-        
+
     }
-    
+
     @FXML
     public void acaoVoltar(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaConsultaVenda.fxml"));
-            loader.setController(this.telaConsultaVenda);
-            AnchorPane tela = loader.load();
-            TelaPrincipalController.getInstance().mudaTela(tela, "Consulta de Vendas");
-        } catch (IOException e) {
+            TelaPrincipalController.getInstance().mudaTela(this.telaConsultaVenda.getTelaConsultaVenda(), "Consulta de Vendas");
+        } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     public void inicializaDados(Long idVenda, TelaConsultaVendaController consultaVenda) {
         this.telaConsultaVenda = consultaVenda;
         this.venda = new VendaNegocio().obterPorId(Venda.class, idVenda);

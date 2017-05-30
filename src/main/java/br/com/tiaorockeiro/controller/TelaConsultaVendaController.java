@@ -10,7 +10,6 @@ import br.com.tiaorockeiro.modelo.Usuario;
 import br.com.tiaorockeiro.negocio.CaixaNegocio;
 import br.com.tiaorockeiro.negocio.UsuarioNegocio;
 import br.com.tiaorockeiro.negocio.VendaNegocio;
-import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
@@ -30,12 +29,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import static javafx.collections.FXCollections.observableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
@@ -54,6 +51,8 @@ import javafx.util.StringConverter;
  */
 public class TelaConsultaVendaController implements Initializable {
 
+    @FXML
+    private AnchorPane telaConsultaVenda;
     @FXML
     private DatePicker dataInicial;
     @FXML
@@ -84,16 +83,6 @@ public class TelaConsultaVendaController implements Initializable {
     private TableColumn<Object[], String> colunaStatus;
     @FXML
     private ComboBox<Integer> paginas;
-    @FXML
-    private Button botaoPesquisar;
-    @FXML
-    private Button botaoVoltar;
-    @FXML
-    private Button botaoVisualizar;
-    @FXML
-    private Button botaoVoltarPagina;
-    @FXML
-    private Button botaoAvancarPagina;
 
     // FILTROS
     private Date filtroDataInicial, filtroDataFinal;
@@ -209,21 +198,6 @@ public class TelaConsultaVendaController implements Initializable {
                 preencheListaVendas();
             });
             this.ajustaTabela();
-            this.botaoPesquisar.setOnAction((event) -> {
-                acaoPesquisar(event);
-            });
-            this.botaoVoltar.setOnAction((event) -> {
-                acaoVoltar(event);
-            });
-            this.botaoVisualizar.setOnAction((event) -> {
-                acaoVisualizar(event);
-            });
-            this.botaoVoltarPagina.setOnAction((event) -> {
-                acaoVoltarPagina(event);
-            });
-            this.botaoAvancarPagina.setOnAction((event) -> {
-                acaoAvancarPagina(event);
-            });
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
@@ -331,6 +305,7 @@ public class TelaConsultaVendaController implements Initializable {
         });
     }
 
+    @FXML
     public void acaoPesquisar(ActionEvent event) {
         try {
             this.filtroDataInicial = Date.from(this.dataInicial.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -355,7 +330,7 @@ public class TelaConsultaVendaController implements Initializable {
         }
     }
 
-    private void preencheListaVendas() {
+    public void preencheListaVendas() {
         if (this.paginas.getValue() != null) {
             this.listaVendas.setItems(observableList(new VendaNegocio().listaConsultaVenda(this.filtroDataInicial, this.filtroDataFinal,
                     this.filtroUsuario != null ? this.filtroUsuario.getId() : null, this.filtroCaixa != null ? this.filtroCaixa.getId() : null,
@@ -363,6 +338,7 @@ public class TelaConsultaVendaController implements Initializable {
         }
     }
 
+    @FXML
     public void acaoVoltar(ActionEvent event) {
         try {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaConsultas.fxml"));
@@ -372,6 +348,7 @@ public class TelaConsultaVendaController implements Initializable {
         }
     }
 
+    @FXML
     public void acaoVisualizar(ActionEvent event) {
         try {
             int index = this.listaVendas.getSelectionModel().getSelectedIndex();
@@ -380,13 +357,14 @@ public class TelaConsultaVendaController implements Initializable {
                 AnchorPane tela = loader.load();
                 TelaVisualizarVendaController telaVisualizarVenda = loader.getController();
                 telaVisualizarVenda.inicializaDados(((BigInteger) this.listaVendas.getSelectionModel().getSelectedItem()[0]).longValue(), this);
-                TelaPrincipalController.getInstance().mudaTela(tela, "Consultas");
+                TelaPrincipalController.getInstance().mudaTela(tela, "Venda " + ((BigInteger) this.listaVendas.getSelectionModel().getSelectedItem()[0]).longValue());
             }
         } catch (IOException e) {
             enviarMensagemErro(e.getMessage());
         }
     }
 
+    @FXML
     public void acaoVoltarPagina(ActionEvent event) {
         try {
             if (this.paginas.getSelectionModel().getSelectedItem() > 1) {
@@ -397,6 +375,7 @@ public class TelaConsultaVendaController implements Initializable {
         }
     }
 
+    @FXML
     public void acaoAvancarPagina(ActionEvent event) {
         try {
             if (!Objects.equals(this.paginas.getSelectionModel().getSelectedItem(), this.paginas.getItems().stream().max((m1, m2) -> m1.compareTo(m2)).get())) {
@@ -405,5 +384,9 @@ public class TelaConsultaVendaController implements Initializable {
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
+    }
+
+    public AnchorPane getTelaConsultaVenda() {
+        return telaConsultaVenda;
     }
 }
