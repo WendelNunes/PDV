@@ -6,7 +6,6 @@
 package br.com.tiaorockeiro.controller;
 
 import br.com.tiaorockeiro.modelo.ItemVenda;
-import br.com.tiaorockeiro.modelo.Pagamento;
 import br.com.tiaorockeiro.modelo.Venda;
 import br.com.tiaorockeiro.negocio.ItemVendaNegocio;
 import br.com.tiaorockeiro.negocio.PagamentoNegocio;
@@ -20,6 +19,8 @@ import br.com.tiaorockeiro.util.SessaoUtil;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -60,11 +61,11 @@ public class TelaVisualizarVendaController implements Initializable {
     @FXML
     private TableColumn<ItemVenda, BigDecimal> tableColumnTotal;
     @FXML
-    private TableView<Pagamento> tableViewPagamentos;
+    private TableView<Map<String, Object>> tableViewValores;
     @FXML
-    private TableColumn<Pagamento, String> tableColumnFormaPagamento;
+    private TableColumn<Map<String, Object>, String> tableColumnDescricaoValor;
     @FXML
-    private TableColumn<Pagamento, BigDecimal> tableColumnValor;
+    private TableColumn<Map<String, Object>, BigDecimal> tableColumnValor;
     @FXML
     private TextField quantidadeItens;
     @FXML
@@ -163,9 +164,9 @@ public class TelaVisualizarVendaController implements Initializable {
                 }
             }
         });
-        this.tableViewPagamentos.setFixedCellSize(45);
-        this.tableColumnFormaPagamento.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getFormaPagamento().getDescricao()));
-        this.tableColumnFormaPagamento.setCellFactory((TableColumn<Pagamento, String> param) -> new TableCell<Pagamento, String>() {
+        this.tableViewValores.setFixedCellSize(45);
+        this.tableColumnDescricaoValor.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().get("DESCRICAO").toString()));
+        this.tableColumnDescricaoValor.setCellFactory((TableColumn<Map<String, Object>, String> param) -> new TableCell<Map<String, Object>, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -178,8 +179,8 @@ public class TelaVisualizarVendaController implements Initializable {
                 }
             }
         });
-        this.tableColumnValor.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValor()));
-        this.tableColumnValor.setCellFactory((TableColumn<Pagamento, BigDecimal> param) -> new TableCell<Pagamento, BigDecimal>() {
+        this.tableColumnValor.setCellValueFactory(i -> new SimpleObjectProperty<>((BigDecimal) i.getValue().get("VALOR")));
+        this.tableColumnValor.setCellFactory((TableColumn<Map<String, Object>, BigDecimal> param) -> new TableCell<Map<String, Object>, BigDecimal>() {
             @Override
             protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
@@ -235,11 +236,31 @@ public class TelaVisualizarVendaController implements Initializable {
         this.quantidadeItens.setText(formataQuantidade(this.tableViewProdutos.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
         BigDecimal total = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.totalItens.setText(formataMoeda(total));
-        this.tableViewPagamentos.setItems(observableList(this.venda.getPagamentos()));
-        this.desconto.setText(formataMoeda(this.venda.getValorComissao()));
-        this.comissao.setText(formataMoeda(this.venda.getValorComissao()));
+        this.venda.getPagamentos().stream().map((pagamento) -> {
+            Map<String, Object> item = new HashMap<>();
+            item.put("DESCRICAO", pagamento.getFormaPagamento().getDescricao());
+            item.put("VALOR", pagamento.getValor());
+            return item;
+        }).forEach((item) -> {
+            this.tableViewValores.getItems().add(item);
+        });
+        Map<String, Object> itemDesconto = new HashMap<>();
+        itemDesconto.put("DESCRICAO", "Desconto");
+        itemDesconto.put("VALOR", this.venda.getValorDesconto());
+        this.tableViewValores.getItems().add(itemDesconto);
+        Map<String, Object> itemComissao = new HashMap<>();
+        itemComissao.put("DESCRICAO", "Comissão");
+        itemComissao.put("VALOR", this.venda.getValorComissao());
+        this.tableViewValores.getItems().add(itemComissao);
         BigDecimal vlPago = this.venda.getPagamentos().stream().map(i -> i.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.pago.setText(formataMoeda(vlPago));
-        this.troco.setText(formataMoeda(vlPago.subtract(total)));
+        Map<String, Object> itemPago = new HashMap<>();
+        itemPago.put("DESCRICAO", "Total Pago");
+        itemPago.put("VALOR", vlPago);
+        this.tableViewValores.getItems().add(itemPago);
+        BigDecimal vlTroco = vlPago.subtract(this.venda.getValorTotal()).compareTo(BigDecimal.ZERO) > 0 ? vlPago.subtract(this.venda.getValorTotal()) : BigDecimal.ZERO;
+        Map<String, Object> itemTroco = new HashMap<>();
+        itemTroco.put("DESCRICAO", "Troco");
+        itemTroco.put("VALOR", vlTroco);
+        this.tableViewValores.getItems().add(itemTroco);
     }
 }
