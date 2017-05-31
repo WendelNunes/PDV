@@ -9,7 +9,8 @@
             </goals>
             <properties>
                 <runfx.args>-jar "${project.build.directory}/${project.build.finalName}.jar"</runfx.args>
-                <com.sun.javafx.touch>true</com.sun.javafx.touch>
+                
+                
             </properties>
         </action>
         <action>
@@ -22,7 +23,8 @@
             <properties>
                 <runfx.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Dglass.disableGrab=true -jar "${project.build.directory}/${project.build.finalName}.jar"</runfx.args>
                 <jpda.listen>true</jpda.listen>
-                <com.sun.javafx.touch>true</com.sun.javafx.touch>
+                
+                
             </properties>
         </action>        
     </actions>

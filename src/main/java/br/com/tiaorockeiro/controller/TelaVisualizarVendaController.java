@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
+import static javafx.collections.FXCollections.observableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +33,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
 /**
@@ -61,17 +60,15 @@ public class TelaVisualizarVendaController implements Initializable {
     @FXML
     private TableColumn<ItemVenda, BigDecimal> tableColumnTotal;
     @FXML
+    private TableView<Pagamento> tableViewPagamentos;
+    @FXML
+    private TableColumn<Pagamento, String> tableColumnFormaPagamento;
+    @FXML
+    private TableColumn<Pagamento, BigDecimal> tableColumnValor;
+    @FXML
     private TextField quantidadeItens;
     @FXML
     private TextField totalItens;
-    @FXML
-    private TextField dinheiro;
-    @FXML
-    private TextField cartaoCredito;
-    @FXML
-    private TextField cartaoDebito;
-    @FXML
-    private TextField outros;
     @FXML
     private TextField desconto;
     @FXML
@@ -166,6 +163,35 @@ public class TelaVisualizarVendaController implements Initializable {
                 }
             }
         });
+        this.tableViewPagamentos.setFixedCellSize(45);
+        this.tableColumnFormaPagamento.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getFormaPagamento().getDescricao()));
+        this.tableColumnFormaPagamento.setCellFactory((TableColumn<Pagamento, String> param) -> new TableCell<Pagamento, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                } else {
+                    setText(item);
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_LEFT);
+                }
+            }
+        });
+        this.tableColumnValor.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValor()));
+        this.tableColumnValor.setCellFactory((TableColumn<Pagamento, BigDecimal> param) -> new TableCell<Pagamento, BigDecimal>() {
+            @Override
+            protected void updateItem(BigDecimal item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                } else {
+                    setText(formataMoeda(item));
+                    setFont(Font.font("Arial", 14));
+                    setAlignment(Pos.CENTER_RIGHT);
+                }
+            }
+        });
     }
 
     @FXML
@@ -205,30 +231,11 @@ public class TelaVisualizarVendaController implements Initializable {
         this.venda.setPagamentos(new PagamentoNegocio().listarPorIdVenda(idVenda));
         this.titulo.setText("Mesa " + this.venda.getMesa());
         this.venda.getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-        this.tableViewProdutos.setItems(FXCollections.observableList(this.venda.getItens()));
+        this.tableViewProdutos.setItems(observableList(this.venda.getItens()));
         this.quantidadeItens.setText(formataQuantidade(this.tableViewProdutos.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
         BigDecimal total = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.totalItens.setText(formataMoeda(total));
-        this.dinheiro.setText(formataMoeda(BigDecimal.ZERO));
-        this.cartaoCredito.setText(formataMoeda(BigDecimal.ZERO));
-        this.cartaoDebito.setText(formataMoeda(BigDecimal.ZERO));
-        this.outros.setText(formataMoeda(BigDecimal.ZERO));
-        for (Pagamento pagamento : this.venda.getPagamentos()) {
-            switch (pagamento.getFormaPagamento()) {
-                case DINHEIRO:
-                    this.dinheiro.setText(formataMoeda(pagamento.getValor()));
-                    break;
-                case CARTAO_CREDITO:
-                    this.cartaoCredito.setText(formataMoeda(pagamento.getValor()));
-                    break;
-                case CARTAO_DEBITO:
-                    this.cartaoDebito.setText(formataMoeda(pagamento.getValor()));
-                    break;
-                case OUTROS:
-                    this.outros.setText(formataMoeda(pagamento.getValor()));
-                    break;
-            }
-        }
+        this.tableViewPagamentos.setItems(observableList(this.venda.getPagamentos()));
         this.desconto.setText(formataMoeda(this.venda.getValorComissao()));
         this.comissao.setText(formataMoeda(this.venda.getValorComissao()));
         BigDecimal vlPago = this.venda.getPagamentos().stream().map(i -> i.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
