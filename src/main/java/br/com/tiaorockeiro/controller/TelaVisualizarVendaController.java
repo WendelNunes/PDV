@@ -6,6 +6,7 @@
 package br.com.tiaorockeiro.controller;
 
 import br.com.tiaorockeiro.modelo.ItemVenda;
+import br.com.tiaorockeiro.modelo.Pagamento;
 import br.com.tiaorockeiro.modelo.Venda;
 import br.com.tiaorockeiro.negocio.ItemVendaNegocio;
 import br.com.tiaorockeiro.negocio.PagamentoNegocio;
@@ -18,9 +19,8 @@ import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,7 +29,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,8 +46,6 @@ public class TelaVisualizarVendaController implements Initializable {
     private TelaConsultaVendaController telaConsultaVenda;
 
     @FXML
-    private Label titulo;
-    @FXML
     private TableView<ItemVenda> tableViewProdutos;
     @FXML
     private TableColumn<ItemVenda, Long> tableColumnSequencia;
@@ -61,11 +58,11 @@ public class TelaVisualizarVendaController implements Initializable {
     @FXML
     private TableColumn<ItemVenda, BigDecimal> tableColumnTotal;
     @FXML
-    private TableView<Map<String, Object>> tableViewValores;
+    private TableView<Pagamento> tableViewValores;
     @FXML
-    private TableColumn<Map<String, Object>, String> tableColumnDescricaoValor;
+    private TableColumn<Pagamento, String> tableColumnDescricaoValor;
     @FXML
-    private TableColumn<Map<String, Object>, BigDecimal> tableColumnValor;
+    private TableColumn<Pagamento, BigDecimal> tableColumnValor;
     @FXML
     private TextField quantidadeItens;
     @FXML
@@ -78,6 +75,16 @@ public class TelaVisualizarVendaController implements Initializable {
     private TextField pago;
     @FXML
     private TextField troco;
+    @FXML
+    private TextField data;
+    @FXML
+    private TextField hora;
+    @FXML
+    private TextField mesa;
+    @FXML
+    private TextField usuario;
+    @FXML
+    private TextField valor;
 
     /**
      * Initializes the controller class.
@@ -165,8 +172,8 @@ public class TelaVisualizarVendaController implements Initializable {
             }
         });
         this.tableViewValores.setFixedCellSize(45);
-        this.tableColumnDescricaoValor.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().get("DESCRICAO").toString()));
-        this.tableColumnDescricaoValor.setCellFactory((TableColumn<Map<String, Object>, String> param) -> new TableCell<Map<String, Object>, String>() {
+        this.tableColumnDescricaoValor.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getFormaPagamento().getDescricao()));
+        this.tableColumnDescricaoValor.setCellFactory((TableColumn<Pagamento, String> param) -> new TableCell<Pagamento, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -179,8 +186,8 @@ public class TelaVisualizarVendaController implements Initializable {
                 }
             }
         });
-        this.tableColumnValor.setCellValueFactory(i -> new SimpleObjectProperty<>((BigDecimal) i.getValue().get("VALOR")));
-        this.tableColumnValor.setCellFactory((TableColumn<Map<String, Object>, BigDecimal> param) -> new TableCell<Map<String, Object>, BigDecimal>() {
+        this.tableColumnValor.setCellValueFactory(i -> new SimpleObjectProperty<>((BigDecimal) i.getValue().getValor()));
+        this.tableColumnValor.setCellFactory((TableColumn<Pagamento, BigDecimal> param) -> new TableCell<Pagamento, BigDecimal>() {
             @Override
             protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
@@ -230,37 +237,25 @@ public class TelaVisualizarVendaController implements Initializable {
         this.venda = new VendaNegocio().obterPorId(Venda.class, idVenda);
         this.venda.setItens(new ItemVendaNegocio().listarPorIdVenda(idVenda));
         this.venda.setPagamentos(new PagamentoNegocio().listarPorIdVenda(idVenda));
-        this.titulo.setText("Mesa " + this.venda.getMesa());
+        BigDecimal vlPago = this.venda.getPagamentos().stream().map(i -> i.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.data.setText(new SimpleDateFormat("dd/MM/yyyy").format(this.venda.getDataHora()));
+        this.hora.setText(new SimpleDateFormat("HH:mm:ss").format(this.venda.getDataHora()));
+        this.mesa.setText(this.venda.getMesa().toString());
+        this.usuario.setText(this.venda.getUsuario().getDescricao());
+        this.valor.setText(formataMoeda(this.venda.getValorTotal()));
+        this.desconto.setText(formataMoeda(this.venda.getValorDesconto()));
+        this.comissao.setText(formataMoeda(this.venda.getValorComissao()));
+        BigDecimal vlTroco = vlPago.subtract(this.venda.getValorTotal()).compareTo(BigDecimal.ZERO) > 0 ? vlPago.subtract(this.venda.getValorTotal()) : BigDecimal.ZERO;
+        this.troco.setText(formataMoeda(vlTroco));
+
         this.venda.getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
         this.tableViewProdutos.setItems(observableList(this.venda.getItens()));
         this.quantidadeItens.setText(formataQuantidade(this.tableViewProdutos.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
         BigDecimal total = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.totalItens.setText(formataMoeda(total));
-        this.venda.getPagamentos().stream().map((pagamento) -> {
-            Map<String, Object> item = new HashMap<>();
-            item.put("DESCRICAO", pagamento.getFormaPagamento().getDescricao());
-            item.put("VALOR", pagamento.getValor());
-            return item;
-        }).forEach((item) -> {
-            this.tableViewValores.getItems().add(item);
-        });
-        Map<String, Object> itemDesconto = new HashMap<>();
-        itemDesconto.put("DESCRICAO", "Desconto");
-        itemDesconto.put("VALOR", this.venda.getValorDesconto());
-        this.tableViewValores.getItems().add(itemDesconto);
-        Map<String, Object> itemComissao = new HashMap<>();
-        itemComissao.put("DESCRICAO", "Comissão");
-        itemComissao.put("VALOR", this.venda.getValorComissao());
-        this.tableViewValores.getItems().add(itemComissao);
-        BigDecimal vlPago = this.venda.getPagamentos().stream().map(i -> i.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
-        Map<String, Object> itemPago = new HashMap<>();
-        itemPago.put("DESCRICAO", "Total Pago");
-        itemPago.put("VALOR", vlPago);
-        this.tableViewValores.getItems().add(itemPago);
-        BigDecimal vlTroco = vlPago.subtract(this.venda.getValorTotal()).compareTo(BigDecimal.ZERO) > 0 ? vlPago.subtract(this.venda.getValorTotal()) : BigDecimal.ZERO;
-        Map<String, Object> itemTroco = new HashMap<>();
-        itemTroco.put("DESCRICAO", "Troco");
-        itemTroco.put("VALOR", vlTroco);
-        this.tableViewValores.getItems().add(itemTroco);
+
+        this.tableViewValores.setItems(observableList(this.venda.getPagamentos()));
+        this.pago.setText(formataMoeda(vlPago));
     }
 }
