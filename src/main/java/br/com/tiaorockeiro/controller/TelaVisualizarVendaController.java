@@ -29,6 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -68,23 +69,35 @@ public class TelaVisualizarVendaController implements Initializable {
     @FXML
     private TextField totalItens;
     @FXML
-    private TextField desconto;
+    private Label desconto;
     @FXML
-    private TextField comissao;
+    private Label comissao;
     @FXML
     private TextField pago;
     @FXML
-    private TextField troco;
+    private Label troco;
     @FXML
-    private TextField data;
+    private Label data;
     @FXML
-    private TextField hora;
+    private Label hora;
     @FXML
-    private TextField mesa;
+    private Label mesa;
     @FXML
-    private TextField usuario;
+    private Label usuario;
     @FXML
-    private TextField valor;
+    private Label usuarioCancelamento;
+    @FXML
+    private Label lbUsuarioCancelamento;
+    @FXML
+    private Label dataCancelamento;
+    @FXML
+    private Label lbDataCancelamento;
+    @FXML
+    private Label horaCancelamento;
+    @FXML
+    private Label lbHoraCancelamento;
+    @FXML
+    private Label valor;
 
     /**
      * Initializes the controller class.
@@ -248,6 +261,19 @@ public class TelaVisualizarVendaController implements Initializable {
         this.comissao.setText(formataMoeda(this.venda.getValorComissao()));
         BigDecimal vlTroco = vlPago.subtract(this.venda.getValorTotal()).compareTo(BigDecimal.ZERO) > 0 ? vlPago.subtract(this.venda.getValorTotal()) : BigDecimal.ZERO;
         this.troco.setText(formataMoeda(vlTroco));
+
+        if (this.venda.getDataHoraCancelamento() != null) {
+            this.usuarioCancelamento.setText(this.venda.getUsuarioCancelamento().getDescricao());
+            this.dataCancelamento.setText(new SimpleDateFormat("dd/MM/yyyy").format(this.venda.getDataHoraCancelamento()));
+            this.horaCancelamento.setText(new SimpleDateFormat("HH:mm:ss").format(this.venda.getDataHoraCancelamento()));
+        } else {
+            this.usuarioCancelamento.setVisible(false);
+            this.dataCancelamento.setVisible(false);
+            this.horaCancelamento.setVisible(false);
+            this.lbUsuarioCancelamento.setVisible(false);
+            this.lbHoraCancelamento.setVisible(false);
+            this.lbDataCancelamento.setVisible(false);
+        }
 
         this.venda.getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
         this.tableViewProdutos.setItems(observableList(this.venda.getItens()));

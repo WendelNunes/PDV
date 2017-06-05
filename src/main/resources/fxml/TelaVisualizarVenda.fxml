@@ -14,28 +14,25 @@
 
 <AnchorPane id="AnchorPane" prefHeight="599.0" prefWidth="800.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaVisualizarVendaController">
    <children>
-      <Label layoutX="312.0" layoutY="89.0" prefHeight="18.0" prefWidth="149.0" text="Comissão:" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="89.0">
+      <Label layoutX="312.0" layoutY="47.0" prefHeight="18.0" prefWidth="149.0" text="Comissão:" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="47.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="comissao" disable="true" editable="false" layoutX="312.0" layoutY="107.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="107.0" />
-      <Label layoutX="463.0" layoutY="89.0" prefHeight="18.0" prefWidth="149.0" text="Troco:" AnchorPane.leftAnchor="463.0" AnchorPane.topAnchor="89.0">
+      <Label layoutX="462.0" layoutY="47.0" prefHeight="18.0" prefWidth="149.0" text="Troco:" AnchorPane.leftAnchor="463.0" AnchorPane.topAnchor="47.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="troco" disable="true" editable="false" layoutX="463.0" layoutY="107.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="463.0" AnchorPane.topAnchor="107.0" />
       <Button layoutX="1067.0" layoutY="659.0" mnemonicParsing="false" onAction="#acaoVoltar" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Voltar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="639.0" layoutY="659.0" mnemonicParsing="false" onAction="#acaoCancelarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Cancelar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="112.0" />
       <Button layoutX="537.0" layoutY="659.0" mnemonicParsing="false" onAction="#acaoEmitirExtrato" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Emitir Extrato" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="214.0" />
-      <Label layoutX="161.0" layoutY="89.0" prefHeight="18.0" prefWidth="149.0" text="Desconto:" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="89.0">
+      <Label layoutX="158.0" layoutY="47.0" prefHeight="18.0" prefWidth="149.0" text="Desconto:" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="47.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="desconto" disable="true" editable="false" layoutX="161.0" layoutY="107.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="107.0" />
-      <TabPane layoutX="14.0" layoutY="171.0" prefHeight="475.0" prefWidth="1235.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="171.0">
+      <TabPane layoutX="14.0" layoutY="127.0" prefHeight="397.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
         <tabs>
           <Tab style="-fx-background-radius: 0;" text="Produtos">
             <content>
@@ -94,7 +91,6 @@
           </Tab>
         </tabs>
       </TabPane>
-      <TextField fx:id="data" disable="true" editable="false" layoutX="10.0" layoutY="28.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="28.0" />
       <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="149.0" text="Data:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Arial" size="14.0" />
@@ -105,24 +101,95 @@
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="hora" disable="true" editable="false" layoutX="161.0" layoutY="28.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="28.0" />
       <Label layoutX="312.0" layoutY="10.0" prefHeight="18.0" prefWidth="149.0" text="Mesa:" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="mesa" disable="true" editable="false" layoutX="312.0" layoutY="28.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="28.0" />
       <Label layoutX="463.0" layoutY="10.0" prefHeight="18.0" prefWidth="149.0" text="Usuário:" AnchorPane.leftAnchor="463.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="usuario" disable="true" editable="false" layoutX="463.0" layoutY="28.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="463.0" AnchorPane.topAnchor="28.0" />
-      <Label layoutX="10.0" layoutY="89.0" prefHeight="18.0" prefWidth="149.0" text="Valor:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="89.0">
+      <Label layoutX="10.0" layoutY="47.0" prefHeight="18.0" prefWidth="149.0" text="Valor:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="47.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="valor" disable="true" editable="false" layoutX="10.0" layoutY="107.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="107.0" />
+      <Label fx:id="data" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="28.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="hora" layoutX="164.0" layoutY="28.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="166.0" AnchorPane.topAnchor="28.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="hora1" layoutX="309.0" layoutY="28.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="10.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="mesa" layoutX="329.0" layoutY="28.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="317.0" AnchorPane.topAnchor="28.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="usuario" layoutX="460.0" layoutY="28.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="468.0" AnchorPane.topAnchor="28.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="valor" layoutX="15.0" layoutY="65.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="desconto" layoutX="166.0" layoutY="65.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="166.0" AnchorPane.topAnchor="65.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="comissao" layoutX="317.0" layoutY="65.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="317.0" AnchorPane.topAnchor="65.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="troco" layoutX="465.0" layoutY="65.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="468.0" AnchorPane.topAnchor="65.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbUsuarioCancelamento" layoutX="10.0" layoutY="83.0" prefHeight="18.0" prefWidth="149.0" text="Usuário Cancelamento:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="83.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="usuarioCancelamento" layoutX="15.0" layoutY="102.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="102.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbDataCancelamento" layoutX="158.0" layoutY="83.0" prefHeight="18.0" prefWidth="149.0" text="Data Cancelamento:" AnchorPane.leftAnchor="161.0" AnchorPane.topAnchor="83.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbHoraCancelamento" layoutX="309.0" layoutY="83.0" prefHeight="18.0" prefWidth="149.0" text="Hora Cancelamento:" AnchorPane.leftAnchor="312.0" AnchorPane.topAnchor="83.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="dataCancelamento" layoutX="158.0" layoutY="102.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="166.0" AnchorPane.topAnchor="102.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="horaCancelamento" layoutX="312.0" layoutY="102.0" prefHeight="18.0" prefWidth="143.0" AnchorPane.leftAnchor="317.0" AnchorPane.topAnchor="102.0">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
