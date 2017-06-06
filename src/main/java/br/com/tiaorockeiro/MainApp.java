@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -53,5 +54,17 @@ public class MainApp extends Application {
         this.stage.setScene(scene);
         this.stage.setMaximized(true);
         this.stage.setResizable(true);
+    }
+
+    public Stage popup(Parent root, boolean modal) {
+        Stage popup = new Stage();
+        if (modal) {
+            popup.initModality(Modality.WINDOW_MODAL);
+            popup.initOwner(this.stage);
+        }
+        Scene scene = new Scene(root);
+        popup.setScene(scene);
+        popup.show();
+        return popup;
     }
 }
