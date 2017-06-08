@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -9,23 +13,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPaneTelaPedido" prefHeight="579.0" prefWidth="1299.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPedidoController">
+<AnchorPane id="AnchorPane" fx:id="anchorPaneTelaPedido" prefHeight="579.0" prefWidth="1277.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaPedidoController">
     <children>
         <Button layoutX="524.0" layoutY="361.0" mnemonicParsing="false" onAction="#acaoVoltar" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Voltar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <ScrollPane fx:id="scrollCategorias" layoutX="10.0" layoutY="14.0" prefHeight="75.0" prefWidth="639.0" vbarPolicy="NEVER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <TableView fx:id="tableViewItens" layoutX="10.0" layoutY="90.0" prefHeight="397.0" prefWidth="663.0" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="626.0" AnchorPane.topAnchor="90.0">
+      <TableView fx:id="tableViewItens" layoutX="10.0" layoutY="90.0" prefHeight="397.0" prefWidth="606.0" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="705.0" AnchorPane.topAnchor="90.0">
         <columns>
-            <TableColumn fx:id="tableColumnSequencia" editable="false" prefWidth="42.0" sortable="false" />
-          <TableColumn fx:id="tableColumnProduto" editable="false" prefWidth="345.0" resizable="false" sortable="false" text="Produto" />
-          <TableColumn fx:id="tableColumnQuantidade" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Qtde" />
-            <TableColumn fx:id="tableColumnPreco" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Preço" />
-            <TableColumn fx:id="tableColumnTotal" editable="false" prefWidth="90.0" resizable="false" sortable="false" text="Total" />
+            <TableColumn fx:id="tableColumnSequencia" editable="false" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" sortable="false" />
+          <TableColumn fx:id="tableColumnProduto" editable="false" prefWidth="345.0" sortable="false" text="Produto" />
+          <TableColumn fx:id="tableColumnQuantidade" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" sortable="false" text="Qtde" />
+            <TableColumn fx:id="tableColumnPreco" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" sortable="false" text="Preço" />
+            <TableColumn fx:id="tableColumnTotal" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" sortable="false" text="Total" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <ScrollPane fx:id="scrollProdutos" fitToWidth="true" hbarPolicy="NEVER" layoutX="683.0" layoutY="108.0" prefHeight="370.0" prefWidth="600.0" AnchorPane.bottomAnchor="92.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="90.0" />
       <Button layoutX="983.0" layoutY="517.0" mnemonicParsing="false" onAction="#acaoFinalizarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Finalizar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="216.0" />
-      <Button layoutX="603.0" layoutY="516.0" mnemonicParsing="false" onAction="#acaoExcluirProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="Excluir" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="626.0" />
-      <Button layoutX="530.0" layoutY="516.0" mnemonicParsing="false" onAction="#acaoMenosProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="699.0" />
+      <Button layoutX="574.0" layoutY="363.0" mnemonicParsing="false" onAction="#acaoExcluirProduto" prefHeight="52.0" prefWidth="85.0" style="-fx-background-radius: 0;" text="Excluir" AnchorPane.rightAnchor="618.0" AnchorPane.topAnchor="363.0" />
+      <Button layoutX="574.0" layoutY="115.0" mnemonicParsing="false" onAction="#acaoMenosProduto" prefHeight="52.0" prefWidth="85.0" style="-fx-background-radius: 0;" text="-" AnchorPane.rightAnchor="618.0" AnchorPane.topAnchor="115.0" />
       <Button layoutX="1086.0" layoutY="517.0" mnemonicParsing="false" onAction="#acaoCancelarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Cancelar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="113.0" />
       <Label fx:id="titulo2" layoutX="159.0" layoutY="491.0" prefHeight="18.0" prefWidth="42.0" text="Total:" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="164.0">
          <font>
@@ -39,7 +46,9 @@
          </font>
       </Label>
       <TextField fx:id="textFieldQuantidadeItens" disable="true" editable="false" layoutX="14.0" layoutY="517.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-      <Button layoutX="457.0" layoutY="517.0" mnemonicParsing="false" onAction="#acaoMaisProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="+" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="772.0" />
+      <Button layoutX="574.0" layoutY="177.0" mnemonicParsing="false" onAction="#acaoMaisProduto" prefHeight="52.0" prefWidth="85.0" style="-fx-background-radius: 0;" text="+" AnchorPane.rightAnchor="618.0" AnchorPane.topAnchor="177.0" />
       <Button layoutX="880.0" layoutY="517.0" mnemonicParsing="false" onAction="#acaoFinalizarPedido" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Finalizar Pedido" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="319.0" />
+      <Button layoutX="574.0" layoutY="239.0" mnemonicParsing="false" onAction="#acaoAbrirAdicionais" prefHeight="52.0" prefWidth="85.0" style="-fx-background-radius: 0;" text="Adicionais" AnchorPane.rightAnchor="618.0" AnchorPane.topAnchor="239.0" />
+      <Button layoutX="574.0" layoutY="301.0" mnemonicParsing="false" onAction="#acaoAbrirObservacao" prefHeight="52.0" prefWidth="85.0" style="-fx-background-radius: 0;" text="Observações" AnchorPane.rightAnchor="618.0" AnchorPane.topAnchor="301.0" />
     </children>
 </AnchorPane>

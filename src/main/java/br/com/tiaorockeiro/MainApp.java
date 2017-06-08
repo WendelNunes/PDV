@@ -1,7 +1,6 @@
 package br.com.tiaorockeiro;
 
 import br.com.tiaorockeiro.controller.TelaLoginController;
-import br.com.tiaorockeiro.controller.TelaPrincipalController;
 import br.com.tiaorockeiro.util.JpaUtil;
 import java.io.IOException;
 import javafx.application.Application;
@@ -16,10 +15,12 @@ import javafx.stage.WindowEvent;
 
 public class MainApp extends Application {
 
+    private static MainApp instance;
     public Stage stage;
 
     @Override
     public void start(Stage stage) throws Exception {
+        instance = this;
         this.stage = stage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaLogin.fxml"));
         Parent root = loader.load();
@@ -66,5 +67,9 @@ public class MainApp extends Application {
         popup.setScene(scene);
         popup.show();
         return popup;
+    }
+
+    public static MainApp getInstance() {
+        return instance;
     }
 }

@@ -5,10 +5,14 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.MainApp;
 import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.CategoriaProduto;
 import br.com.tiaorockeiro.modelo.ItemPedido;
+import br.com.tiaorockeiro.modelo.Observacao;
+import br.com.tiaorockeiro.modelo.ObservacaoProduto;
 import br.com.tiaorockeiro.modelo.Pedido;
+import br.com.tiaorockeiro.modelo.PrefixoObservacao;
 import br.com.tiaorockeiro.modelo.Produto;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.CategoriaProdutoNegocio;
@@ -35,8 +39,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -86,6 +92,19 @@ public class TelaPedidoController implements Initializable {
 
     private static final int QTDE_COLUNAS_PRODUTOS = 5;
 
+    @FXML
+    private ListView<ObservacaoProduto> observacoes;
+
+    @FXML
+    private ComboBox<Observacao> observacao;
+
+    @FXML
+    private ComboBox<PrefixoObservacao> prefixoObservacao;
+    @FXML
+    private Button botaoAdicionarObservacao;
+    @FXML
+    private Button botaoFecharObservacao;
+
     public TelaPedidoController() throws Exception {
         this.aberturaCaixa = new AberturaCaixaNegocio()
                 .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado());
@@ -99,7 +118,12 @@ public class TelaPedidoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        this.botaoAdicionarObservacao.setOnAction((ActionEvent event) -> {
+            acaoAbrirObservacao(event);
+        });
+        this.botaoFecharObservacao.setOnAction((ActionEvent event) -> {
+            acaoFecharObservacao(event);
+        });
     }
 
     @FXML
@@ -386,6 +410,37 @@ public class TelaPedidoController implements Initializable {
         } catch (IOException e) {
             enviarMensagemErro(e.getMessage());
         }
+    }
+
+    @FXML
+    public void acaoAbrirAdicionais(ActionEvent event) {
+        int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+        if (index != -1) {
+
+        }
+    }
+
+    @FXML
+    public void acaoAbrirObservacao(ActionEvent event) {
+        try {
+            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaObservacoesProduto.fxml"));
+                loader.setController(this);
+                AnchorPane tela = loader.load();
+                MainApp.getInstance().popup(tela, true);
+            }
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    public void acaoAdicionarObservacao(ActionEvent event) {
+
+    }
+
+    public void acaoFecharObservacao(ActionEvent event) {
+
     }
 
     public void inicializaDados(Integer mesa) throws Exception {

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -59,6 +61,8 @@ public class ItemPedido implements Serializable {
     private BigDecimal quantidade;
     @Column(name = "valor")
     private BigDecimal valor;
+    @OneToMany(mappedBy = "itemPedido")
+    private List<ObservacaoProduto> observacoes;
 
     public Long getId() {
         return id;
@@ -142,6 +146,14 @@ public class ItemPedido implements Serializable {
 
     public BigDecimal getValorTotal() {
         return this.quantidade.multiply(this.valor).setScale(2, RoundingMode.HALF_DOWN);
+    }
+
+    public List<ObservacaoProduto> getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(List<ObservacaoProduto> observacoes) {
+        this.observacoes = observacoes;
     }
 
     @Override

@@ -189,3 +189,26 @@ CREATE TABLE pagamento (
     PRIMARY KEY (id),
     FOREIGN KEY (id_venda) REFERENCES venda (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
+
+CREATE TABLE observacao (
+    id bigserial NOT NULL,
+    descricao character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE prefixo_observacao (
+    id bigserial NOT NULL,
+    descricao character varying NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE observacao_produto (
+    id bigserial NOT NULL,
+    id_item_pedido bigint NOT NULL,
+    id_prefixo_observacao bigint NOT NULL,
+    id_observacao bigint NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_item_pedido) REFERENCES item_pedido (id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    FOREIGN KEY (id_prefixo_observacao) REFERENCES prefixo_observacao (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (id_observacao) REFERENCES observacao (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
