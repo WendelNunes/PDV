@@ -60,7 +60,8 @@ public class MainApp extends Application {
     public Stage popup(Parent root, boolean modal) {
         Stage popup = new Stage();
         if (modal) {
-            popup.initModality(Modality.WINDOW_MODAL);
+            popup.initModality(Modality.APPLICATION_MODAL);
+            popup.centerOnScreen();
             popup.initOwner(this.stage);
         }
         Scene scene = new Scene(root);

@@ -6,13 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="342.0" prefWidth="600.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="342.0" prefWidth="600.0" style="-fx-background-color: #ECEFF1;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaObservacoesProdutoController">
     <children>
         <Label layoutX="14.0" layoutY="14.0" text="Observação:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
         <ComboBox fx:id="prefixoObservacao" layoutX="10.0" layoutY="27.0" prefWidth="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="27.0" />
         <ComboBox fx:id="observacao" layoutX="137.0" layoutY="27.0" prefWidth="353.0" AnchorPane.leftAnchor="137.0" AnchorPane.rightAnchor="112.0" AnchorPane.topAnchor="27.0" />
-        <Button fx:id="botaoAdicionarObservacao" layoutX="534.0" layoutY="27.0" mnemonicParsing="false" prefWidth="100.0" text="Adicionar" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0" />
+        <Button layoutX="534.0" layoutY="27.0" mnemonicParsing="false" onAction="#acaoAdicionarObservacao" prefWidth="100.0" text="Adicionar" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="27.0" />
         <ListView fx:id="observacoes" layoutX="10.0" layoutY="89.0" prefHeight="181.0" prefWidth="580.0" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="89.0" />
-        <Button fx:id="botaoFecharObservacao" layoutX="531.0" layoutY="326.0" mnemonicParsing="false" prefWidth="100.0" text="Fechar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+        <Button layoutX="531.0" layoutY="326.0" mnemonicParsing="false" onAction="#acaoFechar" prefWidth="100.0" text="Fechar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
     </children>
 </AnchorPane>
