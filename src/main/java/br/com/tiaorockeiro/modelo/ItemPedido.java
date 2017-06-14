@@ -63,6 +63,8 @@ public class ItemPedido implements Serializable {
     private BigDecimal valor;
     @OneToMany(mappedBy = "itemPedido")
     private List<ObservacaoProduto> observacoes;
+    @OneToMany(mappedBy = "itemPedido")
+    private List<AdicionalProduto> adicionais;
 
     public Long getId() {
         return id;
