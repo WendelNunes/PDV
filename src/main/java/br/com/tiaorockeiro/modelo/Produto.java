@@ -44,6 +44,8 @@ public class Produto implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_impressora_comanda")
     private Impressora impressoraComanda;
+    @Column(name = "adicional")
+    private boolean adicional;
 
     public Long getId() {
         return id;
@@ -99,6 +101,14 @@ public class Produto implements Serializable {
 
     public void setImpressoraComanda(Impressora impressoraComanda) {
         this.impressoraComanda = impressoraComanda;
+    }
+
+    public boolean isAdicional() {
+        return adicional;
+    }
+
+    public void setAdicional(boolean adicional) {
+        this.adicional = adicional;
     }
 
     @Override

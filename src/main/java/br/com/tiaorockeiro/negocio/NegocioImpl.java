@@ -41,13 +41,14 @@ public class NegocioImpl<T, Long> implements Negocio<T, Long> {
     }
 
     @Override
+    @SuppressWarnings("UnusedAssignment")
     public void salvar(List<T> entidades) {
         EntityManager entityManager = null;
         try {
             entityManager = criaEntityManager();
             entityManager.getTransaction().begin();
             DAO<T, Long> dao = new DAOImpl<>(entityManager);
-            entidades.stream().forEach((entidade) -> {
+            entidades.stream().forEach(entidade -> {
                 entidade = dao.salvar(entidade);
             });
             entityManager.getTransaction().commit();

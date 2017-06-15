@@ -113,6 +113,7 @@ CREATE TABLE produto (
     id_unidade_produto bigint NOT NULL,
     valor numeric(14,4) NOT NULL DEFAULT 0,
     id_impressora_comanda bigint,
+    adicional boolean NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id),
     FOREIGN KEY (id_categoria_produto) REFERENCES categoria_produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY (id_unidade_produto) REFERENCES unidade_produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -211,4 +212,15 @@ CREATE TABLE observacao_produto (
     FOREIGN KEY (id_item_pedido) REFERENCES item_pedido (id) ON UPDATE NO ACTION ON DELETE CASCADE,
     FOREIGN KEY (id_prefixo_observacao) REFERENCES prefixo_observacao (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY (id_observacao) REFERENCES observacao (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE adicional_produto (
+    id bigserial NOT NULL,
+    id_item_pedido bigint NOT NULL,
+    id_produto bigint NOT NULL,
+    quantidade numeric(14,4) NOT NULL DEFAULT 0,
+    valor numeric(14,4) NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_item_pedido) REFERENCES item_pedido (id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
