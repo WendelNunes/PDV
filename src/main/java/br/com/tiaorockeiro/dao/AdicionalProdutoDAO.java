@@ -5,10 +5,12 @@
  */
 package br.com.tiaorockeiro.dao;
 
+import br.com.tiaorockeiro.modelo.AdicionalProduto;
+
 /**
  *
- * @author Wendel
+ * @author INLOC01
  */
-public interface AdicionalProdutoDAO {
-    
+public interface AdicionalProdutoDAO extends DAO<AdicionalProduto, Long> {
+
 }
