@@ -27,4 +27,14 @@ public class ProdutoNegocio extends NegocioImpl<Produto, Long> {
             entityManager.close();
         }
     }
+
+    public List<Produto> listarAdicionais() throws Exception {
+        EntityManager entityManager = criaEntityManager();
+        try {
+            ProdutoDAO produtoDAO = new ProdutoDAOImpl(entityManager);
+            return produtoDAO.listarAdicionais();
+        } finally {
+            entityManager.close();
+        }
+    }
 }

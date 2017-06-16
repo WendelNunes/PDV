@@ -401,9 +401,16 @@ public class TelaPedidoController implements Initializable {
 
     @FXML
     public void acaoAbrirAdicionais(ActionEvent event) {
-        int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
-        if (index != -1) {
-
+        try {
+            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaAdicionaisProduto.fxml"));
+                AnchorPane tela = loader.load();
+                TelaAdicionaisProdutoController controller = loader.getController();
+                controller.abrirTela(tela, this.tableViewItens.getSelectionModel().getSelectedItem());
+            }
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
         }
     }
 

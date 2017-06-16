@@ -15,4 +15,6 @@ import java.util.List;
 public interface ProdutoDAO extends DAO<Produto, Long> {
 
     public List<Produto> listarPorCategoria(Long idCategoria);
+
+    public List<Produto> listarAdicionais();
 }

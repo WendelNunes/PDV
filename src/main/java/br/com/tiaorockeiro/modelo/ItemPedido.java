@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "item_pedido")
 public class ItemPedido implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -65,110 +65,118 @@ public class ItemPedido implements Serializable {
     private List<ObservacaoProduto> observacoes;
     @OneToMany(mappedBy = "itemPedido")
     private List<AdicionalProduto> adicionais;
-    
+
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Pedido getPedido() {
         return pedido;
     }
-    
+
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
     }
-    
+
     public AberturaCaixa getAberturaCaixa() {
         return aberturaCaixa;
     }
-    
+
     public void setAberturaCaixa(AberturaCaixa aberturaCaixa) {
         this.aberturaCaixa = aberturaCaixa;
     }
-    
+
     public Usuario getUsuario() {
         return usuario;
     }
-    
+
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
+
     public Date getDataHora() {
         return dataHora;
     }
-    
+
     public void setDataHora(Date dataHora) {
         this.dataHora = dataHora;
     }
-    
+
     public Usuario getUsuarioCancelamento() {
         return usuarioCancelamento;
     }
-    
+
     public void setUsuarioCancelamento(Usuario usuarioCancelamento) {
         this.usuarioCancelamento = usuarioCancelamento;
     }
-    
+
     public Date getDataHoraCancelamento() {
         return dataHoraCancelamento;
     }
-    
+
     public void setDataHoraCancelamento(Date dataHoraCancelamento) {
         this.dataHoraCancelamento = dataHoraCancelamento;
     }
-    
+
     public Produto getProduto() {
         return produto;
     }
-    
+
     public void setProduto(Produto produto) {
         this.produto = produto;
     }
-    
+
     public BigDecimal getQuantidade() {
         return quantidade;
     }
-    
+
     public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
-    
+
     public BigDecimal getValor() {
         return valor;
     }
-    
+
     public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
-    
+
     public BigDecimal getValorTotalAdicionais() {
         return this.adicionais != null ? this.adicionais.stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add) : BigDecimal.ZERO;
     }
-    
+
     public BigDecimal getValorTotal() {
         return this.quantidade.multiply(this.valor).setScale(2, RoundingMode.HALF_DOWN).add(this.getValorTotalAdicionais());
     }
-    
+
     public List<ObservacaoProduto> getObservacoes() {
         return observacoes;
     }
-    
+
     public void setObservacoes(List<ObservacaoProduto> observacoes) {
         this.observacoes = observacoes;
     }
-    
+
+    public List<AdicionalProduto> getAdicionais() {
+        return adicionais;
+    }
+
+    public void setAdicionais(List<AdicionalProduto> adicionais) {
+        this.adicionais = adicionais;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.id);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

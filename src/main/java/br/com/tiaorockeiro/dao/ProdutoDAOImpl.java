@@ -29,4 +29,10 @@ public class ProdutoDAOImpl extends DAOImpl<Produto, Long> implements ProdutoDAO
         query.setParameter("idCategoriaProduto", idCategoria);
         return query.getResultList();
     }
+
+    @Override
+    public List<Produto> listarAdicionais() {
+        Query query = this.entityManager.createQuery("FROM Produto p WHERE p.adicional = true");
+        return query.getResultList();
+    }
 }
