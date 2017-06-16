@@ -252,6 +252,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
         this.criaGridProdutos();
         this.ajustaTabelaItens();
         this.tableViewItens.setItems(observableList(this.itemPedido.getAdicionais()));
+        this.atualizaTotalizadores();
         this.stage = MainApp.getInstance().popup(tela, true);
     }
 }

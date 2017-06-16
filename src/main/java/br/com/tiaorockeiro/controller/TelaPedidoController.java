@@ -318,6 +318,7 @@ public class TelaPedidoController implements Initializable {
             item.setQuantidade(BigDecimal.ONE);
             item.setValor(produto.getValor());
             item.setObservacoes(new ArrayList<>());
+            item.setAdicionais(new ArrayList<>());
             this.tableViewItens.getItems().add(item);
             this.atualizaTotalizadores();
         } catch (NumberFormatException e) {
