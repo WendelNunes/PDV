@@ -6,7 +6,9 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.AdicionalProduto;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  *
@@ -14,7 +16,17 @@ import javax.persistence.EntityManager;
  */
 public class AdicionalProdutoDAOImpl extends DAOImpl<AdicionalProduto, Long> implements AdicionalProdutoDAO {
 
+    private final EntityManager entityManager;
+
     public AdicionalProdutoDAOImpl(EntityManager entityManager) {
         super(entityManager);
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public List<AdicionalProduto> obterPorIdItemPedido(Long idItemPedido) {
+        Query query = this.entityManager.createQuery("FROM AdicionalProduto ap WHERE ap.itemPedido.id = :idItemPedido");
+        query.setParameter("idItemPedido", idItemPedido);
+        return query.getResultList();
     }
 }

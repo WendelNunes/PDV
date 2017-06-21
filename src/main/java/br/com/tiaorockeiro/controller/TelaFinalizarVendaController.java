@@ -5,6 +5,7 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.AdicionalProduto;
 import br.com.tiaorockeiro.modelo.FormaPagamento;
 import br.com.tiaorockeiro.modelo.ItemPedido;
 import br.com.tiaorockeiro.modelo.ItemVenda;
@@ -12,7 +13,9 @@ import br.com.tiaorockeiro.modelo.Pagamento;
 import br.com.tiaorockeiro.modelo.Pedido;
 import br.com.tiaorockeiro.modelo.Venda;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
+import br.com.tiaorockeiro.negocio.AdicionalProdutoNegocio;
 import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
+import br.com.tiaorockeiro.negocio.ObservacaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.VendaNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
@@ -382,6 +385,14 @@ public class TelaFinalizarVendaController implements Initializable {
                     item.setQuantidade(i.getQuantidade());
                     item.setValorUnitario(i.getValor());
                     this.venda.getItens().add(item);
+                    i.getAdicionais().forEach(a -> {
+                        ItemVenda itemAdicional = new ItemVenda();
+                        itemAdicional.setVenda(this.venda);
+                        itemAdicional.setProduto(a.getProduto());
+                        itemAdicional.setQuantidade(a.getQuantidade());
+                        itemAdicional.setValorUnitario(a.getValor());
+                        this.venda.getItens().add(itemAdicional);
+                    });
                 });
                 // FORMA PAGAMENTO
                 if (dinheiro.compareTo(BigDecimal.ZERO) > 0) {
@@ -458,6 +469,14 @@ public class TelaFinalizarVendaController implements Initializable {
 
     public void inicializaDados(Long idPedido) {
         this.venda.setPedido(new PedidoNegocio().obterPorId(Pedido.class, idPedido));
+        ObservacaoProdutoNegocio observacaoProdutoNegocio = new ObservacaoProdutoNegocio();
+        AdicionalProdutoNegocio adicionalProdutoNegocio = new AdicionalProdutoNegocio();
+        this.venda.getPedido().getItens().stream().map((itemPedido) -> {
+            return itemPedido;
+        }).forEachOrdered((itemPedido) -> {
+            itemPedido.setObservacoes(observacaoProdutoNegocio.obterPorIdItemPedido(itemPedido.getId()));
+            itemPedido.setAdicionais(adicionalProdutoNegocio.obterPorIdItemPedido(itemPedido.getId()));
+        });
         this.venda.setMesa(this.venda.getPedido().getMesa());
         this.titulo.setText("Mesa " + this.venda.getMesa());
         this.ajustaTabelaItens();

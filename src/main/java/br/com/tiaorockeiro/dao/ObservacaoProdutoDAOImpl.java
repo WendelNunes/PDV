@@ -6,7 +6,9 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.ObservacaoProduto;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  *
@@ -14,7 +16,17 @@ import javax.persistence.EntityManager;
  */
 public class ObservacaoProdutoDAOImpl extends DAOImpl<ObservacaoProduto, Long> implements ObservacaoProdutoDAO {
 
+    private final EntityManager entityManager;
+
     public ObservacaoProdutoDAOImpl(EntityManager entityManager) {
         super(entityManager);
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public List<ObservacaoProduto> obterPorIdItemPedido(Long idItemPedido) {
+        Query query = this.entityManager.createQuery("FROM ObservacaoProduto op WHERE op.itemPedido.id = :idItemPedido");
+        query.setParameter("idItemPedido", idItemPedido);
+        return query.getResultList();
     }
 }

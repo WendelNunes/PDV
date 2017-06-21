@@ -13,11 +13,8 @@ import br.com.tiaorockeiro.negocio.ProdutoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
 import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
-import br.com.tiaorockeiro.util.SessaoUtil;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
@@ -66,6 +63,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
     @FXML
     private TextField textFieldValorTotal;
     private ItemPedido itemPedido;
+    private TelaPedidoController telaPedido;
     private Stage stage;
 
     /**
@@ -148,6 +146,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
             item.setQuantidade(BigDecimal.ONE);
             item.setValor(produto.getValor());
             this.tableViewItens.getItems().add(item);
+            this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
             this.atualizaTotalizadores();
         } catch (NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
@@ -162,6 +161,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
                 AdicionalProduto item = this.tableViewItens.getSelectionModel().getSelectedItem();
                 item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
                 this.tableViewItens.getItems().set(index, item);
+                this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
                 this.tableViewItens.getSelectionModel().select(index);
             }
             this.atualizaTotalizadores();
@@ -179,6 +179,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
                 if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
                     item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
                     this.tableViewItens.getItems().set(index, item);
+                    this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
                     this.tableViewItens.getSelectionModel().select(index);
                 }
             }
@@ -194,6 +195,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
             int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
                 this.tableViewItens.getItems().remove(index);
+                this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
             }
             this.atualizaTotalizadores();
         } catch (Exception e) {
@@ -247,8 +249,9 @@ public class TelaAdicionaisProdutoController implements Initializable {
         this.textFieldValorTotal.setText(formataMoeda(this.tableViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
     }
 
-    public void abrirTela(AnchorPane tela, ItemPedido itemPedido) throws Exception {
+    public void abrirTela(AnchorPane tela, TelaPedidoController telaPedido, ItemPedido itemPedido) throws Exception {
         this.itemPedido = itemPedido;
+        this.telaPedido = telaPedido;
         this.criaGridProdutos();
         this.ajustaTabelaItens();
         this.tableViewItens.setItems(observableList(this.itemPedido.getAdicionais()));

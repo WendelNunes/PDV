@@ -6,11 +6,13 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.ObservacaoProduto;
+import java.util.List;
 
 /**
  *
  * @author INLOC01
  */
 public interface ObservacaoProdutoDAO extends DAO<ObservacaoProduto, Long> {
-    
+
+    public List<ObservacaoProduto> obterPorIdItemPedido(Long idItemPedido);
 }
