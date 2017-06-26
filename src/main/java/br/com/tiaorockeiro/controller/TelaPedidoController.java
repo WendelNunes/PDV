@@ -32,27 +32,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -60,7 +57,7 @@ import javafx.scene.text.Font;
  * @author Wendel
  */
 public class TelaPedidoController implements Initializable {
-    
+
     @FXML
     private ScrollPane scrollCategorias;
     @FXML
@@ -68,7 +65,7 @@ public class TelaPedidoController implements Initializable {
     @FXML
     private GridPane gridProdutos;
     @FXML
-    private TableView<ItemPedido> tableViewItens;
+    private ListView<ItemPedido> listViewItens;
     @FXML
     private TableColumn<ItemPedido, Long> tableColumnSequencia;
     @FXML
@@ -83,14 +80,14 @@ public class TelaPedidoController implements Initializable {
     private TextField textFieldQuantidadeItens;
     @FXML
     private TextField textFieldValorTotal;
-    
+
     private List<CategoriaProduto> categorias;
     private List<Produto> produtos;
     private Pedido pedido;
     private final AberturaCaixa aberturaCaixa;
-    
+
     private static final int QTDE_COLUNAS_PRODUTOS = 5;
-    
+
     public TelaPedidoController() throws Exception {
         this.aberturaCaixa = new AberturaCaixaNegocio()
                 .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado());
@@ -105,7 +102,7 @@ public class TelaPedidoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
-    
+
     @FXML
     public void acaoVoltar(ActionEvent event) {
         try {
@@ -116,7 +113,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     private void criaGridCategorias() {
         this.categorias = new CategoriaProdutoNegocio().listarTodos(CategoriaProduto.class);
         HBox listaCategorias = new HBox();
@@ -128,7 +125,7 @@ public class TelaPedidoController implements Initializable {
         }
         this.scrollCategorias.setContent(listaCategorias);
     }
-    
+
     private Button criaBotaoCategorias(CategoriaProduto categoriaProduto) {
         Button button = new Button(categoriaProduto.getDescricao());
         button.getStyleClass().add("botao-menu-solto");
@@ -138,7 +135,7 @@ public class TelaPedidoController implements Initializable {
         });
         return button;
     }
-    
+
     private void selecionaCategoria(ActionEvent event) {
         try {
             Long idCategoria = Long.valueOf(((Control) event.getSource()).getId());
@@ -148,7 +145,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     private void criaGridProdutos(Long idCategoria) throws Exception {
         this.produtos = new ProdutoNegocio().listarPorCategoria(idCategoria);
         this.gridProdutos = new GridPane();
@@ -168,7 +165,7 @@ public class TelaPedidoController implements Initializable {
         }
         this.scrollProdutos.setContent(this.gridProdutos);
     }
-    
+
     private Button criaBotaoProdutos(Produto produto) {
         Image image = new Image("/imagens/icon-table.png");
         Button button = new Button(produto.getDescricao(), new ImageView(image));
@@ -180,113 +177,60 @@ public class TelaPedidoController implements Initializable {
         });
         return button;
     }
-    
-    @SuppressWarnings("Convert2Lambda")
+
     private void ajustaTabelaItens() {
-        this.tableViewItens.setFixedCellSize(45);
-        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getProduto().getId()));
-        this.tableColumnSequencia.setCellFactory((TableColumn<ItemPedido, Long> param) -> new TableCell<ItemPedido, Long>() {
+        this.listViewItens.setCellFactory(param -> new ListCell<ItemPedido>() {
             @Override
-            protected void updateItem(Long item, boolean empty) {
+            protected void updateItem(ItemPedido item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null) {
-                    setText(String.valueOf(getIndex() + 1));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
+                    try {
+                        ListCellProduto cellProduto = new ListCellProduto(item.getProduto().getDescricao(), item.getValor(), item.getQuantidade(), item.getValorTotalAdicionais(), item.getValorTotal());
+                        setGraphic(cellProduto.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
                 } else {
-                    setText("");
-                }
-            }
-        });
-        this.tableColumnProduto.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getProduto().getDescricao()));
-        this.tableColumnProduto.setCellFactory((TableColumn<ItemPedido, String> param) -> new TableCell<ItemPedido, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(item);
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_LEFT);
-                }
-            }
-        });
-        this.tableColumnQuantidade.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getQuantidade()));
-        this.tableColumnQuantidade.setCellFactory((TableColumn<ItemPedido, BigDecimal> param) -> new TableCell<ItemPedido, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataQuantidade(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnPreco.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValor()));
-        this.tableColumnPreco.setCellFactory((TableColumn<ItemPedido, BigDecimal> param) -> new TableCell<ItemPedido, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnTotal.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValorTotal()));
-        this.tableColumnTotal.setCellFactory((TableColumn<ItemPedido, BigDecimal> param) -> new TableCell<ItemPedido, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
+                    setText(null);
+                    setGraphic(null);
                 }
             }
         });
     }
-    
+
     private void atualizaTotalizadores() {
-        this.textFieldQuantidadeItens.setText(formataQuantidade(this.tableViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
-        this.textFieldValorTotal.setText(formataMoeda(this.tableViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        this.textFieldQuantidadeItens.setText(formataQuantidade(this.listViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        this.textFieldValorTotal.setText(formataMoeda(this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
     }
-    
+
     @FXML
     public void acaoMaisProduto() {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
+                ItemPedido item = this.listViewItens.getSelectionModel().getSelectedItem();
                 item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
-                this.tableViewItens.getItems().set(index, item);
-                this.tableViewItens.getSelectionModel().select(index);
+                this.listViewItens.getItems().set(index, item);
+                this.listViewItens.getSelectionModel().select(index);
             }
             this.atualizaTotalizadores();
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoMenosProduto() {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                ItemPedido item = this.tableViewItens.getSelectionModel().getSelectedItem();
+                ItemPedido item = this.listViewItens.getSelectionModel().getSelectedItem();
                 if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
                     item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
-                    this.tableViewItens.getItems().set(index, item);
-                    this.tableViewItens.getSelectionModel().select(index);
+                    this.listViewItens.getItems().set(index, item);
+                    this.listViewItens.getSelectionModel().select(index);
                 }
             }
             this.atualizaTotalizadores();
@@ -294,20 +238,20 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoExcluirProduto() {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                this.tableViewItens.getItems().remove(index);
+                this.listViewItens.getItems().remove(index);
             }
             this.atualizaTotalizadores();
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     private void acaoAdicionaProduto(ActionEvent event) {
         try {
             Produto produto = new ProdutoNegocio().obterPorId(Produto.class, Long.valueOf(((Control) event.getSource()).getId()));
@@ -321,17 +265,17 @@ public class TelaPedidoController implements Initializable {
             item.setValor(produto.getValor());
             item.setObservacoes(new ArrayList<>());
             item.setAdicionais(new ArrayList<>());
-            this.tableViewItens.getItems().add(item);
+            this.listViewItens.getItems().add(item);
             this.atualizaTotalizadores();
         } catch (NumberFormatException e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoFinalizarPedido(ActionEvent event) {
         try {
-            if (!this.tableViewItens.getItems().isEmpty()) {
+            if (!this.listViewItens.getItems().isEmpty()) {
                 this.salvarPedido();
                 this.acaoVoltar(null);
                 enviarMensagemInformacao("Pedido realizado com sucesso!");
@@ -342,7 +286,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @SuppressWarnings("UnusedAssignment")
     private void salvarPedido() {
         if (this.pedido.getId() == null) {
@@ -353,7 +297,7 @@ public class TelaPedidoController implements Initializable {
         ItemPedidoNegocio itemPedidoNegocio = new ItemPedidoNegocio();
         ObservacaoProdutoNegocio observacaoProdutoNegocio = new ObservacaoProdutoNegocio();
         AdicionalProdutoNegocio adicionalProdutoNegocio = new AdicionalProdutoNegocio();
-        this.tableViewItens.getItems().stream().map((item) -> {
+        this.listViewItens.getItems().stream().map((item) -> {
             item.setPedido(this.pedido);
             return item;
         }).forEachOrdered((item) -> {
@@ -370,11 +314,11 @@ public class TelaPedidoController implements Initializable {
             }
         });
     }
-    
+
     @FXML
     public void acaoFinalizarVenda(ActionEvent event) {
         try {
-            if (this.tableViewItens.getItems().size() > 0 && enviarMensagemConfirmacao("Deseja salvar o pedido?")) {
+            if (this.listViewItens.getItems().size() > 0 && enviarMensagemConfirmacao("Deseja salvar o pedido?")) {
                 this.salvarPedido();
             }
             if (this.pedido.getId() != null) {
@@ -390,7 +334,7 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoCancelarVenda(ActionEvent event) {
         try {
@@ -409,45 +353,45 @@ public class TelaPedidoController implements Initializable {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     @FXML
     public void acaoAbrirAdicionais(ActionEvent event) {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaAdicionaisProduto.fxml"));
                 AnchorPane tela = loader.load();
                 TelaAdicionaisProdutoController controller = loader.getController();
-                controller.abrirTela(tela, this, this.tableViewItens.getSelectionModel().getSelectedItem());
+                controller.abrirTela(tela, this, this.listViewItens.getSelectionModel().getSelectedItem());
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     public void updateItemPedidoSelecionado(ItemPedido itemPedido) {
-        int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+        int index = this.listViewItens.getSelectionModel().getSelectedIndex();
         if (index != -1) {
-            this.tableViewItens.getItems().set(index, itemPedido);
-            this.tableViewItens.getSelectionModel().select(index);
+            this.listViewItens.getItems().set(index, itemPedido);
+            this.listViewItens.getSelectionModel().select(index);
         }
     }
-    
+
     @FXML
     public void acaoAbrirObservacao(ActionEvent event) {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaObservacoesProduto.fxml"));
                 AnchorPane tela = loader.load();
                 TelaObservacoesProdutoController controller = loader.getController();
-                controller.abrirTela(tela, this.tableViewItens.getSelectionModel().getSelectedItem());
+                controller.abrirTela(tela, this.listViewItens.getSelectionModel().getSelectedItem());
             }
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }
-    
+
     public void inicializaDados(Integer mesa) throws Exception {
         this.pedido = new Pedido();
         this.pedido.setMesa(mesa);
@@ -462,7 +406,7 @@ public class TelaPedidoController implements Initializable {
         }
         this.atualizaTotalizadores();
     }
-    
+
     public Pedido getPedido() {
         return pedido;
     }

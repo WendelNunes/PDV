@@ -164,3 +164,7 @@
     -fx-pref-height: 100px;
     -fx-pref-width: 150px;
 }
+
+.labelAdicional{
+    -fx-font: bold 12px "System";
+}
