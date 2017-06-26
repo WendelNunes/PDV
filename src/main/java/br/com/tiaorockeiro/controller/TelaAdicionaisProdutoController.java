@@ -27,6 +27,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -51,15 +53,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
     @FXML
     private ScrollPane scrollProdutos;
     @FXML
-    private TableView<AdicionalProduto> tableViewItens;
-    @FXML
-    private TableColumn<AdicionalProduto, String> tableColumnProduto;
-    @FXML
-    private TableColumn<AdicionalProduto, BigDecimal> tableColumnQuantidade;
-    @FXML
-    private TableColumn<AdicionalProduto, BigDecimal> tableColumnPreco;
-    @FXML
-    private TableColumn<AdicionalProduto, BigDecimal> tableColumnTotal;
+    private ListView<AdicionalProduto> listViewItens;
     @FXML
     private TextField textFieldValorTotal;
     private ItemPedido itemPedido;
@@ -78,60 +72,22 @@ public class TelaAdicionaisProdutoController implements Initializable {
     }
 
     private void ajustaTabelaItens() {
-        this.tableViewItens.setFixedCellSize(45);
-        this.tableColumnProduto.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getProduto().getDescricao()));
-        this.tableColumnProduto.setCellFactory((TableColumn<AdicionalProduto, String> param) -> new TableCell<AdicionalProduto, String>() {
+        this.listViewItens.setCellFactory(param -> new ListCell<AdicionalProduto>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(AdicionalProduto item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
+                if (item != null) {
+                    try {
+                        ListCellProduto cellProduto = new ListCellProduto(item.getProduto().getDescricao(), item.getValor(), item.getQuantidade(), null, item.getValorTotal());
+                        setGraphic(cellProduto.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
                 } else {
-                    setText(item);
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_LEFT);
-                }
-            }
-        });
-        this.tableColumnQuantidade.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getQuantidade()));
-        this.tableColumnQuantidade.setCellFactory((TableColumn<AdicionalProduto, BigDecimal> param) -> new TableCell<AdicionalProduto, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataQuantidade(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnPreco.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValor()));
-        this.tableColumnPreco.setCellFactory((TableColumn<AdicionalProduto, BigDecimal> param) -> new TableCell<AdicionalProduto, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnTotal.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValorTotal()));
-        this.tableColumnTotal.setCellFactory((TableColumn<AdicionalProduto, BigDecimal> param) -> new TableCell<AdicionalProduto, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
+                    setText(null);
+                    setGraphic(null);
                 }
             }
         });
@@ -145,7 +101,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
             item.setProduto(produto);
             item.setQuantidade(BigDecimal.ONE);
             item.setValor(produto.getValor());
-            this.tableViewItens.getItems().add(item);
+            this.listViewItens.getItems().add(item);
             this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
             this.atualizaTotalizadores();
         } catch (NumberFormatException e) {
@@ -156,13 +112,13 @@ public class TelaAdicionaisProdutoController implements Initializable {
     @FXML
     public void acaoMaisProduto(ActionEvent event) {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                AdicionalProduto item = this.tableViewItens.getSelectionModel().getSelectedItem();
+                AdicionalProduto item = this.listViewItens.getSelectionModel().getSelectedItem();
                 item.setQuantidade(item.getQuantidade().add(BigDecimal.ONE));
-                this.tableViewItens.getItems().set(index, item);
+                this.listViewItens.getItems().set(index, item);
                 this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
-                this.tableViewItens.getSelectionModel().select(index);
+                this.listViewItens.getSelectionModel().select(index);
             }
             this.atualizaTotalizadores();
         } catch (Exception e) {
@@ -173,14 +129,14 @@ public class TelaAdicionaisProdutoController implements Initializable {
     @FXML
     public void acaoMenosProduto(ActionEvent event) {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                AdicionalProduto item = this.tableViewItens.getSelectionModel().getSelectedItem();
+                AdicionalProduto item = this.listViewItens.getSelectionModel().getSelectedItem();
                 if (item.getQuantidade().compareTo(BigDecimal.ONE) > 0) {
                     item.setQuantidade(item.getQuantidade().subtract(BigDecimal.ONE));
-                    this.tableViewItens.getItems().set(index, item);
+                    this.listViewItens.getItems().set(index, item);
                     this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
-                    this.tableViewItens.getSelectionModel().select(index);
+                    this.listViewItens.getSelectionModel().select(index);
                 }
             }
             this.atualizaTotalizadores();
@@ -192,9 +148,9 @@ public class TelaAdicionaisProdutoController implements Initializable {
     @FXML
     public void acaoExcluirProduto() {
         try {
-            int index = this.tableViewItens.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1) {
-                this.tableViewItens.getItems().remove(index);
+                this.listViewItens.getItems().remove(index);
                 this.telaPedido.updateItemPedidoSelecionado(this.itemPedido);
             }
             this.atualizaTotalizadores();
@@ -245,8 +201,8 @@ public class TelaAdicionaisProdutoController implements Initializable {
     }
 
     private void atualizaTotalizadores() {
-        this.textFieldQuantidadeItens.setText(formataQuantidade(this.tableViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
-        this.textFieldValorTotal.setText(formataMoeda(this.tableViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        this.textFieldQuantidadeItens.setText(formataQuantidade(this.listViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        this.textFieldValorTotal.setText(formataMoeda(this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
     }
 
     public void abrirTela(AnchorPane tela, TelaPedidoController telaPedido, ItemPedido itemPedido) throws Exception {
@@ -254,7 +210,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
         this.telaPedido = telaPedido;
         this.criaGridProdutos();
         this.ajustaTabelaItens();
-        this.tableViewItens.setItems(observableList(this.itemPedido.getAdicionais()));
+        this.listViewItens.setItems(observableList(this.itemPedido.getAdicionais()));
         this.atualizaTotalizadores();
         this.stage = MainApp.getInstance().popup(tela, true);
     }

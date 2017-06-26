@@ -5,7 +5,6 @@
  */
 package br.com.tiaorockeiro.controller;
 
-import br.com.tiaorockeiro.modelo.AdicionalProduto;
 import br.com.tiaorockeiro.modelo.FormaPagamento;
 import br.com.tiaorockeiro.modelo.ItemPedido;
 import br.com.tiaorockeiro.modelo.ItemVenda;
@@ -34,24 +33,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Font;
 
 /**
  * FXML Controller class
@@ -77,19 +71,7 @@ public class TelaFinalizarVendaController implements Initializable {
     @FXML
     private ToggleButton buttonCalcularComissao;
     @FXML
-    private Label titulo;
-    @FXML
-    private TableView<ItemPedido> tableViewProdutos;
-    @FXML
-    private TableColumn<ItemPedido, Long> tableColumnSequencia;
-    @FXML
-    private TableColumn<ItemPedido, String> tableColumnProduto;
-    @FXML
-    private TableColumn<ItemPedido, BigDecimal> tableColumnQuantidade;
-    @FXML
-    private TableColumn<ItemPedido, BigDecimal> tableColumnPreco;
-    @FXML
-    private TableColumn<ItemPedido, BigDecimal> tableColumnTotal;
+    private ListView<ItemPedido> listViewItens;
     @FXML
     private TextField textFieldDinhieiro;
     @FXML
@@ -147,87 +129,34 @@ public class TelaFinalizarVendaController implements Initializable {
         });
     }
 
-    @SuppressWarnings("Convert2Lambda")
     private void ajustaTabelaItens() {
         this.venda.getPedido().getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-        this.tableViewProdutos.setItems(FXCollections.observableList(this.venda.getPedido().getItens().stream()
+        this.listViewItens.setItems(FXCollections.observableList(this.venda.getPedido().getItens().stream()
                 .filter(i -> i.getDataHoraCancelamento() == null).collect(Collectors.toList())));
-        this.tableViewProdutos.setFixedCellSize(45);
-        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getId()));
-        this.tableColumnSequencia.setCellFactory((TableColumn<ItemPedido, Long> param) -> new TableCell<ItemPedido, Long>() {
+        this.listViewItens.setCellFactory(param -> new ListCell<ItemPedido>() {
             @Override
-            protected void updateItem(Long item, boolean empty) {
+            protected void updateItem(ItemPedido item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null) {
-                    setText("");
+                if (item != null) {
+                    try {
+                        ListCellProduto cellProduto = new ListCellProduto(item.getProduto().getDescricao(), item.getValor(), item.getQuantidade(), item.getValorTotalAdicionais(), item.getValorTotal());
+                        setGraphic(cellProduto.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
                 } else {
-                    setText(String.valueOf(getIndex() + 1));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnProduto.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getProduto().getDescricao()));
-        this.tableColumnProduto.setCellFactory((TableColumn<ItemPedido, String> param) -> new TableCell<ItemPedido, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(item);
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_LEFT);
-                }
-            }
-        });
-        this.tableColumnQuantidade.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getQuantidade()));
-        this.tableColumnQuantidade.setCellFactory((TableColumn<ItemPedido, BigDecimal> param) -> new TableCell<ItemPedido, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataQuantidade(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnPreco.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValor()));
-        this.tableColumnPreco.setCellFactory((TableColumn<ItemPedido, BigDecimal> param) -> new TableCell<ItemPedido, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnTotal.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValorTotal()));
-        this.tableColumnTotal.setCellFactory((TableColumn<ItemPedido, BigDecimal> param) -> new TableCell<ItemPedido, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
+                    setText(null);
+                    setGraphic(null);
                 }
             }
         });
     }
 
     private void atualizaTotalizadores() {
-        this.textFieldQuantidadeItens.setText(formataQuantidade(this.tableViewProdutos.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
-        BigDecimal total = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.textFieldQuantidadeItens.setText(formataQuantidade(this.listViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        BigDecimal total = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.textFieldValorTotal.setText(formataMoeda(total));
         BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
         BigDecimal comissao = BigDecimal.ZERO;
@@ -255,13 +184,13 @@ public class TelaFinalizarVendaController implements Initializable {
     @FXML
     public void acaoCancelarProduto(ActionEvent event) {
         try {
-            int index = this.tableViewProdutos.getSelectionModel().getSelectedIndex();
+            int index = this.listViewItens.getSelectionModel().getSelectedIndex();
             if (index != -1 && enviarMensagemConfirmacao("Deseja realmente cancelar o item selecionado?")) {
-                ItemPedido item = this.tableViewProdutos.getItems().get(index);
+                ItemPedido item = this.listViewItens.getItems().get(index);
                 item.setDataHoraCancelamento(new Date());
                 item.setUsuarioCancelamento(SessaoUtil.getUsuario());
                 new ItemPedidoNegocio().salvar(item);
-                this.tableViewProdutos.getItems().remove(index);
+                this.listViewItens.getItems().remove(index);
                 this.atualizaTotalizadores();
             }
         } catch (Exception e) {
@@ -365,7 +294,7 @@ public class TelaFinalizarVendaController implements Initializable {
             BigDecimal pagamentos = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
             BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
             BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal totalItens = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalItens = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totalGeral = totalItens.add(comissao).subtract(desconto);
             // VERIFICA SE TOTAL DE PAGAMENTOS E MAIOR DO QUE O TOTAL GERAL
             if (pagamentos.compareTo(totalGeral) < 0) {
@@ -478,7 +407,6 @@ public class TelaFinalizarVendaController implements Initializable {
             itemPedido.setAdicionais(adicionalProdutoNegocio.obterPorIdItemPedido(itemPedido.getId()));
         });
         this.venda.setMesa(this.venda.getPedido().getMesa());
-        this.titulo.setText("Mesa " + this.venda.getMesa());
         this.ajustaTabelaItens();
         this.atualizaTotalizadores();
     }
