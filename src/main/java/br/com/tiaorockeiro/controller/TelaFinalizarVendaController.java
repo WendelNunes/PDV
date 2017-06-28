@@ -39,12 +39,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 
 /**
@@ -57,37 +54,7 @@ public class TelaFinalizarVendaController implements Initializable {
     @FXML
     private Button btnAcaoVoltar;
     @FXML
-    private ToggleGroup grupoBotaoTeclado;
-    @FXML
-    private ToggleButton buttonSelecionarDinheiro;
-    @FXML
-    private ToggleButton buttonSelecionarCartaoCredito;
-    @FXML
-    private ToggleButton buttonSelecionarCartaoDebito;
-    @FXML
-    private ToggleButton buttonSelecionarOutros;
-    @FXML
-    private ToggleButton buttonSelecionarDesconto;
-    @FXML
-    private ToggleButton buttonCalcularComissao;
-    @FXML
     private ListView<ItemPedido> listViewItens;
-    @FXML
-    private TextField textFieldDinhieiro;
-    @FXML
-    private TextField textFieldCartaoCredito;
-    @FXML
-    private TextField textFieldCartaoDebito;
-    @FXML
-    private TextField textFieldOutros;
-    @FXML
-    private TextField textFieldDesconto;
-    @FXML
-    private TextField textFieldComissao;
-    @FXML
-    private TextField textFieldTotalGeral;
-    @FXML
-    private TextField textFieldTroco;
     @FXML
     private TextField textFieldQuantidadeItens;
     @FXML
@@ -109,21 +76,6 @@ public class TelaFinalizarVendaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.textFieldDinhieiro.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldCartaoCredito.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldCartaoDebito.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldOutros.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldDesconto.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldComissao.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldTotalGeral.setText(formataMoeda(BigDecimal.ZERO));
-        this.textFieldTroco.setText(formataMoeda(BigDecimal.ZERO));
-
-        this.buttonSelecionarDinheiro.setUserData(this.textFieldDinhieiro);
-        this.buttonSelecionarCartaoCredito.setUserData(this.textFieldCartaoCredito);
-        this.buttonSelecionarCartaoDebito.setUserData(this.textFieldCartaoDebito);
-        this.buttonSelecionarOutros.setUserData(this.textFieldOutros);
-        this.buttonSelecionarDesconto.setUserData(this.textFieldDesconto);
-
         this.btnAcaoVoltar.setOnAction((ActionEvent event) -> {
             acaoVoltar(event);
         });
