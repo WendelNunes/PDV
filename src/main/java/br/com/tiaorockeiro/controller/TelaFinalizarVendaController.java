@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,6 +56,8 @@ public class TelaFinalizarVendaController implements Initializable {
     private Button btnAcaoVoltar;
     @FXML
     private ListView<ItemPedido> listViewItens;
+    @FXML
+    private ListView<Pagamento> listViewPagamentos;
     @FXML
     private TextField textFieldQuantidadeItens;
     @FXML
@@ -106,31 +109,61 @@ public class TelaFinalizarVendaController implements Initializable {
         });
     }
 
+    private void ajustaTabelaPagamentos() {
+        ObservableList<Pagamento> pagamentos = FXCollections.observableArrayList();
+        for (FormaPagamento fp : FormaPagamento.values()) {
+            Pagamento pagamento = new Pagamento();
+            pagamento.setFormaPagamento(fp);
+            pagamento.setValor(BigDecimal.ZERO);
+            pagamentos.add(pagamento);
+        }
+        this.listViewPagamentos.setItems(pagamentos);
+        this.listViewPagamentos.setCellFactory(param -> new ListCell<Pagamento>() {
+            @Override
+            protected void updateItem(Pagamento item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    try {
+                        ListCellPagamento cellPagamento = new ListCellPagamento(item.getFormaPagamento().getDescricao(), item.getValor());
+                        setGraphic(cellPagamento.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
+                } else {
+                    setText(null);
+                    setGraphic(null);
+                }
+            }
+        });
+    }
+
     private void atualizaTotalizadores() {
         this.textFieldQuantidadeItens.setText(formataQuantidade(this.listViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
         BigDecimal total = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.textFieldValorTotal.setText(formataMoeda(total));
-        BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//        BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
         BigDecimal comissao = BigDecimal.ZERO;
-        if (this.buttonCalcularComissao.isSelected()
-                && SessaoUtil.getConfiguracao() != null
-                && SessaoUtil.getConfiguracao().getPercentualComissao() != null
-                && SessaoUtil.getConfiguracao().getPercentualComissao().compareTo(BigDecimal.ZERO) > 0) {
-            comissao = total.multiply(SessaoUtil.getConfiguracao().getPercentualComissao()
-                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
-            this.textFieldComissao.setText(formataMoeda(comissao));
-        } else {
-            this.textFieldComissao.setText(formataMoeda(comissao));
-        }
-        BigDecimal totalGeral = total.add(comissao).subtract(desconto);
-        this.textFieldTotalGeral.setText(formataMoeda(totalGeral));
-        BigDecimal dinheiro = new BigDecimal(this.textFieldDinhieiro.getText().replaceAll("\\.", "").replaceAll(",", "."));
-        BigDecimal cartaoCredito = new BigDecimal(this.textFieldCartaoCredito.getText().replaceAll("\\.", "").replaceAll(",", "."));
-        BigDecimal cartaoDebito = new BigDecimal(this.textFieldCartaoDebito.getText().replaceAll("\\.", "").replaceAll(",", "."));
-        BigDecimal outros = new BigDecimal(this.textFieldOutros.getText().replaceAll("\\.", "").replaceAll(",", "."));
-        BigDecimal totalPagamento = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
-        this.textFieldTroco.setText(formataMoeda(totalPagamento.compareTo(totalGeral) > 0
-                ? totalPagamento.subtract(totalGeral) : BigDecimal.ZERO));
+//        if (this.buttonCalcularComissao.isSelected()
+//                && SessaoUtil.getConfiguracao() != null
+//                && SessaoUtil.getConfiguracao().getPercentualComissao() != null
+//                && SessaoUtil.getConfiguracao().getPercentualComissao().compareTo(BigDecimal.ZERO) > 0) {
+//            comissao = total.multiply(SessaoUtil.getConfiguracao().getPercentualComissao()
+//                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
+//            this.textFieldComissao.setText(formataMoeda(comissao));
+//        } else {
+//            this.textFieldComissao.setText(formataMoeda(comissao));
+//        }
+//        BigDecimal totalGeral = total.add(comissao).subtract(desconto);
+//        this.textFieldTotalGeral.setText(formataMoeda(totalGeral));
+//        BigDecimal dinheiro = new BigDecimal(this.textFieldDinhieiro.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//        BigDecimal cartaoCredito = new BigDecimal(this.textFieldCartaoCredito.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//        BigDecimal cartaoDebito = new BigDecimal(this.textFieldCartaoDebito.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//        BigDecimal outros = new BigDecimal(this.textFieldOutros.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//        BigDecimal totalPagamento = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
+//        this.textFieldTroco.setText(formataMoeda(totalPagamento.compareTo(totalGeral) > 0
+//                ? totalPagamento.subtract(totalGeral) : BigDecimal.ZERO));
     }
 
     @FXML
@@ -212,9 +245,9 @@ public class TelaFinalizarVendaController implements Initializable {
     @FXML
     public void acaoBotaoLimpar(ActionEvent event) {
         try {
-            if (this.grupoBotaoTeclado.getSelectedToggle() != null) {
-                ((TextField) this.grupoBotaoTeclado.getSelectedToggle().getUserData()).setText(formataMoeda(BigDecimal.ZERO));
-            }
+//            if (this.grupoBotaoTeclado.getSelectedToggle() != null) {
+//                ((TextField) this.grupoBotaoTeclado.getSelectedToggle().getUserData()).setText(formataMoeda(BigDecimal.ZERO));
+//            }
             this.atualizaTotalizadores();
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
@@ -222,30 +255,34 @@ public class TelaFinalizarVendaController implements Initializable {
     }
 
     private void adicionaNumero(Integer numero) {
-        try {
-            if (this.grupoBotaoTeclado.getSelectedToggle() != null) {
-                TextField textField = (TextField) this.grupoBotaoTeclado.getSelectedToggle().getUserData();
-                StringBuilder texto = new StringBuilder(parseMoeda(textField.getText()).toString().replaceAll("\\.", ""));
-                texto.append(numero);
-                texto.insert(texto.length() - 2, ".");
-                textField.setText(formataMoeda(new BigDecimal(texto.toString())));
-                this.atualizaTotalizadores();
-            }
-        } catch (NumberFormatException | ParseException e) {
-            enviarMensagemErro(e.getMessage());
-        }
+//        try {
+//            if (this.grupoBotaoTeclado.getSelectedToggle() != null) {
+//                TextField textField = (TextField) this.grupoBotaoTeclado.getSelectedToggle().getUserData();
+//                StringBuilder texto = new StringBuilder(parseMoeda(textField.getText()).toString().replaceAll("\\.", ""));
+//                texto.append(numero);
+//                texto.insert(texto.length() - 2, ".");
+//                textField.setText(formataMoeda(new BigDecimal(texto.toString())));
+//                this.atualizaTotalizadores();
+//            }
+//        } catch (NumberFormatException | ParseException e) {
+//            enviarMensagemErro(e.getMessage());
+//        }
     }
 
     @FXML
     public void acaoFinalizarVenda(ActionEvent event) {
         try {
-            BigDecimal dinheiro = new BigDecimal(this.textFieldDinhieiro.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal cartaoCredito = new BigDecimal(this.textFieldCartaoCredito.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal cartaoDebito = new BigDecimal(this.textFieldCartaoDebito.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal outros = new BigDecimal(this.textFieldOutros.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal dinheiro = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.DINHEIRO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+            BigDecimal cartaoCredito = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_CREDITO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+            BigDecimal cartaoDebito = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_DEBITO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+            BigDecimal outros = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.OUTROS)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+
             BigDecimal pagamentos = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
-            BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
+
+//            BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal desconto = BigDecimal.ZERO;
+//            BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
+            BigDecimal comissao = BigDecimal.ZERO;
             BigDecimal totalItens = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totalGeral = totalItens.add(comissao).subtract(desconto);
             // VERIFICA SE TOTAL DE PAGAMENTOS E MAIOR DO QUE O TOTAL GERAL
@@ -256,8 +293,8 @@ public class TelaFinalizarVendaController implements Initializable {
                         .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado()));
                 this.venda.setUsuario(SessaoUtil.getUsuario());
                 this.venda.setDataHora(new Date());
-                this.venda.setValorComissao(comissao);
-                this.venda.setValorDesconto(desconto);
+//                this.venda.setValorComissao(comissao);
+//                this.venda.setValorDesconto(desconto);
                 // ITENS
                 this.venda.getPedido().getItens().forEach(i -> {
                     ItemVenda item = new ItemVenda();
@@ -360,6 +397,7 @@ public class TelaFinalizarVendaController implements Initializable {
         });
         this.venda.setMesa(this.venda.getPedido().getMesa());
         this.ajustaTabelaItens();
+        this.ajustaTabelaPagamentos();
         this.atualizaTotalizadores();
     }
 }
