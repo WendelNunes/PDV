@@ -15,12 +15,12 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author INLOC01
  */
-public class ListCellPagamento {
+public class ListCellTotal {
 
     private final String descPagamento;
     private final BigDecimal vlrPagamento;
 
-    public ListCellPagamento(String descPagamento, BigDecimal vlrPagamento) {
+    public ListCellTotal(String descPagamento, BigDecimal vlrPagamento) {
         this.descPagamento = descPagamento;
         this.vlrPagamento = vlrPagamento;
     }
@@ -33,7 +33,7 @@ public class ListCellPagamento {
         lbDescricao.getStyleClass().add("labelListNegrito");
         AnchorPane.setLeftAnchor(lbDescricao, 5.0);
         AnchorPane.setTopAnchor(lbDescricao, 5.0);
-        AnchorPane.setRightAnchor(lbDescricao, 170.0);
+//        AnchorPane.setRightAnchor(lbDescricao, 170.0);
         pane.getChildren().add(lbDescricao);
         Label lbVlrPagamento = new Label(formataQuantidade(this.vlrPagamento));
         lbVlrPagamento.setPrefHeight(30.0);

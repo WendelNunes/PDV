@@ -5,31 +5,24 @@
  */
 package br.com.tiaorockeiro.controller;
 
-import br.com.tiaorockeiro.modelo.FormaPagamento;
 import br.com.tiaorockeiro.modelo.ItemPedido;
-import br.com.tiaorockeiro.modelo.ItemVenda;
-import br.com.tiaorockeiro.modelo.Pagamento;
 import br.com.tiaorockeiro.modelo.Pedido;
 import br.com.tiaorockeiro.modelo.Venda;
-import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
 import br.com.tiaorockeiro.negocio.AdicionalProdutoNegocio;
 import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.ObservacaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
-import br.com.tiaorockeiro.negocio.VendaNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
-import static br.com.tiaorockeiro.util.MoedaUtil.parseMoeda;
 import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -57,7 +50,7 @@ public class TelaFinalizarVendaController implements Initializable {
     @FXML
     private ListView<ItemPedido> listViewItens;
     @FXML
-    private ListView<Pagamento> listViewPagamentos;
+    private ListView<Total> listViewTotais;
     @FXML
     private TextField textFieldQuantidadeItens;
     @FXML
@@ -109,23 +102,27 @@ public class TelaFinalizarVendaController implements Initializable {
         });
     }
 
-    private void ajustaTabelaPagamentos() {
-        ObservableList<Pagamento> pagamentos = FXCollections.observableArrayList();
-        for (FormaPagamento fp : FormaPagamento.values()) {
-            Pagamento pagamento = new Pagamento();
-            pagamento.setFormaPagamento(fp);
-            pagamento.setValor(BigDecimal.ZERO);
-            pagamentos.add(pagamento);
-        }
-        this.listViewPagamentos.setItems(pagamentos);
-        this.listViewPagamentos.setCellFactory(param -> new ListCell<Pagamento>() {
+    private void ajustaTabelaTotais() {
+        ObservableList<Total> totais = FXCollections.observableArrayList();
+        totais.add(new Total(1, "Dinheiro", BigDecimal.ZERO));
+        totais.add(new Total(2, "Cartão de Crédito", BigDecimal.ZERO));
+        totais.add(new Total(3, "Cartão de Débito", BigDecimal.ZERO));
+        totais.add(new Total(4, "Outros", BigDecimal.ZERO));
+        totais.add(new Total(5, "Desconto", BigDecimal.ZERO));
+        totais.add(new Total(6, "Comissão", BigDecimal.ZERO));
+        totais.add(new Total(7, "Total Geral", BigDecimal.ZERO));
+        totais.add(new Total(8, "Total Pagamentos", BigDecimal.ZERO));
+        totais.add(new Total(9, "Total a Pagar", BigDecimal.ZERO));
+        totais.add(new Total(10, "Troco", BigDecimal.ZERO));
+        this.listViewTotais.setItems(totais);
+        this.listViewTotais.setCellFactory(param -> new ListCell<Total>() {
             @Override
-            protected void updateItem(Pagamento item, boolean empty) {
+            protected void updateItem(Total item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null) {
                     try {
-                        ListCellPagamento cellPagamento = new ListCellPagamento(item.getFormaPagamento().getDescricao(), item.getValor());
-                        setGraphic(cellPagamento.getCell());
+                        ListCellTotal cellTotal = new ListCellTotal(item.getDescricao(), item.getTotal());
+                        setGraphic(cellTotal.getCell());
                     } catch (Exception e) {
                         enviarMensagemErro(e.getMessage());
                         setText(null);
@@ -184,15 +181,6 @@ public class TelaFinalizarVendaController implements Initializable {
     }
 
     @FXML
-    public void acaoCalcularComissao(ActionEvent event) {
-        try {
-            this.atualizaTotalizadores();
-        } catch (Exception e) {
-            enviarMensagemErro(e.getMessage());
-        }
-    }
-
-    @FXML
     public void acaoBotao1(ActionEvent event) {
         this.adicionaNumero(1);
     }
@@ -245,9 +233,24 @@ public class TelaFinalizarVendaController implements Initializable {
     @FXML
     public void acaoBotaoLimpar(ActionEvent event) {
         try {
-//            if (this.grupoBotaoTeclado.getSelectedToggle() != null) {
-//                ((TextField) this.grupoBotaoTeclado.getSelectedToggle().getUserData()).setText(formataMoeda(BigDecimal.ZERO));
-//            }
+            int index = this.listViewTotais.getSelectionModel().getSelectedIndex();
+            if (index != -1 && asList(1, 2, 3, 4, 5, 6).contains(this.listViewTotais.getItems().get(index).getId())) {
+                Total totalAntigo = this.listViewTotais.getItems().get(index);
+                this.listViewTotais.getItems().set(index, new Total(totalAntigo.getId(), totalAntigo.getDescricao(), BigDecimal.ZERO));
+            }
+            this.atualizaTotalizadores();
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoBotaoCalcular(ActionEvent event) {
+        try {
+            int index = this.listViewTotais.getSelectionModel().getSelectedIndex();
+            if (index != -1 && this.listViewTotais.getItems().get(index).getId() == 6) {
+                this.listViewTotais.getItems().set(index, new Total(6, "Comissão", new BigDecimal(10)));
+            }
             this.atualizaTotalizadores();
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
@@ -271,88 +274,88 @@ public class TelaFinalizarVendaController implements Initializable {
 
     @FXML
     public void acaoFinalizarVenda(ActionEvent event) {
-        try {
-            BigDecimal dinheiro = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.DINHEIRO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
-            BigDecimal cartaoCredito = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_CREDITO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
-            BigDecimal cartaoDebito = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_DEBITO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
-            BigDecimal outros = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.OUTROS)).map(p -> p.getValor()).reduce((a, b) -> null).get();
-
-            BigDecimal pagamentos = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
-
-//            BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal desconto = BigDecimal.ZERO;
-//            BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
-            BigDecimal comissao = BigDecimal.ZERO;
-            BigDecimal totalItens = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totalGeral = totalItens.add(comissao).subtract(desconto);
-            // VERIFICA SE TOTAL DE PAGAMENTOS E MAIOR DO QUE O TOTAL GERAL
-            if (pagamentos.compareTo(totalGeral) < 0) {
-                enviarMensagemInformacao("O valor total dos pagamentos é menor que o valor total a pagar!");
-            } else {
-                this.venda.setAberturaCaixa(new AberturaCaixaNegocio()
-                        .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado()));
-                this.venda.setUsuario(SessaoUtil.getUsuario());
-                this.venda.setDataHora(new Date());
-//                this.venda.setValorComissao(comissao);
-//                this.venda.setValorDesconto(desconto);
-                // ITENS
-                this.venda.getPedido().getItens().forEach(i -> {
-                    ItemVenda item = new ItemVenda();
-                    item.setVenda(this.venda);
-                    item.setProduto(i.getProduto());
-                    item.setQuantidade(i.getQuantidade());
-                    item.setValorUnitario(i.getValor());
-                    this.venda.getItens().add(item);
-                    i.getAdicionais().forEach(a -> {
-                        ItemVenda itemAdicional = new ItemVenda();
-                        itemAdicional.setVenda(this.venda);
-                        itemAdicional.setProduto(a.getProduto());
-                        itemAdicional.setQuantidade(a.getQuantidade());
-                        itemAdicional.setValorUnitario(a.getValor());
-                        this.venda.getItens().add(itemAdicional);
-                    });
-                });
-                // FORMA PAGAMENTO
-                if (dinheiro.compareTo(BigDecimal.ZERO) > 0) {
-                    Pagamento pagamento = new Pagamento();
-                    pagamento.setVenda(this.venda);
-                    pagamento.setFormaPagamento(FormaPagamento.DINHEIRO);
-                    pagamento.setValor(dinheiro);
-                    this.venda.getPagamentos().add(pagamento);
-                }
-                if (cartaoCredito.compareTo(BigDecimal.ZERO) > 0) {
-                    Pagamento pagamento = new Pagamento();
-                    pagamento.setVenda(this.venda);
-                    pagamento.setFormaPagamento(FormaPagamento.CARTAO_CREDITO);
-                    pagamento.setValor(cartaoCredito);
-                    this.venda.getPagamentos().add(pagamento);
-                }
-                if (cartaoDebito.compareTo(BigDecimal.ZERO) > 0) {
-                    Pagamento pagamento = new Pagamento();
-                    pagamento.setVenda(this.venda);
-                    pagamento.setFormaPagamento(FormaPagamento.CARTAO_DEBITO);
-                    pagamento.setValor(cartaoDebito);
-                    this.venda.getPagamentos().add(pagamento);
-                }
-                if (outros.compareTo(BigDecimal.ZERO) > 0) {
-                    Pagamento pagamento = new Pagamento();
-                    pagamento.setVenda(this.venda);
-                    pagamento.setFormaPagamento(FormaPagamento.OUTROS);
-                    pagamento.setValor(outros);
-                    this.venda.getPagamentos().add(pagamento);
-                }
-                this.venda = new VendaNegocio().salvar(this.venda);
-                if (this.venda.getId() == null) {
-                    throw new Exception("Erro ao finalizar a venda, tente novamente!");
-                }
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
-                AnchorPane telaMesas = loader.load();
-                TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
-                enviarMensagemInformacao("Venda finalizada com sucesso!");
-            }
-        } catch (Exception e) {
-            enviarMensagemErro(e.getMessage());
-        }
+//        try {
+//            BigDecimal dinheiro = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.DINHEIRO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+//            BigDecimal cartaoCredito = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_CREDITO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+//            BigDecimal cartaoDebito = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_DEBITO)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+//            BigDecimal outros = this.listViewPagamentos.getItems().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.OUTROS)).map(p -> p.getValor()).reduce((a, b) -> null).get();
+//
+//            BigDecimal pagamentos = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
+//
+////            BigDecimal desconto = new BigDecimal(this.textFieldDesconto.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//            BigDecimal desconto = BigDecimal.ZERO;
+////            BigDecimal comissao = new BigDecimal(this.textFieldComissao.getText().replaceAll("\\.", "").replaceAll(",", "."));
+//            BigDecimal comissao = BigDecimal.ZERO;
+//            BigDecimal totalItens = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+//            BigDecimal totalGeral = totalItens.add(comissao).subtract(desconto);
+//            // VERIFICA SE TOTAL DE PAGAMENTOS E MAIOR DO QUE O TOTAL GERAL
+//            if (pagamentos.compareTo(totalGeral) < 0) {
+//                enviarMensagemInformacao("O valor total dos pagamentos é menor que o valor total a pagar!");
+//            } else {
+//                this.venda.setAberturaCaixa(new AberturaCaixaNegocio()
+//                        .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado()));
+//                this.venda.setUsuario(SessaoUtil.getUsuario());
+//                this.venda.setDataHora(new Date());
+////                this.venda.setValorComissao(comissao);
+////                this.venda.setValorDesconto(desconto);
+//                // ITENS
+//                this.venda.getPedido().getItens().forEach(i -> {
+//                    ItemVenda item = new ItemVenda();
+//                    item.setVenda(this.venda);
+//                    item.setProduto(i.getProduto());
+//                    item.setQuantidade(i.getQuantidade());
+//                    item.setValorUnitario(i.getValor());
+//                    this.venda.getItens().add(item);
+//                    i.getAdicionais().forEach(a -> {
+//                        ItemVenda itemAdicional = new ItemVenda();
+//                        itemAdicional.setVenda(this.venda);
+//                        itemAdicional.setProduto(a.getProduto());
+//                        itemAdicional.setQuantidade(a.getQuantidade());
+//                        itemAdicional.setValorUnitario(a.getValor());
+//                        this.venda.getItens().add(itemAdicional);
+//                    });
+//                });
+//                // FORMA PAGAMENTO
+//                if (dinheiro.compareTo(BigDecimal.ZERO) > 0) {
+//                    Pagamento pagamento = new Pagamento();
+//                    pagamento.setVenda(this.venda);
+//                    pagamento.setFormaPagamento(FormaPagamento.DINHEIRO);
+//                    pagamento.setValor(dinheiro);
+//                    this.venda.getPagamentos().add(pagamento);
+//                }
+//                if (cartaoCredito.compareTo(BigDecimal.ZERO) > 0) {
+//                    Pagamento pagamento = new Pagamento();
+//                    pagamento.setVenda(this.venda);
+//                    pagamento.setFormaPagamento(FormaPagamento.CARTAO_CREDITO);
+//                    pagamento.setValor(cartaoCredito);
+//                    this.venda.getPagamentos().add(pagamento);
+//                }
+//                if (cartaoDebito.compareTo(BigDecimal.ZERO) > 0) {
+//                    Pagamento pagamento = new Pagamento();
+//                    pagamento.setVenda(this.venda);
+//                    pagamento.setFormaPagamento(FormaPagamento.CARTAO_DEBITO);
+//                    pagamento.setValor(cartaoDebito);
+//                    this.venda.getPagamentos().add(pagamento);
+//                }
+//                if (outros.compareTo(BigDecimal.ZERO) > 0) {
+//                    Pagamento pagamento = new Pagamento();
+//                    pagamento.setVenda(this.venda);
+//                    pagamento.setFormaPagamento(FormaPagamento.OUTROS);
+//                    pagamento.setValor(outros);
+//                    this.venda.getPagamentos().add(pagamento);
+//                }
+//                this.venda = new VendaNegocio().salvar(this.venda);
+//                if (this.venda.getId() == null) {
+//                    throw new Exception("Erro ao finalizar a venda, tente novamente!");
+//                }
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
+//                AnchorPane telaMesas = loader.load();
+//                TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
+//                enviarMensagemInformacao("Venda finalizada com sucesso!");
+//            }
+//        } catch (Exception e) {
+//            enviarMensagemErro(e.getMessage());
+//        }
     }
 
     @FXML
@@ -397,7 +400,32 @@ public class TelaFinalizarVendaController implements Initializable {
         });
         this.venda.setMesa(this.venda.getPedido().getMesa());
         this.ajustaTabelaItens();
-        this.ajustaTabelaPagamentos();
+        this.ajustaTabelaTotais();
         this.atualizaTotalizadores();
+    }
+
+    private class Total {
+
+        private Integer id;
+        private String descricao;
+        private BigDecimal total;
+
+        public Total(Integer id, String descricao, BigDecimal total) {
+            this.id = id;
+            this.descricao = descricao;
+            this.total = total;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public String getDescricao() {
+            return descricao;
+        }
+
+        public BigDecimal getTotal() {
+            return total;
+        }
     }
 }

@@ -14,15 +14,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="657.0" prefWidth="1174.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaFinalizarVendaController">
+<AnchorPane id="AnchorPane" prefHeight="657.0" prefWidth="1174.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaFinalizarVendaController">
     <children>
-        <Label fx:id="titulo2" layoutX="164.0" layoutY="577.0" prefHeight="18.0" prefWidth="42.0" text="Total:" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="164.0">
+        <Label fx:id="titulo2" layoutX="164.0" layoutY="577.0" prefHeight="18.0" prefWidth="42.0" text="Total:" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="164.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
         </Label>
         <TextField fx:id="textFieldValorTotal" disable="true" editable="false" layoutX="164.0" layoutY="595.0" prefHeight="52.0" prefWidth="149.0" style="-fx-background-radius: 0;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="164.0" />
-        <Label fx:id="titulo21" layoutX="10.0" layoutY="577.0" prefHeight="18.0" prefWidth="77.0" text="Qtde Itens:" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="10.0">
+        <Label fx:id="titulo21" layoutX="10.0" layoutY="546.0" prefHeight="18.0" prefWidth="77.0" text="Qtde Itens:" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="10.0">
             <font>
                 <Font name="Arial" size="14.0" />
             </font>
@@ -33,9 +33,9 @@
         <Button layoutX="755.0" layoutY="595.0" mnemonicParsing="false" onAction="#acaoFinalizarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Finalizar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="319.0" />
         <Button layoutX="961.0" layoutY="595.0" mnemonicParsing="false" onAction="#acaoCancelarVenda" prefHeight="52.0" prefWidth="100.0" style="-fx-background-radius: 0;" text="Cancelar Venda" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="113.0" />
         <Button layoutX="605.0" layoutY="595.0" mnemonicParsing="false" onAction="#acaoCancelarProduto" prefHeight="52.0" prefWidth="70.0" style="-fx-background-radius: 0;" text="Cancelar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="499.0" />
-      <ListView fx:id="listViewItens" layoutX="32.0" layoutY="25.0" prefHeight="551.0" prefWidth="665.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="499.0" AnchorPane.topAnchor="30.0" />
-      <ListView fx:id="listViewPagamentos" layoutX="680.0" layoutY="28.0" prefHeight="269.0" prefWidth="291.0" AnchorPane.rightAnchor="203.0" AnchorPane.topAnchor="30.0" />
-      <Label layoutX="675.0" layoutY="14.0" prefHeight="18.0" prefWidth="149.0" text="Pagamentos:" AnchorPane.rightAnchor="345.0" AnchorPane.topAnchor="10.0">
+      <ListView fx:id="listViewItens" layoutX="32.0" layoutY="25.0" prefHeight="440.0" prefWidth="665.0" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="499.0" AnchorPane.topAnchor="30.0" />
+      <ListView fx:id="listViewTotais" layoutX="680.0" layoutY="28.0" prefHeight="535.0" prefWidth="291.0" AnchorPane.bottomAnchor="92.0" AnchorPane.rightAnchor="203.0" AnchorPane.topAnchor="30.0" />
+      <Label layoutX="675.0" layoutY="14.0" prefHeight="18.0" prefWidth="149.0" text="Totais:" AnchorPane.rightAnchor="345.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Arial" size="14.0" />
          </font>
@@ -45,12 +45,6 @@
             <Font name="Arial" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="680.0" layoutY="301.0" prefHeight="18.0" prefWidth="149.0" text="Totais:" AnchorPane.rightAnchor="345.0" AnchorPane.topAnchor="301.0">
-         <font>
-            <Font name="Arial" size="14.0" />
-         </font>
-      </Label>
-      <ListView fx:id="listViewPagamentos1" layoutX="680.0" layoutY="319.0" prefHeight="257.0" prefWidth="482.0" AnchorPane.bottomAnchor="81.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="319.0" />
       <GridPane hgap="2.0" layoutX="990.0" layoutY="30.0" vgap="2.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
          <children>
             <Button mnemonicParsing="false" onAction="#acaoBotao1" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" />
@@ -64,6 +58,7 @@
             <Button mnemonicParsing="false" onAction="#acaoBotao9" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" onAction="#acaoBotao0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Button mnemonicParsing="false" onAction="#acaoBotaoLimpar" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Limpar" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Button mnemonicParsing="false" onAction="#acaoBotaoCalcular" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Calcular" GridPane.rowIndex="3" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
