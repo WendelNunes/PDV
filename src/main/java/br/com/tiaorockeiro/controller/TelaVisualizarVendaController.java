@@ -5,8 +5,20 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.FormaPagamento;
+import br.com.tiaorockeiro.modelo.Informacao;
 import br.com.tiaorockeiro.modelo.ItemVenda;
 import br.com.tiaorockeiro.modelo.Pagamento;
+import br.com.tiaorockeiro.modelo.Total;
+import static br.com.tiaorockeiro.modelo.Total.cartaoCredito;
+import static br.com.tiaorockeiro.modelo.Total.cartaoDebito;
+import static br.com.tiaorockeiro.modelo.Total.comissao;
+import static br.com.tiaorockeiro.modelo.Total.desconto;
+import static br.com.tiaorockeiro.modelo.Total.dinheiro;
+import static br.com.tiaorockeiro.modelo.Total.outros;
+import static br.com.tiaorockeiro.modelo.Total.totalGeral;
+import static br.com.tiaorockeiro.modelo.Total.totalPagamentos;
+import static br.com.tiaorockeiro.modelo.Total.troco;
 import br.com.tiaorockeiro.modelo.Venda;
 import br.com.tiaorockeiro.negocio.ItemVendaNegocio;
 import br.com.tiaorockeiro.negocio.PagamentoNegocio;
@@ -21,20 +33,16 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import java.util.stream.Collectors;
 import static javafx.collections.FXCollections.observableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Font;
 
 /**
  * FXML Controller class
@@ -47,57 +55,15 @@ public class TelaVisualizarVendaController implements Initializable {
     private TelaConsultaVendaController telaConsultaVenda;
 
     @FXML
-    private TableView<ItemVenda> tableViewProdutos;
-    @FXML
-    private TableColumn<ItemVenda, Long> tableColumnSequencia;
-    @FXML
-    private TableColumn<ItemVenda, String> tableColumnProduto;
-    @FXML
-    private TableColumn<ItemVenda, BigDecimal> tableColumnQuantidade;
-    @FXML
-    private TableColumn<ItemVenda, BigDecimal> tableColumnPreco;
-    @FXML
-    private TableColumn<ItemVenda, BigDecimal> tableColumnTotal;
-    @FXML
-    private TableView<Pagamento> tableViewValores;
-    @FXML
-    private TableColumn<Pagamento, String> tableColumnDescricaoValor;
-    @FXML
-    private TableColumn<Pagamento, BigDecimal> tableColumnValor;
+    private ListView<ItemVenda> listViewItens;
     @FXML
     private TextField quantidadeItens;
     @FXML
     private TextField totalItens;
     @FXML
-    private Label desconto;
+    private ListView<Total> listViewTotais;
     @FXML
-    private Label comissao;
-    @FXML
-    private TextField pago;
-    @FXML
-    private Label troco;
-    @FXML
-    private Label data;
-    @FXML
-    private Label hora;
-    @FXML
-    private Label mesa;
-    @FXML
-    private Label usuario;
-    @FXML
-    private Label usuarioCancelamento;
-    @FXML
-    private Label lbUsuarioCancelamento;
-    @FXML
-    private Label dataCancelamento;
-    @FXML
-    private Label lbDataCancelamento;
-    @FXML
-    private Label horaCancelamento;
-    @FXML
-    private Label lbHoraCancelamento;
-    @FXML
-    private Label valor;
+    private ListView<Informacao> listViewInfoAdicionais;
 
     /**
      * Initializes the controller class.
@@ -107,109 +73,72 @@ public class TelaVisualizarVendaController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         this.ajustaTabelaItens();
+        this.ajustaTabelaTotais();
+        this.ajustaTabelaInformacoesAdicionais();
     }
 
-    @SuppressWarnings("Convert2Lambda")
     private void ajustaTabelaItens() {
-        this.tableViewProdutos.setFixedCellSize(45);
-        this.tableColumnSequencia.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getId()));
-        this.tableColumnSequencia.setCellFactory((TableColumn<ItemVenda, Long> param) -> new TableCell<ItemVenda, Long>() {
+        this.listViewItens.setCellFactory(param -> new ListCell<ItemVenda>() {
             @Override
-            protected void updateItem(Long item, boolean empty) {
+            protected void updateItem(ItemVenda item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null) {
-                    setText("");
+                if (item != null) {
+                    try {
+                        ListCellProduto cellProduto = new ListCellProduto(item.getProduto().getDescricao(), item.getValorUnitario(), item.getQuantidade(), null, item.getValorTotal());
+                        setGraphic(cellProduto.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
                 } else {
-                    setText(String.valueOf(getIndex() + 1));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
+                    setText(null);
+                    setGraphic(null);
                 }
             }
         });
-        this.tableColumnProduto.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getProduto().getDescricao()));
-        this.tableColumnProduto.setCellFactory((TableColumn<ItemVenda, String> param) -> new TableCell<ItemVenda, String>() {
+    }
+
+    private void ajustaTabelaTotais() {
+        this.listViewTotais.setCellFactory(param -> new ListCell<Total>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Total item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
+                if (item != null) {
+                    try {
+                        ListCellTotal cellTotal = new ListCellTotal(item.getDescricao(), item.getTotal());
+                        setGraphic(cellTotal.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
                 } else {
-                    setText(item);
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_LEFT);
+                    setText(null);
+                    setGraphic(null);
                 }
             }
         });
-        this.tableColumnQuantidade.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getQuantidade()));
-        this.tableColumnQuantidade.setCellFactory((TableColumn<ItemVenda, BigDecimal> param) -> new TableCell<ItemVenda, BigDecimal>() {
+    }
+
+    private void ajustaTabelaInformacoesAdicionais() {
+        this.listViewInfoAdicionais.setCellFactory(param -> new ListCell<Informacao>() {
             @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
+            protected void updateItem(Informacao item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
+                if (item != null) {
+                    try {
+                        ListCellInformacao cellInformacao = new ListCellInformacao(item.getDescricao(), item.getTexto());
+                        setGraphic(cellInformacao.getCell());
+                    } catch (Exception e) {
+                        enviarMensagemErro(e.getMessage());
+                        setText(null);
+                        setGraphic(null);
+                    }
                 } else {
-                    setText(formataQuantidade(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnPreco.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValorUnitario()));
-        this.tableColumnPreco.setCellFactory((TableColumn<ItemVenda, BigDecimal> param) -> new TableCell<ItemVenda, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableColumnTotal.setCellValueFactory(i -> new SimpleObjectProperty<>(i.getValue().getValorTotal()));
-        this.tableColumnTotal.setCellFactory((TableColumn<ItemVenda, BigDecimal> param) -> new TableCell<ItemVenda, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
-                }
-            }
-        });
-        this.tableViewValores.setFixedCellSize(45);
-        this.tableColumnDescricaoValor.setCellValueFactory(i -> new SimpleStringProperty(i.getValue().getFormaPagamento().getDescricao()));
-        this.tableColumnDescricaoValor.setCellFactory((TableColumn<Pagamento, String> param) -> new TableCell<Pagamento, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(item);
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_LEFT);
-                }
-            }
-        });
-        this.tableColumnValor.setCellValueFactory(i -> new SimpleObjectProperty<>((BigDecimal) i.getValue().getValor()));
-        this.tableColumnValor.setCellFactory((TableColumn<Pagamento, BigDecimal> param) -> new TableCell<Pagamento, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText("");
-                } else {
-                    setText(formataMoeda(item));
-                    setFont(Font.font("Arial", 14));
-                    setAlignment(Pos.CENTER_RIGHT);
+                    setText(null);
+                    setGraphic(null);
                 }
             }
         });
@@ -250,38 +179,37 @@ public class TelaVisualizarVendaController implements Initializable {
         this.venda = new VendaNegocio().obterPorId(Venda.class, idVenda);
         this.venda.setItens(new ItemVendaNegocio().listarPorIdVenda(idVenda));
         this.venda.setPagamentos(new PagamentoNegocio().listarPorIdVenda(idVenda));
-        BigDecimal vlPago = this.venda.getPagamentos().stream().map(i -> i.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        this.data.setText(new SimpleDateFormat("dd/MM/yyyy").format(this.venda.getDataHora()));
-        this.hora.setText(new SimpleDateFormat("HH:mm:ss").format(this.venda.getDataHora()));
-        this.mesa.setText(this.venda.getMesa().toString());
-        this.usuario.setText(this.venda.getUsuario().getDescricao());
-        this.valor.setText(formataMoeda(this.venda.getValorTotal()));
-        this.desconto.setText(formataMoeda(this.venda.getValorDesconto()));
-        this.comissao.setText(formataMoeda(this.venda.getValorComissao()));
-        BigDecimal vlTroco = vlPago.subtract(this.venda.getValorTotal()).compareTo(BigDecimal.ZERO) > 0 ? vlPago.subtract(this.venda.getValorTotal()) : BigDecimal.ZERO;
-        this.troco.setText(formataMoeda(vlTroco));
-
-        if (this.venda.getDataHoraCancelamento() != null) {
-            this.usuarioCancelamento.setText(this.venda.getUsuarioCancelamento().getDescricao());
-            this.dataCancelamento.setText(new SimpleDateFormat("dd/MM/yyyy").format(this.venda.getDataHoraCancelamento()));
-            this.horaCancelamento.setText(new SimpleDateFormat("HH:mm:ss").format(this.venda.getDataHoraCancelamento()));
-        } else {
-            this.usuarioCancelamento.setVisible(false);
-            this.dataCancelamento.setVisible(false);
-            this.horaCancelamento.setVisible(false);
-            this.lbUsuarioCancelamento.setVisible(false);
-            this.lbHoraCancelamento.setVisible(false);
-            this.lbDataCancelamento.setVisible(false);
-        }
-
+        // ITENS
         this.venda.getItens().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-        this.tableViewProdutos.setItems(observableList(this.venda.getItens()));
-        this.quantidadeItens.setText(formataQuantidade(this.tableViewProdutos.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
-        BigDecimal total = this.tableViewProdutos.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.listViewItens.setItems(observableList(this.venda.getItens()));
+        this.quantidadeItens.setText(formataQuantidade(this.listViewItens.getItems().stream().map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+        BigDecimal total = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.totalItens.setText(formataMoeda(total));
-
-        this.tableViewValores.setItems(observableList(this.venda.getPagamentos()));
-        this.pago.setText(formataMoeda(vlPago));
+        // TOTAIS
+        List<Pagamento> dinheiro = this.venda.getPagamentos().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.DINHEIRO)).collect(Collectors.toList());
+        this.listViewTotais.getItems().add(dinheiro(dinheiro.isEmpty() ? BigDecimal.ZERO : dinheiro.get(0).getValor()));
+        List<Pagamento> cartaoCredito = this.venda.getPagamentos().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_CREDITO)).collect(Collectors.toList());
+        this.listViewTotais.getItems().add(cartaoCredito(cartaoCredito.isEmpty() ? BigDecimal.ZERO : cartaoCredito.get(0).getValor()));
+        List<Pagamento> cartaoDebito = this.venda.getPagamentos().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.CARTAO_DEBITO)).collect(Collectors.toList());
+        this.listViewTotais.getItems().add(cartaoDebito(cartaoDebito.isEmpty() ? BigDecimal.ZERO : cartaoDebito.get(0).getValor()));
+        List<Pagamento> outros = this.venda.getPagamentos().stream().filter(p -> p.getFormaPagamento().equals(FormaPagamento.OUTROS)).collect(Collectors.toList());
+        this.listViewTotais.getItems().add(outros(outros.isEmpty() ? BigDecimal.ZERO : outros.get(0).getValor()));
+        this.listViewTotais.getItems().add(desconto(this.venda.getValorDesconto() != null ? this.venda.getValorDesconto() : BigDecimal.ZERO));
+        this.listViewTotais.getItems().add(comissao(this.venda.getValorComissao() != null ? this.venda.getValorComissao() : BigDecimal.ZERO));
+        this.listViewTotais.getItems().add(totalGeral(this.venda.getValorTotal() != null ? this.venda.getValorTotal() : BigDecimal.ZERO));
+        BigDecimal vlPago = this.venda.getPagamentos().stream().map(i -> i.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.listViewTotais.getItems().add(totalPagamentos(vlPago));
+        BigDecimal vlTroco = vlPago.subtract(this.venda.getValorTotal()).compareTo(BigDecimal.ZERO) > 0 ? vlPago.subtract(this.venda.getValorTotal()) : BigDecimal.ZERO;
+        this.listViewTotais.getItems().add(troco(vlTroco));
+        // INFORMACOES ADICIONAIS
+        this.listViewInfoAdicionais.getItems().add(new Informacao("Realizada por:", this.venda.getUsuario().getDescricao()));
+        this.listViewInfoAdicionais.getItems().add(new Informacao("Data da Venda:", new SimpleDateFormat("dd/MM/yyyy").format(this.venda.getDataHora())));
+        this.listViewInfoAdicionais.getItems().add(new Informacao("Hora da Venda:", new SimpleDateFormat("HH:mm:ss").format(this.venda.getDataHora())));
+        this.listViewInfoAdicionais.getItems().add(new Informacao("Mesa:", this.venda.getMesa().toString()));
+        if (this.venda.getDataHoraCancelamento() != null) {
+            this.listViewInfoAdicionais.getItems().add(new Informacao("Cancelada por:", this.venda.getUsuarioCancelamento().getDescricao()));
+            this.listViewInfoAdicionais.getItems().add(new Informacao("Data do Cancelamento:", new SimpleDateFormat("dd/MM/yyyy").format(this.venda.getDataHoraCancelamento())));
+            this.listViewInfoAdicionais.getItems().add(new Informacao("Hora do Cancelamento:", new SimpleDateFormat("HH:mm:ss").format(this.venda.getDataHoraCancelamento())));
+        }
     }
 }

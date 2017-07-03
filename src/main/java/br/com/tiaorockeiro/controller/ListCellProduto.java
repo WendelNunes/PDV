@@ -74,7 +74,7 @@ public class ListCellProduto {
         AnchorPane paneTotal = new AnchorPane();
         Label lbTotal = new Label("Total");
         lbTotal.setAlignment(Pos.CENTER_RIGHT);
-        lbTotal.getStyleClass().add("labelAdicional");
+        lbTotal.getStyleClass().add("labelListNegrito");
         AnchorPane.setLeftAnchor(lbTotal, 10.0);
         AnchorPane.setTopAnchor(lbTotal, 5.0);
         AnchorPane.setRightAnchor(lbTotal, 170.0);

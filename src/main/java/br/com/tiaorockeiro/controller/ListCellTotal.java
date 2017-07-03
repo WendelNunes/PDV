@@ -33,7 +33,6 @@ public class ListCellTotal {
         lbDescricao.getStyleClass().add("labelListNegrito");
         AnchorPane.setLeftAnchor(lbDescricao, 5.0);
         AnchorPane.setTopAnchor(lbDescricao, 5.0);
-//        AnchorPane.setRightAnchor(lbDescricao, 170.0);
         pane.getChildren().add(lbDescricao);
         Label lbVlrPagamento = new Label(formataQuantidade(this.vlrPagamento));
         lbVlrPagamento.setPrefHeight(30.0);

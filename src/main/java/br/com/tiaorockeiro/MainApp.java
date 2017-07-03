@@ -2,9 +2,11 @@ package br.com.tiaorockeiro;
 
 import br.com.tiaorockeiro.controller.TelaLoginController;
 import br.com.tiaorockeiro.util.JpaUtil;
+import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import java.io.IOException;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,13 +29,22 @@ public class MainApp extends Application {
         TelaLoginController telaLoginController = loader.getController();
         telaLoginController.setApplication(this);
         this.stage.setOnCloseRequest((WindowEvent event) -> {
-            JpaUtil.closeEntityManagerFactory();
+            sair();
+            event.consume();
         });
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+    }
+
+    public static void sair() {
+        if (enviarMensagemConfirmacao("Deseja realmente sair?")) {
+            JpaUtil.closeEntityManagerFactory();
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     /**

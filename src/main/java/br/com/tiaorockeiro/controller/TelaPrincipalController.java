@@ -5,15 +5,20 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.MainApp;
 import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.ConfiguracaoUsuario;
 import br.com.tiaorockeiro.modelo.Usuario;
 import br.com.tiaorockeiro.negocio.AberturaCaixaNegocio;
+import br.com.tiaorockeiro.util.JpaUtil;
+import br.com.tiaorockeiro.util.MensagemUtil;
+import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import br.com.tiaorockeiro.util.SessaoUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -111,6 +116,15 @@ public class TelaPrincipalController implements Initializable {
             AnchorPane tela = FXMLLoader.load(getClass().getResource("/fxml/TelaConsultas.fxml"));
             this.mudaTela(tela, "Consultas");
         } catch (IOException e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void acaoSair(ActionEvent event) {
+        try {
+            MainApp.sair();
+        } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }
     }

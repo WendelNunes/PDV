@@ -35,7 +35,7 @@
                       </Button>
                   </children>
               </HBox>
-              <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Sair" textFill="#000000ad" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <Button mnemonicParsing="false" onAction="#acaoSair" prefHeight="60.0" prefWidth="96.0" styleClass="botao-menu" text="Sair" textFill="#000000ad" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <font>
                       <Font name="Arial" size="16.0" />
                   </font>

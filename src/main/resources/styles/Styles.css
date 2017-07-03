@@ -168,3 +168,7 @@
 .labelListNegrito{
     -fx-font: bold 12px "System";
 }
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #ECEFF1;
+}

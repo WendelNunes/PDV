@@ -13,33 +13,31 @@ import br.com.tiaorockeiro.negocio.ProdutoNegocio;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MoedaUtil.formataMoeda;
 import static br.com.tiaorockeiro.util.QuantidadeUtil.formataQuantidade;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import static javafx.collections.FXCollections.observableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -179,7 +177,7 @@ public class TelaAdicionaisProdutoController implements Initializable {
             for (Produto produto : produtos) {
                 gridProdutos.add(this.criaBotaoProdutos(produto), coluna, linha);
                 ++coluna;
-                if (coluna == 5) {
+                if (coluna == 3) {
                     coluna = 0;
                     ++linha;
                 }
@@ -188,9 +186,18 @@ public class TelaAdicionaisProdutoController implements Initializable {
         this.scrollProdutos.setContent(gridProdutos);
     }
 
-    private Button criaBotaoProdutos(Produto produto) {
-        Image image = new Image("/imagens/icon-table.png");
-        Button button = new Button(produto.getDescricao(), new ImageView(image));
+    private Button criaBotaoProdutos(Produto produto) throws IOException {
+        Button button = new Button(produto.getDescricao());
+        button.setTooltip(new Tooltip(produto.getDescricao()));
+        if (produto.getImagem() != null) {
+            ByteArrayInputStream in = new ByteArrayInputStream(produto.getImagem());
+            BufferedImage read = ImageIO.read(in);
+            ImageView imagem = new ImageView();
+            imagem.setFitWidth(50);
+            imagem.setFitHeight(50);
+            imagem.setImage(SwingFXUtils.toFXImage(read, null));
+            button.setGraphic(imagem);
+        }
         button.setContentDisplay(ContentDisplay.TOP);
         button.getStyleClass().add("botao-produto");
         button.setId(produto.getId().toString());

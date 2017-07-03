@@ -114,6 +114,7 @@ CREATE TABLE produto (
     valor numeric(14,4) NOT NULL DEFAULT 0,
     id_impressora_comanda bigint,
     adicional boolean NOT NULL DEFAULT FALSE,
+    imagem bytea NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_categoria_produto) REFERENCES categoria_produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY (id_unidade_produto) REFERENCES unidade_produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,

@@ -8,12 +8,15 @@ package br.com.tiaorockeiro.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -46,6 +49,8 @@ public class Produto implements Serializable {
     private Impressora impressoraComanda;
     @Column(name = "adicional")
     private boolean adicional;
+    @Column(name = "imagem")
+    private byte[] imagem;
 
     public Long getId() {
         return id;
@@ -109,6 +114,14 @@ public class Produto implements Serializable {
 
     public void setAdicional(boolean adicional) {
         this.adicional = adicional;
+    }
+
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
     }
 
     @Override
