@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="399.0" prefWidth="575.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaLoginController">
+<AnchorPane id="AnchorPane" prefHeight="619.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.tiaorockeiro.controller.TelaLoginController">
     <children>
-        <Label layoutX="1124.0" layoutY="10.0" text="Senha:" AnchorPane.rightAnchor="161.0" AnchorPane.topAnchor="10.0" />
-        <PasswordField fx:id="senha" disable="true" editable="false" layoutX="862.0" layoutY="29.0" prefHeight="52.0" prefWidth="186.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="29.0" />
-        <Button layoutX="650.0" layoutY="351.0" mnemonicParsing="false" onAction="#acaoLogar" prefHeight="52.0" prefWidth="186.0" text="Logar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="14.0" layoutY="6.0" text="Usuário:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <ListView fx:id="listaUsuarios" layoutX="10.0" layoutY="29.0" prefHeight="361.0" prefWidth="519.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="29.0" />
-      <Button layoutX="1187.0" layoutY="85.0" mnemonicParsing="false" onAction="#acaoBotao2" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="2" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="85.0" />
-      <Button layoutX="1124.0" layoutY="85.0" mnemonicParsing="false" onAction="#acaoBotao1" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="85.0" />
-      <Button layoutX="1260.0" layoutY="85.0" mnemonicParsing="false" onAction="#acaoBotao3" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="3" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
-      <Button layoutX="1187.0" layoutY="148.0" mnemonicParsing="false" onAction="#acaoBotao5" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="5" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="148.0" />
-      <Button layoutX="1250.0" layoutY="148.0" mnemonicParsing="false" onAction="#acaoBotao6" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="6" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="148.0" />
-      <Button layoutX="1124.0" layoutY="148.0" mnemonicParsing="false" onAction="#acaoBotao4" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="4" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="148.0" />
-      <Button layoutX="1124.0" layoutY="211.0" mnemonicParsing="false" onAction="#acaoBotao7" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="7" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="211.0" />
-      <Button layoutX="1187.0" layoutY="211.0" mnemonicParsing="false" onAction="#acaoBotao9" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="211.0" />
-      <Button layoutX="1187.0" layoutY="211.0" mnemonicParsing="false" onAction="#acaoBotao8" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="8" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="211.0" />
-      <Button layoutX="925.0" layoutY="274.0" mnemonicParsing="false" onAction="#acaoBotao0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="274.0" />
-      <Button layoutX="505.0" layoutY="274.0" mnemonicParsing="false" onAction="#acaoBotaoLimpar" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Limpar" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="274.0" />
+      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="599.0" prefWidth="398.0">
+               <children>
+                  <AnchorPane prefHeight="407.0" prefWidth="398.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../styles/Styles.css">
+                     <children>
+                          <Label text="Senha:" AnchorPane.rightAnchor="161.0" AnchorPane.topAnchor="10.0" />
+                          <PasswordField fx:id="senha" disable="true" editable="false" prefHeight="52.0" prefWidth="186.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="29.0" />
+                          <Button layoutX="379.0" layoutY="341.0" mnemonicParsing="false" onAction="#acaoLogar" prefHeight="52.0" prefWidth="186.0" text="Logar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <Label text="Usuário:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <ListView fx:id="listaUsuarios" prefHeight="312.0" prefWidth="357.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="29.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao2" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="2" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="85.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao1" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="1" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="85.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao3" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="3" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao5" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="5" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="148.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao6" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="6" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="148.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao4" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="4" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="148.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao7" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="7" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="211.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao9" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="9" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="211.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao8" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="8" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="211.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotao0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="0" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="274.0" />
+                        <Button mnemonicParsing="false" onAction="#acaoBotaoLimpar" prefHeight="60.0" prefWidth="60.0" style="-fx-background-radius: 0;" text="Limpar" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="274.0" />
+                     </children>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
     </children>
 </AnchorPane>
