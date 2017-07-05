@@ -123,7 +123,12 @@ public class TelaPrincipalController implements Initializable {
     @FXML
     public void acaoSair(ActionEvent event) {
         try {
-            MainApp.sair();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaLogin.fxml"));
+            AnchorPane pane = loader.load();
+            TelaLoginController telaLoginController = loader.getController();
+            telaLoginController.setApplication(MainApp.getInstance());
+            SessaoUtil.fecharSessao();
+            MainApp.getInstance().stage.getScene().setRoot(pane);
         } catch (Exception e) {
             enviarMensagemErro(e.getMessage());
         }

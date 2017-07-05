@@ -34,9 +34,10 @@ public class MainApp extends Application {
         });
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        this.stage.setScene(scene);
+        this.stage.setMaximized(true);
+        this.stage.setResizable(true);
+        this.stage.show();
     }
 
     public static void sair() {
@@ -62,10 +63,7 @@ public class MainApp extends Application {
     public void irParaTelaPrincipal() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaPrincipal_new.fxml"));
         AnchorPane pane = loader.load();
-        Scene scene = new Scene(pane);
-        this.stage.setScene(scene);
-        this.stage.setMaximized(true);
-        this.stage.setResizable(true);
+        this.stage.getScene().setRoot(pane);
     }
 
     public Stage popup(Parent root, boolean modal) {

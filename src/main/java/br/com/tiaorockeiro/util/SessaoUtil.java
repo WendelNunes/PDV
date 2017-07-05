@@ -37,6 +37,7 @@ public class SessaoUtil {
 
     public static void fecharSessao() {
         usuario = null;
+        configuracao = null;
     }
 
     public static Usuario getUsuario() {
