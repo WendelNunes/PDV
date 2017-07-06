@@ -225,3 +225,33 @@ CREATE TABLE adicional_produto (
     FOREIGN KEY (id_item_pedido) REFERENCES item_pedido (id) ON UPDATE NO ACTION ON DELETE CASCADE,
     FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+CREATE TABLE promocao (
+    id bigserial NOT NULL,
+    descricao CHARACTER VARYING NOT NULL,
+    data_inicial DATE NOT NULL,
+    data_final DATE,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE promocao_dia (
+    id bigserial NOT NULL,
+    id_promocao bigint NOT NULL,
+    dia integer NOT NULL,
+    hora_inicial TIMESTAMP,
+    hora_final TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_promocao) REFERENCES promocao (id) ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
+CREATE TABLE promocao_produto (
+    id bigserial NOT NULL,
+    id_promocao bigint NOT NULL,
+    id_produto bigint NOT NULL,
+    quantidade NUMERIC(14,4),
+    desconto_percentual NUMERIC(14,4),
+    desconto_valor NUMERIC(14,4),
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_promocao) REFERENCES promocao (id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+);
