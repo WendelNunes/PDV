@@ -8,6 +8,9 @@ package br.com.tiaorockeiro.controller;
 import br.com.tiaorockeiro.modelo.AberturaCaixa;
 import br.com.tiaorockeiro.modelo.AdicionalProduto;
 import br.com.tiaorockeiro.modelo.CategoriaProduto;
+import br.com.tiaorockeiro.modelo.Comanda;
+import br.com.tiaorockeiro.modelo.ComandaAdicional;
+import br.com.tiaorockeiro.modelo.ComandaItem;
 import br.com.tiaorockeiro.modelo.ItemPedido;
 import br.com.tiaorockeiro.modelo.ObservacaoProduto;
 import br.com.tiaorockeiro.modelo.Pedido;
@@ -19,6 +22,7 @@ import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.ObservacaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.ProdutoNegocio;
+import static br.com.tiaorockeiro.util.ImpressoraUtil.imprimir;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
@@ -299,8 +303,8 @@ public class TelaPedidoController implements Initializable {
         }
     }
 
-    @SuppressWarnings("UnusedAssignment")
-    private void salvarPedido() {
+    @SuppressWarnings({"UnusedAssignment", "null"})
+    private void salvarPedido() throws Exception {
         if (this.pedido.getId() == null) {
             this.pedido.setDataHora(new Date());
             this.pedido.setUsuario(SessaoUtil.getUsuario());
@@ -325,6 +329,30 @@ public class TelaPedidoController implements Initializable {
                 adicionalProdutoNegocio.salvar(adicional);
             }
         });
+
+        Long idAnterior = null;
+        List<Comanda> comandas = new ArrayList<>();
+        this.pedido.getItens().stream().filter(i -> i.getProduto().getImpressoraComanda() != null)
+                .sorted((i1, i2) -> i1.getProduto().getId().compareTo(i2.getProduto().getId()))
+                .forEach(i -> {
+                    Comanda comanda = null;
+                    if (idAnterior == null || !idAnterior.equals(i.getId())) {
+                        comanda = new Comanda(this.pedido.getMesa(), new Date(), SessaoUtil.getUsuario().getPessoa().getId()
+                                + " - " + SessaoUtil.getUsuario().getPessoa().getDescricao(), i.getProduto().getImpressoraComanda());
+                        comandas.add(comanda);
+                    }
+                    ComandaItem comandaItem = new ComandaItem(i.getProduto().getCodigo() + " - " + i.getProduto().getDescricao(), i.getQuantidade());
+                    i.getObservacoes().forEach(o -> {
+                        comandaItem.addInformacao((o.getPrefixo() != null ? o.getPrefixo() + " " : "") + o.getObservacao());
+                    });
+                    i.getAdicionais().forEach(a -> {
+                        comandaItem.addAdicional(new ComandaAdicional(a.getProduto().getCodigo() + " - " + a.getProduto().getDescricao(), a.getQuantidade()));
+                    });
+                    comanda.addItem(comandaItem);
+                });
+        for (Comanda comanda : comandas) {
+            imprimir(comanda.getComanda(), comanda.getImpressora().getUrl());
+        }
     }
 
     @FXML
