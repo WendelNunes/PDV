@@ -30,6 +30,12 @@ public class Impressora implements Serializable {
     private String descricao;
     @Column(name = "url")
     private String url;
+    @Column(name = "codigo_inicio_impressao")
+    private String codigoInicioImpressao;
+    @Column(name = "codigo_corte")
+    private String codigoCorte;
+    @Column(name = "quantidade_caracteres")
+    private Integer quantidadeCaracteres;
 
     public Long getId() {
         return id;
@@ -53,6 +59,30 @@ public class Impressora implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getCodigoInicioImpressao() {
+        return codigoInicioImpressao;
+    }
+
+    public void setCodigoInicioImpressao(String codigoInicioImpressao) {
+        this.codigoInicioImpressao = codigoInicioImpressao;
+    }
+
+    public String getCodigoCorte() {
+        return codigoCorte;
+    }
+
+    public void setCodigoCorte(String codigoCorte) {
+        this.codigoCorte = codigoCorte;
+    }
+
+    public Integer getQuantidadeCaracteres() {
+        return quantidadeCaracteres;
+    }
+
+    public void setQuantidadeCaracteres(Integer quantidadeCaracteres) {
+        this.quantidadeCaracteres = quantidadeCaracteres;
     }
 
     @Override

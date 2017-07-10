@@ -24,12 +24,24 @@ CREATE TABLE usuario(
     FOREIGN KEY (id_pessoa) REFERENCES pessoa (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
+CREATE TABLE impressora (
+    id bigserial NOT NULL,
+    descricao character varying NOT NULL,
+    url character varying NOT NULL,
+    codigo_inicio_impressao character varying,
+    codigo_corte character varying,
+    quantidade_caracteres integer,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE caixa (
     id bigserial NOT NULL,
     codigo character varying NOT NULL,
     descricao character varying NOT NULL,
+    id_impressora bigint NOT NULL,
     PRIMARY KEY(id),
-    UNIQUE (codigo)
+    UNIQUE (codigo),
+    FOREIGN KEY (id_impressora) REFERENCES impressora (id) ON DELETE SET NULL
 );
 
 CREATE TABLE abertura_caixa (
@@ -83,13 +95,6 @@ CREATE TABLE configuracao_usuario (
    PRIMARY KEY (id),
    FOREIGN KEY (id_usuario) REFERENCES usuario (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
    FOREIGN KEY (id_caixa_selecionado) REFERENCES caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-CREATE TABLE impressora (
-    id bigserial NOT NULL,
-    descricao character varying NOT NULL,
-    url character varying NOT NULL,
-    PRIMARY KEY (id)
 );
 
 CREATE TABLE unidade_produto (

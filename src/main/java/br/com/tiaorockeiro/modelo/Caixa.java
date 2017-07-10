@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,6 +36,9 @@ public class Caixa implements Serializable {
     private String descricao;
     @OneToMany(mappedBy = "caixa")
     private List<AberturaCaixa> aberturas;
+    @ManyToOne
+    @JoinColumn(name = "id_impressora")
+    private Impressora impressora;
 
     public Long getId() {
         return id;
@@ -65,6 +70,14 @@ public class Caixa implements Serializable {
 
     public void setAberturas(List<AberturaCaixa> aberturas) {
         this.aberturas = aberturas;
+    }
+
+    public Impressora getImpressora() {
+        return impressora;
+    }
+
+    public void setImpressora(Impressora impressora) {
+        this.impressora = impressora;
     }
 
     @Override

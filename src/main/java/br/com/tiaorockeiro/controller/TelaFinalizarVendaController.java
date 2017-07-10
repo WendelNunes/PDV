@@ -5,6 +5,12 @@
  */
 package br.com.tiaorockeiro.controller;
 
+import br.com.tiaorockeiro.modelo.Cupom;
+import br.com.tiaorockeiro.modelo.CupomAcerto;
+import br.com.tiaorockeiro.modelo.CupomExtrato;
+import br.com.tiaorockeiro.modelo.CupomItem;
+import br.com.tiaorockeiro.modelo.CupomPagamento;
+import br.com.tiaorockeiro.modelo.CupomTotal;
 import static br.com.tiaorockeiro.modelo.FormaPagamento.CARTAO_CREDITO;
 import static br.com.tiaorockeiro.modelo.FormaPagamento.CARTAO_DEBITO;
 import static br.com.tiaorockeiro.modelo.FormaPagamento.DINHEIRO;
@@ -41,6 +47,7 @@ import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.ObservacaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.VendaNegocio;
+import static br.com.tiaorockeiro.util.ImpressoraUtil.imprimir;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemInformacao;
@@ -330,8 +337,6 @@ public class TelaFinalizarVendaController implements Initializable {
             if (pagamentos.compareTo(totalGeral) < 0) {
                 enviarMensagemInformacao("O valor total dos pagamentos é menor que o valor total a pagar!");
             } else {
-                this.venda.setAberturaCaixa(new AberturaCaixaNegocio()
-                        .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado()));
                 this.venda.setUsuario(SessaoUtil.getUsuario());
                 this.venda.setDataHora(new Date());
                 this.venda.setValorComissao(comissao);
@@ -386,6 +391,24 @@ public class TelaFinalizarVendaController implements Initializable {
                 if (this.venda.getId() == null) {
                     throw new Exception("Erro ao finalizar a venda, tente novamente!");
                 }
+                
+                Cupom cupom = new CupomAcerto("TIAO ROCKEIRO", this.venda.getPedido().getUsuario().getPessoa().getId()
+                        + " - " + this.venda.getPedido().getUsuario().getPessoa().getDescricao(),
+                        this.venda.getPedido().getUsuario().getDescricao(), this.venda.getPedido().getMesa(),
+                        this.venda.getPedido().getDataHora(), this.venda.getAberturaCaixa().getCaixa().getImpressora());
+                this.venda.getItens().forEach(i -> {
+                    cupom.addItem(new CupomItem(i.getProduto().getDescricao(), i.getQuantidade(), i.getValorUnitario(), i.getValorTotal()));
+                });
+                this.venda.getPagamentos().forEach(p -> {
+                    cupom.addPagamento(new CupomPagamento(p.getFormaPagamento().getDescricao(), p.getValor()));
+                });
+                cupom.addTotal(new CupomTotal("TOTAL ITENS", this.venda.getValorTotalItens()));
+                cupom.addTotal(new CupomTotal("COMISSAO", this.venda.getValorComissao()));
+                cupom.addTotal(new CupomTotal("DESCONTO", this.venda.getValorDesconto()));
+                cupom.addTotal(new CupomTotal("TOTAL", this.venda.getValorTotal()));
+                cupom.addTotal(new CupomTotal("TOTAL PAGMENTO", this.venda.getPagamentos().stream().map(p -> p.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+                imprimir(cupom.getCupom(), this.venda.getAberturaCaixa().getCaixa().getImpressora().getUrl());
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaMesas.fxml"));
                 AnchorPane telaMesas = loader.load();
                 TelaPrincipalController.getInstance().mudaTela(telaMesas, "Mesas");
@@ -414,6 +437,26 @@ public class TelaFinalizarVendaController implements Initializable {
     }
 
     @FXML
+    public void acaoEmitirExtrato(ActionEvent event) {
+        try {
+            Cupom cupom = new CupomExtrato("TIAO ROCKEIRO", this.venda.getPedido().getUsuario().getPessoa().getId()
+                    + " - " + this.venda.getPedido().getUsuario().getPessoa().getDescricao(),
+                    this.venda.getPedido().getUsuario().getDescricao(), this.venda.getPedido().getMesa(),
+                    this.venda.getPedido().getDataHora(), this.venda.getAberturaCaixa().getCaixa().getImpressora());
+            this.venda.getPedido().getItens().forEach(i -> {
+                cupom.addItem(new CupomItem(i.getProduto().getDescricao(), i.getQuantidade(), i.getValor(), i.getValorTotal()));
+                i.getAdicionais().forEach(a -> {
+                    cupom.addItem(new CupomItem(a.getProduto().getDescricao(), a.getQuantidade(), a.getValor(), a.getValorTotal()));
+                });
+            });
+            cupom.addTotal(new CupomTotal("TOTAL", this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add)));
+            imprimir(cupom.getCupom(), this.venda.getAberturaCaixa().getCaixa().getImpressora().getUrl());
+        } catch (Exception e) {
+            enviarMensagemErro(e.getMessage());
+        }
+    }
+
+    @FXML
     public void acaoVoltar(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TelaPedido.fxml"));
@@ -426,8 +469,10 @@ public class TelaFinalizarVendaController implements Initializable {
         }
     }
 
-    public void inicializaDados(Long idPedido) {
+    public void inicializaDados(Long idPedido) throws Exception {
         this.venda.setPedido(new PedidoNegocio().obterPorId(Pedido.class, idPedido));
+        this.venda.setAberturaCaixa(new AberturaCaixaNegocio()
+                .obterAbertoPorCaixa(SessaoUtil.getUsuario().getConfiguracao().getCaixaSelecionado()));
         ObservacaoProdutoNegocio observacaoProdutoNegocio = new ObservacaoProdutoNegocio();
         AdicionalProdutoNegocio adicionalProdutoNegocio = new AdicionalProdutoNegocio();
         this.venda.getPedido().getItens().stream().map((itemPedido) -> {

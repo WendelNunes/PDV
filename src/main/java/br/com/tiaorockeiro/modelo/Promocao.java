@@ -8,34 +8,16 @@ package br.com.tiaorockeiro.modelo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
  * @author INLOC01
  */
-@Entity
-@Table(name = "promocao")
 public class Promocao implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    @Column(name = "descricao")
     private String descricao;
-    @Column(name = "data_inicial")
-    @Temporal(TemporalType.DATE)
     private Date dataInicial;
-    @Column(name = "data_final")
-    @Temporal(TemporalType.DATE)
     private Date dataFinal;
     private List<PromocaoDia> dias;
 

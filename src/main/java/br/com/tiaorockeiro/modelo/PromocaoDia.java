@@ -18,13 +18,8 @@ import javax.persistence.Table;
  *
  * @author INLOC01
  */
-@Entity
-@Table(name = "promocao_dia")
 public class PromocaoDia implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
     private Promocao promocao;
     private DiaSemana dia;
