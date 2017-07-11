@@ -23,6 +23,7 @@ import javax.print.SimpleDoc;
  */
 public class ImpressoraUtil {
 
+    @SuppressWarnings("ConvertToTryWithResources")
     public static void imprimir(String texto, String urlImpressora) throws Exception {
         PrintService printService = localizarImpressora(urlImpressora);
         if (printService == null) {
@@ -33,11 +34,12 @@ public class ImpressoraUtil {
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             Doc doc = new SimpleDoc(stream, flavor, null);
             printJob.print(doc, null);
+            stream.close();
         }
     }
 
     public static PrintService localizarImpressora(String urlImpressora) {
-        List<PrintService> impressoras = asList(PrintServiceLookup.lookupDefaultPrintService()).stream()
+        List<PrintService> impressoras = asList(PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PRINTABLE, null)).stream()
                 .filter(ps -> ps.getName().equals(urlImpressora)).collect(Collectors.toList());
         return impressoras.isEmpty() ? null : impressoras.get(0);
     }

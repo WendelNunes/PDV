@@ -49,7 +49,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -73,16 +72,6 @@ public class TelaPedidoController implements Initializable {
     private GridPane gridProdutos;
     @FXML
     private ListView<ItemPedido> listViewItens;
-    @FXML
-    private TableColumn<ItemPedido, Long> tableColumnSequencia;
-    @FXML
-    private TableColumn<ItemPedido, String> tableColumnProduto;
-    @FXML
-    private TableColumn<ItemPedido, BigDecimal> tableColumnQuantidade;
-    @FXML
-    private TableColumn<ItemPedido, BigDecimal> tableColumnPreco;
-    @FXML
-    private TableColumn<ItemPedido, BigDecimal> tableColumnTotal;
     @FXML
     private TextField textFieldQuantidadeItens;
     @FXML
@@ -329,27 +318,23 @@ public class TelaPedidoController implements Initializable {
                 adicionalProdutoNegocio.salvar(adicional);
             }
         });
-
-        Long idAnterior = null;
         List<Comanda> comandas = new ArrayList<>();
-        this.pedido.getItens().stream().filter(i -> i.getProduto().getImpressoraComanda() != null)
-                .sorted((i1, i2) -> i1.getProduto().getId().compareTo(i2.getProduto().getId()))
-                .forEach(i -> {
-                    Comanda comanda = null;
-                    if (idAnterior == null || !idAnterior.equals(i.getId())) {
-                        comanda = new Comanda(this.pedido.getMesa(), new Date(), SessaoUtil.getUsuario().getPessoa().getId()
-                                + " - " + SessaoUtil.getUsuario().getPessoa().getDescricao(), i.getProduto().getImpressoraComanda());
-                        comandas.add(comanda);
-                    }
-                    ComandaItem comandaItem = new ComandaItem(i.getProduto().getCodigo() + " - " + i.getProduto().getDescricao(), i.getQuantidade());
-                    i.getObservacoes().forEach(o -> {
-                        comandaItem.addInformacao((o.getPrefixo() != null ? o.getPrefixo() + " " : "") + o.getObservacao());
+        this.listViewItens.getItems().stream().filter(i -> i.getProduto().getImpressoraComanda() != null).map(i -> i.getProduto().getImpressoraComanda()).distinct().forEach(i -> {
+            Comanda comanda = new Comanda(this.pedido.getMesa(), new Date(), SessaoUtil.getUsuario().getPessoa().getId()
+                    + " - " + SessaoUtil.getUsuario().getPessoa().getDescricao(), i);
+            this.listViewItens.getItems().stream().filter(p -> p.getProduto().getImpressoraComanda() != null
+                    && p.getProduto().getImpressoraComanda().equals(i)).forEach(p -> {
+                        ComandaItem comandaItem = new ComandaItem(p.getProduto().getCodigo() + " - " + p.getProduto().getDescricao(), p.getQuantidade());
+                        p.getObservacoes().forEach(o -> {
+                            comandaItem.addInformacao((o.getPrefixo() != null ? o.getPrefixo().getDescricao() + " " : "") + o.getObservacao().getDescricao());
+                        });
+                        p.getAdicionais().forEach(a -> {
+                            comandaItem.addAdicional(new ComandaAdicional(a.getProduto().getCodigo() + " - " + a.getProduto().getDescricao(), a.getQuantidade()));
+                        });
+                        comanda.addItem(comandaItem);
                     });
-                    i.getAdicionais().forEach(a -> {
-                        comandaItem.addAdicional(new ComandaAdicional(a.getProduto().getCodigo() + " - " + a.getProduto().getDescricao(), a.getQuantidade()));
-                    });
-                    comanda.addItem(comandaItem);
-                });
+            comandas.add(comanda);
+        });
         for (Comanda comanda : comandas) {
             imprimir(comanda.getComanda(), comanda.getImpressora().getUrl());
         }
