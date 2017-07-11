@@ -318,7 +318,6 @@ public class TelaPedidoController implements Initializable {
                 adicionalProdutoNegocio.salvar(adicional);
             }
         });
-        List<Comanda> comandas = new ArrayList<>();
         this.listViewItens.getItems().stream().filter(i -> i.getProduto().getImpressoraComanda() != null).map(i -> i.getProduto().getImpressoraComanda()).distinct().forEach(i -> {
             Comanda comanda = new Comanda(this.pedido.getMesa(), new Date(), SessaoUtil.getUsuario().getPessoa().getId()
                     + " - " + SessaoUtil.getUsuario().getPessoa().getDescricao(), i);
@@ -333,11 +332,12 @@ public class TelaPedidoController implements Initializable {
                         });
                         comanda.addItem(comandaItem);
                     });
-            comandas.add(comanda);
+            try {
+                imprimir(comanda.getComanda(), comanda.getImpressora().getUrl());
+            } catch (Exception e) {
+                enviarMensagemInformacao(e.getMessage());
+            }
         });
-        for (Comanda comanda : comandas) {
-            imprimir(comanda.getComanda(), comanda.getImpressora().getUrl());
-        }
     }
 
     @FXML
