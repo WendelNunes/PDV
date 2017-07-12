@@ -5,26 +5,45 @@
  */
 package br.com.tiaorockeiro.modelo;
 
+import br.com.tiaorockeiro.converter.DiaSemanaAttributeConverter;
 import java.io.Serializable;
-import java.sql.Time;
+import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author INLOC01
  */
+@Entity
+@Table(name = "promocao_dia")
 public class PromocaoDia implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "id_promocao", referencedColumnName = "id")
     private Promocao promocao;
+    @Column(name = "dia")
+    @Convert(converter = DiaSemanaAttributeConverter.class)
     private DiaSemana dia;
-    private Time horaInicial;
-    private Time horaFinal;
+    @Column(name = "hora_inicial")
+    @Temporal(TemporalType.TIME)
+    private Date horaInicial;
+    @Column(name = "hora_final")
+    @Temporal(TemporalType.TIME)
+    private Date horaFinal;
 
     public Long getId() {
         return id;
@@ -50,19 +69,19 @@ public class PromocaoDia implements Serializable {
         this.dia = dia;
     }
 
-    public Time getHoraInicial() {
+    public Date getHoraInicial() {
         return horaInicial;
     }
 
-    public void setHoraInicial(Time horaInicial) {
+    public void setHoraInicial(Date horaInicial) {
         this.horaInicial = horaInicial;
     }
 
-    public Time getHoraFinal() {
+    public Date getHoraFinal() {
         return horaFinal;
     }
 
-    public void setHoraFinal(Time horaFinal) {
+    public void setHoraFinal(Date horaFinal) {
         this.horaFinal = horaFinal;
     }
 }
