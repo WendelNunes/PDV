@@ -25,6 +25,7 @@ public class Total implements Serializable {
     public static final Integer TOTAL_PAGAMENTOS = 8;
     public static final Integer TOTAL_PAGAR = 9;
     public static final Integer TOTAL_TROCO = 10;
+    public static final Integer TOTAL_DESCONTO_PROMOCAO = 11;
 
     private Integer id;
     private String descricao;
@@ -102,6 +103,14 @@ public class Total implements Serializable {
         totalDesconto.descricao = "Desconto";
         totalDesconto.total = total;
         return totalDesconto;
+    }
+
+    public static Total descontoPromocao(BigDecimal total) {
+        Total totalDescontoPromocao = new Total();
+        totalDescontoPromocao.id = TOTAL_DESCONTO_PROMOCAO;
+        totalDescontoPromocao.descricao = "Desconto Promoção";
+        totalDescontoPromocao.total = total;
+        return totalDescontoPromocao;
     }
 
     public static Total comissao(BigDecimal total) {

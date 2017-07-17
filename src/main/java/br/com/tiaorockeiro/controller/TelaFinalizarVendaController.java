@@ -26,6 +26,7 @@ import static br.com.tiaorockeiro.modelo.Total.TOTAL_CARTAO_DEBITO;
 import static br.com.tiaorockeiro.modelo.Total.TOTAL_OUTROS;
 import static br.com.tiaorockeiro.modelo.Total.TOTAL_DESCONTO;
 import static br.com.tiaorockeiro.modelo.Total.TOTAL_COMISSAO;
+import static br.com.tiaorockeiro.modelo.Total.TOTAL_DESCONTO_PROMOCAO;
 import static br.com.tiaorockeiro.modelo.Total.TOTAL_GERAL;
 import static br.com.tiaorockeiro.modelo.Total.TOTAL_PAGAMENTOS;
 import static br.com.tiaorockeiro.modelo.Total.TOTAL_PAGAR;
@@ -34,6 +35,7 @@ import static br.com.tiaorockeiro.modelo.Total.cartaoCredito;
 import static br.com.tiaorockeiro.modelo.Total.cartaoDebito;
 import static br.com.tiaorockeiro.modelo.Total.comissao;
 import static br.com.tiaorockeiro.modelo.Total.desconto;
+import static br.com.tiaorockeiro.modelo.Total.descontoPromocao;
 import static br.com.tiaorockeiro.modelo.Total.dinheiro;
 import static br.com.tiaorockeiro.modelo.Total.outros;
 import static br.com.tiaorockeiro.modelo.Total.totalGeral;
@@ -46,6 +48,7 @@ import br.com.tiaorockeiro.negocio.AdicionalProdutoNegocio;
 import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.ObservacaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
+import br.com.tiaorockeiro.negocio.PromocaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.VendaNegocio;
 import static br.com.tiaorockeiro.util.ImpressoraUtil.imprimir;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
@@ -61,6 +64,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
@@ -94,6 +99,7 @@ public class TelaFinalizarVendaController implements Initializable {
     private TextField textFieldValorTotal;
 
     private Venda venda;
+    private List<Map<String, Object>> listaPromocoes;
 
     public TelaFinalizarVendaController() {
         this.venda = new Venda();
@@ -146,6 +152,7 @@ public class TelaFinalizarVendaController implements Initializable {
         totais.add(cartaoDebito(BigDecimal.ZERO));
         totais.add(outros(BigDecimal.ZERO));
         totais.add(desconto(BigDecimal.ZERO));
+        totais.add(descontoPromocao(BigDecimal.ZERO));
         totais.add(comissao(BigDecimal.ZERO));
         totais.add(totalGeral(BigDecimal.ZERO));
         totais.add(totalPagamentos(BigDecimal.ZERO));
@@ -198,8 +205,9 @@ public class TelaFinalizarVendaController implements Initializable {
         BigDecimal total = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.textFieldValorTotal.setText(formataMoeda(total));
         BigDecimal desconto = this.getTotal(TOTAL_DESCONTO);
+        BigDecimal descontoPromocao = this.getTotal(TOTAL_DESCONTO_PROMOCAO);
         BigDecimal comissao = this.getTotal(TOTAL_COMISSAO);
-        BigDecimal totalGeral = total.add(comissao).subtract(desconto);
+        BigDecimal totalGeral = total.add(comissao).subtract(desconto.add(descontoPromocao));
         this.setTotal(TOTAL_GERAL, totalGeral);
         BigDecimal dinheiro = this.getTotal(TOTAL_DINHEIRO);
         BigDecimal cartaoCredito = this.getTotal(TOTAL_CARTAO_CREDITO);
@@ -329,7 +337,7 @@ public class TelaFinalizarVendaController implements Initializable {
             BigDecimal cartaoDebito = this.getTotal(TOTAL_CARTAO_DEBITO);
             BigDecimal outros = this.getTotal(TOTAL_OUTROS);
             BigDecimal pagamentos = dinheiro.add(cartaoCredito).add(cartaoDebito).add(outros);
-            BigDecimal desconto = this.getTotal(TOTAL_DESCONTO);
+            BigDecimal desconto = this.getTotal(TOTAL_DESCONTO).add(this.getTotal(TOTAL_DESCONTO_PROMOCAO));
             BigDecimal comissao = this.getTotal(TOTAL_COMISSAO);
             BigDecimal totalItens = this.listViewItens.getItems().stream().map(i -> i.getValorTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totalGeral = totalItens.add(comissao).subtract(desconto);
@@ -391,7 +399,7 @@ public class TelaFinalizarVendaController implements Initializable {
                 if (this.venda.getId() == null) {
                     throw new Exception("Erro ao finalizar a venda, tente novamente!");
                 }
-                
+
                 Cupom cupom = new CupomAcerto("TIAO ROCKEIRO", this.venda.getPedido().getUsuario().getPessoa().getId()
                         + " - " + this.venda.getPedido().getUsuario().getPessoa().getDescricao(),
                         this.venda.getPedido().getUsuario().getDescricao(), this.venda.getPedido().getMesa(),
@@ -486,5 +494,36 @@ public class TelaFinalizarVendaController implements Initializable {
         this.ajustaTabelaTotais();
         this.calculaComissao();
         this.atualizaTotalizadores();
+    }
+
+    private void calculaPromocoes() {
+        this.listaPromocoes = new PromocaoProdutoNegocio().procuraPromocaoPorProduto(this.venda.getPedido().getItens().stream()
+                .map(i -> i.getProduto().getId()).distinct().collect(Collectors.toList()));
+        this.listaPromocoes.forEach((promocao) -> {
+            boolean aplicaDesconto = false;
+            // APLICA POR QUANTIDADE
+            if (promocao.get("QUANTIDADE") != null) {
+                BigDecimal quantidadeTotalProduto = this.venda.getPedido().getItens().stream()
+                        .filter(i -> i.getProduto().getId().equals(promocao.get("ID_PRODUTO")))
+                        .map(i -> i.getQuantidade()).reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal quantidadeAplicar = quantidadeTotalProduto.divide((BigDecimal) promocao.get("QUANTIDADE"), 2, RoundingMode.FLOOR);
+                if (quantidadeAplicar.compareTo(BigDecimal.valueOf(1)) >= 0) {
+                    BigDecimal valorDesconto = BigDecimal.ZERO;
+                    if (promocao.get("DESCONTO_PERCENTUAL") != null) {
+                        List<ItemPedido> itensPedido = this.venda.getPedido().getItens().stream()
+                                .filter(i -> i.getProduto().getId().equals(promocao.get("ID_PRODUTO"))).collect(Collectors.toList());
+                        ItemPedido item = itensPedido.get(0);
+                        BigDecimal valorCalculado = item.getValor().multiply(((BigDecimal) promocao.get("DESCONTO_PERCENTUAL"))
+                                .divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
+                        valorDesconto = valorCalculado.multiply(quantidadeAplicar);
+                    } else if (promocao.get("DESCONTO_VALOR") != null) {
+                        valorDesconto = ((BigDecimal) promocao.get("DESCONTO_VALOR")).multiply(quantidadeAplicar);
+                    }
+                    this.setTotal(TOTAL_DESCONTO_PROMOCAO, getTotal(TOTAL_DESCONTO_PROMOCAO).add(valorDesconto));
+                }
+            } else {
+                
+            }
+        });
     }
 }

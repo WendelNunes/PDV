@@ -6,11 +6,14 @@
 package br.com.tiaorockeiro.dao;
 
 import br.com.tiaorockeiro.modelo.PromocaoProduto;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author INLOC01
  */
 public interface PromocaoProdutoDAO extends DAO<PromocaoProduto, Long> {
-    
+
+    public List<Map<String, Object>> procuraPromocaoPorProduto(List<Long> idProdutos);
 }

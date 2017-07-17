@@ -35,6 +35,9 @@ public class PromocaoProduto implements Serializable {
     @OneToOne
     @JoinColumn(name = "id_produto", referencedColumnName = "id")
     private Produto produto;
+    @OneToOne
+    @JoinColumn(name = "id_produto_substituto", referencedColumnName = "id")
+    private Produto produtoSubstituto;
     @Column(name = "quantidade")
     private BigDecimal quantidade;
     @Column(name = "desconto_percentual")
@@ -88,5 +91,13 @@ public class PromocaoProduto implements Serializable {
 
     public void setDescontoValor(BigDecimal descontoValor) {
         this.descontoValor = descontoValor;
+    }
+
+    public Produto getProdutoSubstituto() {
+        return produtoSubstituto;
+    }
+
+    public void setProdutoSubstituto(Produto produtoSubstituto) {
+        this.produtoSubstituto = produtoSubstituto;
     }
 }
