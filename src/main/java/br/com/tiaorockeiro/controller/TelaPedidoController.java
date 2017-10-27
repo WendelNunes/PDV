@@ -22,6 +22,7 @@ import br.com.tiaorockeiro.negocio.ItemPedidoNegocio;
 import br.com.tiaorockeiro.negocio.ObservacaoProdutoNegocio;
 import br.com.tiaorockeiro.negocio.PedidoNegocio;
 import br.com.tiaorockeiro.negocio.ProdutoNegocio;
+import br.com.tiaorockeiro.negocio.PromocaoProdutoNegocio;
 import static br.com.tiaorockeiro.util.ImpressoraUtil.imprimir;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemConfirmacao;
 import static br.com.tiaorockeiro.util.MensagemUtil.enviarMensagemErro;
@@ -35,8 +36,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -260,6 +264,9 @@ public class TelaPedidoController implements Initializable {
     private void acaoAdicionaProduto(ActionEvent event) {
         try {
             Produto produto = new ProdutoNegocio().obterPorId(Produto.class, Long.valueOf(((Control) event.getSource()).getId()));
+            List<Map<String, Object>> listaPromocoes = new PromocaoProdutoNegocio().procuraPromocaoPorProduto(asList(produto.getId()));
+            BigDecimal valorProduto = listaPromocoes != null && !listaPromocoes.isEmpty() ? (BigDecimal) listaPromocoes.get(0).get("VALOR_PRODUTO")
+                    : produto.getValor();
             ItemPedido item = new ItemPedido();
             item.setPedido(this.pedido);
             item.setAberturaCaixa(this.aberturaCaixa);
@@ -267,7 +274,7 @@ public class TelaPedidoController implements Initializable {
             item.setDataHora(new Date());
             item.setProduto(produto);
             item.setQuantidade(BigDecimal.ONE);
-            item.setValor(produto.getValor());
+            item.setValor(valorProduto);
             item.setObservacoes(new ArrayList<>());
             item.setAdicionais(new ArrayList<>());
             this.listViewItens.getItems().add(item);

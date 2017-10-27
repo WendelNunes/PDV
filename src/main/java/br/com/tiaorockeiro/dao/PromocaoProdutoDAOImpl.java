@@ -33,16 +33,13 @@ public class PromocaoProdutoDAOImpl extends DAOImpl<PromocaoProduto, Long> imple
         sql.append("    SELECT p.id AS id_promocao,\n");
         sql.append("           pp.id AS id_promocao_produto,\n");
         sql.append("           pp.id_produto,\n");
-        sql.append("           pp.quantidade,\n");
-        sql.append("           pp.desconto_percentual,\n");
-        sql.append("           pp.desconto_valor,\n");
-        sql.append("           pp.id_produto_substituto\n");
+        sql.append("           pp.valor_produto\n");
         sql.append("      FROM promocao_produto pp\n");
         sql.append("INNER JOIN promocao p ON p.id = pp.id_promocao\n");
         sql.append(" LEFT JOIN promocao_dia pd ON p.id = pd.id_promocao\n");
-        sql.append("     WHERE pp.id_produto = ANY(STRING_TO_ARRAY(:idProdutos,';')::BIGINT[])\n");
+        sql.append("     WHERE pp.id_produto = ANY(STRING_TO_ARRAY(:idProdutos,';')\\:\\:BIGINT[])\n");
         sql.append("       AND ((p.data_final ISNULL AND p.data_inicial <= CURRENT_DATE) OR\n");
-        sql.append("            (current_date BETWEEN p.data_inicial AND p.data_final))\n");
+        sql.append("            (CURRENT_DATE BETWEEN p.data_inicial AND p.data_final))\n");
         sql.append("       AND (pd.id ISNULL OR pd.dia = (EXTRACT(DOW FROM CURRENT_DATE)+1))\n");
         sql.append("       AND ((pd.hora_inicial ISNULL AND pd.hora_final ISNULL) OR\n");
         sql.append("            (pd.hora_final ISNULL AND pd.hora_inicial <= CURRENT_TIME) OR\n");
@@ -57,10 +54,7 @@ public class PromocaoProdutoDAOImpl extends DAOImpl<PromocaoProduto, Long> imple
             item.put("ID_PROMOCAO", object[0]);
             item.put("ID_PROMOCAO_PRODUTO", object[1]);
             item.put("ID_PRODUTO", object[2]);
-            item.put("QUANTIDADE", object[3]);
-            item.put("DESCONTO_PERCENTUAL", object[4]);
-            item.put("DESCONTO_VALOR", object[5]);
-            item.put("ID_PRODUTO_SUBSTITUTO", object[6]);
+            item.put("VALOR_PRODUTO", object[3]);
             return item;
         }).forEachOrdered((item) -> {
             lista.add(item);

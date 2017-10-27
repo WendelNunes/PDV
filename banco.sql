@@ -243,8 +243,8 @@ CREATE TABLE promocao_dia (
     id bigserial NOT NULL,
     id_promocao bigint NOT NULL,
     dia integer NOT NULL,
-    hora_inicial TIMESTAMP,
-    hora_final TIMESTAMP,
+    hora_inicial TIME WITHOUT TIME ZONE,
+    hora_final TIME WITHOUT TIME ZONE,
     PRIMARY KEY (id),
     FOREIGN KEY (id_promocao) REFERENCES promocao (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
@@ -253,12 +253,8 @@ CREATE TABLE promocao_produto (
     id bigserial NOT NULL,
     id_promocao bigint NOT NULL,
     id_produto bigint NOT NULL,
-    id_produto_substituto bigint NOT NULL,
-    quantidade NUMERIC(14,4),
-    desconto_percentual NUMERIC(14,4),
-    desconto_valor NUMERIC(14,4),
+    valor_produto NUMERIC(14,4) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_promocao) REFERENCES promocao (id) ON UPDATE NO ACTION ON DELETE CASCADE,
-    FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (id_produto_substituto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (id_produto) REFERENCES produto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
