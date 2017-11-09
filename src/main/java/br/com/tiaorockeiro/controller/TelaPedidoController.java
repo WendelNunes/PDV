@@ -38,6 +38,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.util.Arrays.asList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javax.imageio.ImageIO;
+import org.apache.commons.lang.time.DateUtils;
 
 /**
  * FXML Controller class
@@ -430,6 +432,13 @@ public class TelaPedidoController implements Initializable {
         Pedido pedidoEmAberto = new PedidoNegocio().obterAbertoPorMesa(this.pedido.getMesa());
         if (pedidoEmAberto != null) {
             this.pedido = pedidoEmAberto;
+        } // VERIFICA SE CAIXA VIROU O DIA
+        else if (DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH)
+                .compareTo(DateUtils.truncate(this.aberturaCaixa.getDataHora(), Calendar.DAY_OF_MONTH)) > 0) {
+            if (SessaoUtil.getConfiguracao().getHoraMaximaViradaDiaCaixa() != null
+                    && new Date().compareTo(SessaoUtil.getConfiguracao().getHoraMaximaViradaDiaCaixa()) > 0) {
+                throw new Exception("O caixa virou o dia e a hora máxima para utilização do mesmo foi excedida, por favor feche o caixa e reabra novamente!");
+            }
         }
         this.ajustaTabelaItens();
         this.criaGridCategorias();

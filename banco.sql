@@ -2,6 +2,7 @@ CREATE TABLE configuracao (
     id bigserial NOT NULL,
     qtde_mesas INTEGER NOT NULL DEFAULT 0,
     percentual_comissao numeric(14,4) DEFAULT 0,
+    hora_maxima_virada_dia_caixa TIME WITHOUT TIME ZONE,
     PRIMARY KEY (id)
 );
 
@@ -48,7 +49,7 @@ CREATE TABLE abertura_caixa (
    id bigserial NOT NULL, 
    id_caixa bigint NOT NULL, 
    data_hora timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-   saldo_inicial numeric(14,4) NOT NULL DEFAULT 0, 
+   saldo_inicial numeric(14,4) NOT NULL DEFAULT 0,
    id_usuario bigint NOT NULL, 
    PRIMARY KEY (id), 
    FOREIGN KEY (id_caixa) REFERENCES caixa (id) ON UPDATE NO ACTION ON DELETE NO ACTION, 

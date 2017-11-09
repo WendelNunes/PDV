@@ -7,6 +7,7 @@ package br.com.tiaorockeiro.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -31,6 +34,9 @@ public class Configuracao implements Serializable {
     private Integer quantidadeMesas;
     @Column(name = "percentual_comissao")
     private BigDecimal percentualComissao;
+    @Column(name = "hora_maxima_virada_dia_caixa")
+    @Temporal(TemporalType.TIME)
+    private Date horaMaximaViradaDiaCaixa;
 
     public Long getId() {
         return id;
@@ -54,6 +60,14 @@ public class Configuracao implements Serializable {
 
     public void setPercentualComissao(BigDecimal percentualComissao) {
         this.percentualComissao = percentualComissao;
+    }
+
+    public Date getHoraMaximaViradaDiaCaixa() {
+        return horaMaximaViradaDiaCaixa;
+    }
+
+    public void setHoraMaximaViradaDiaCaixa(Date horaMaximaViradaDiaCaixa) {
+        this.horaMaximaViradaDiaCaixa = horaMaximaViradaDiaCaixa;
     }
 
     @Override
